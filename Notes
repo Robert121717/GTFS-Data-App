@@ -1,4 +1,4 @@
 GTFS data structures - use a hashset. Allows for objects to be paired to their relative ID while permitting duplicates. 
     -For the keys: strings cannot be used. So consider the stop/route/trip ID as ASCII characters and convert them to their decimal 
     resentations. Use the decimal representation as the key.
-        -Ex: A stop with stop_ID 12 would have have the key 4950.
+        -Ex: A stop with stop_ID 12 would have the key 4950.
