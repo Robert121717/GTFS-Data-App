@@ -22,6 +22,10 @@ public class GTFS {
 	public Trips m_Trips;
 
 	public GTFS(){
+		routes = new Hashtable<Integer, Routes>();
+		stops = new Hashtable<Integer, Stops>();
+		stopTimes = new Hashtable<Integer, StopTimes>();
+		trips = new Hashtable<Integer, Trips>();
 
 	}
 
@@ -38,7 +42,7 @@ public class GTFS {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param String
 	 */
 	public boolean export(String String){
