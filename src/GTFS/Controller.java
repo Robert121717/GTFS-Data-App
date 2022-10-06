@@ -30,10 +30,11 @@ public class Controller{
 	}
 
 	/**
-	 *
+	 *checks what kind of file we are importing and calls the related methods
 	 * @param
 	 */
 	private boolean importFiles(){
+		//if stop file call importstop method.
 		return false;
 	}
 
