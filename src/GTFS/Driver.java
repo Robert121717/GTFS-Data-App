@@ -23,9 +23,9 @@ public class Driver extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(Driver.class.getResource("GTFSController.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        Parent root = FXMLLoader.load(getClass().getResource("GTFSController.fxml"));
+        Scene scene = new Scene(root);
+        stage.setTitle("GTFS Application");
         stage.setScene(scene);
         stage.show();
     }
