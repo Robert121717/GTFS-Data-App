@@ -22,7 +22,7 @@ public class Stops {
 
 
 	public Stops(String stopID, String stopName, String stopLat, String stopLon, String stopDesc){
-		//converting routID into int for keys
+		//converting stopID into int for keys
 		byte[] stopIdBytes = stopID.getBytes(StandardCharsets.US_ASCII);
 		StringBuilder routIDByteString = new StringBuilder();
 		for (byte stopIdByte : stopIdBytes) {
