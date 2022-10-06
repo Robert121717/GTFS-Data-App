@@ -2,7 +2,6 @@ package GTFS;
 
 
 import java.util.Hashtable;
-import java.util.List;
 
 /**
  * @author nairac
@@ -11,10 +10,11 @@ import java.util.List;
 public class GTFS {
 
 	//Change UML to show that GTFS has four hashtables, not Lists.
-	protected Hashtable<Integer, Routes> routes;
-	protected Hashtable<Integer, Stops> stops;
-	protected Hashtable<Integer,StopTimes> stopTimes;
-	protected Hashtable<Integer, Trips> trips;
+	//Do we need to put all of these in a single list??? or keep separate?
+	protected Hashtable<Integer, Route> routes;
+	protected Hashtable<Integer, Stop> stops;
+	protected Hashtable<Integer, StopTime> stopTimes;
+	protected Hashtable<Integer, Trip> trips;
 
 
 	public GTFS(){
@@ -25,14 +25,20 @@ public class GTFS {
 
 	}
 
-	/**
-	 * 
-	 * @param path
-	 */
-	public boolean importFile(String path){
+	private void importRoute(Route rout){
 
+	}
 
-		return false;
+	private void importStop(){
+
+	}
+
+	private void importStopTime(){
+
+	}
+
+	private void importTrip(){
+
 	}
 
 	/**
@@ -47,7 +53,7 @@ public class GTFS {
 	 * Searches for a stop, given the stopID. Returns the Stop
 	 * @param stopId- ID turned into ascii decimal used as a key for each stop.
 	 */
-	public Stops searchStopId(int stopId){
+	public Stop searchStopId(int stopId){
 		return stops.get(stopId);
 	}
 
@@ -55,7 +61,7 @@ public class GTFS {
 	 * Searches for a route, given the routeId. Returns the route
 	 * @param routeId- ID turned into ascii decimal used as a key for each stop
 	 */
-	public Routes searchRouteId(int routeId){
+	public Route searchRouteId(int routeId){
 		return routes.get(routeId);
 	}
 
@@ -63,14 +69,14 @@ public class GTFS {
 	 * Searches for a trip, given the tripId. Returns the trip
 	 * @param tripId- ID turned into ascii decimal used as a key for each trip
 	 */
-	public Trips searchTrips(int tripId){
+	public Trip searchTrips(int tripId){
 		return trips.get(tripId);
 	}
 	/**
 	 * Searches for a stop time, given the stopTimeId. Returns the stop time.
 	 * @param stopTimeId- ID turned into ascii decimal used as a key for each stop time
 	 */
-	public StopTimes searchStopTimes(int stopTimeId){
+	public StopTime searchStopTimes(int stopTimeId){
 		return stopTimes.get(stopTimeId);
 	}
 

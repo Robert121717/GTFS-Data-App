@@ -10,3 +10,4 @@ GTFS data structures - use a hashset. Allows for objects to be paired to their r
         -All ID parameters must become integers. We are converting the strings into the ascii decimal values
         - GTFS class should not need individual route, trip, stoptime, and stop Objects.
         - add search stop times method into UML in GTFS class.
+        - The controller has imports for each type of file. Copied same structure in GTFS

@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
  * @version 1.0
  * @created 05-Oct-2022 8:14:32 PM
  */
-public class Routes {
+public class Route {
 
 	//none should be final because we can update info.
 	private int routeID;
@@ -25,8 +25,8 @@ public class Routes {
 
 
 
-	public Routes(String routeID, String agencyId, String routeShortName, String routeLongName, String routeDesc,
-				  String routeType, String routeURL, String routeColor, String routeTextColor){
+	public Route(String routeID, String agencyId, String routeShortName, String routeLongName, String routeDesc,
+				 String routeType, String routeURL, String routeColor, String routeTextColor){
 
 		//converting routID into int for keys
 		byte[] routeIdBytes = routeID.getBytes(StandardCharsets.US_ASCII);
@@ -97,7 +97,7 @@ public class Routes {
 	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
-	public void plotCoord(Routes routeId){
+	public void plotCoord(Route routeId){
 
 	}
 
@@ -105,7 +105,7 @@ public class Routes {
 	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
-	public void plotLocation(Routes routeId){
+	public void plotLocation(Route routeId){
 
 	}
 
@@ -113,7 +113,7 @@ public class Routes {
 	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
-	public Routes searchRouteId(String routeId){
+	public Route searchRouteId(String routeId){
 		return null;
 	}
 

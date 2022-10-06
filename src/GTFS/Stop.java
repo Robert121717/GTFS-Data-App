@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
  * @version 1.0
  * @created 05-Oct-2022 8:14:32 PM
  */
-public class Stops {
+public class Stop {
 //these can be updated so not private
 	private int stopID;
 	private String stopName;
@@ -21,7 +21,7 @@ public class Stops {
 
 
 
-	public Stops(String stopID, String stopName, String stopLat, String stopLon, String stopDesc){
+	public Stop(String stopID, String stopName, String stopLat, String stopLon, String stopDesc){
 		//converting stopID into int for keys
 		byte[] stopIdBytes = stopID.getBytes(StandardCharsets.US_ASCII);
 		StringBuilder routIDByteString = new StringBuilder();
@@ -40,7 +40,7 @@ public class Stops {
 	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
-	public Stops searchStopId(String stopId){
+	public Stop searchStopId(String stopId){
 		return null;
 	}
 

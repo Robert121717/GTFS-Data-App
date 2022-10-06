@@ -1,9 +1,7 @@
 package GTFS;
-import javafx.fxml.Initializable;
 
 import java.awt.*;
-import java.net.URL;
-import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 
 /**
@@ -12,6 +10,8 @@ import javafx.fxml.FXML;
  * @created 05-Oct-2022 8:14:31 PM
  */
 public class Controller{
+	private final GTFS gtfs;
+
 	@FXML
 	private Label test;
 
@@ -26,7 +26,7 @@ public class Controller{
 
 
 	public Controller(){
-
+		gtfs = new GTFS();
 	}
 
 	/**
@@ -35,6 +35,10 @@ public class Controller{
 	 */
 	private boolean importFiles(){
 		//if stop file call importstop method.
+		//else if trip file call importtrip
+		//else if route file call importroute
+		//else if stopTime file call importstopTime
+		//else error cannot import that file
 		return false;
 	}
 
@@ -138,7 +142,7 @@ public class Controller{
 
 	}
 
-	private Trips searchForNextTrip(){
+	private Trip searchForNextTrip(){
 		return null;
 	}
 

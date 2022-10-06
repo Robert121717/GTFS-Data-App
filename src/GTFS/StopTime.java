@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
  * @version 1.0
  * @created 05-Oct-2022 8:14:32 PM
  */
-public class StopTimes {
+public class StopTime {
 
 	private int stopTimeID; //COMBO OF THE TRIP ID AND STOP ID (used to make key for HASHTABLE)
 	private String arrivalTime;
@@ -22,8 +22,8 @@ public class StopTimes {
 	private String dropOffType;
 	private String stopSequence;
 
-	public StopTimes(String tripId, String arrivalTime, String departureTime, String stopId,
-					 String stopSequence, String stopHeadSign, String pickUpType, String dropOffType){
+	public StopTime(String tripId, String arrivalTime, String departureTime, String stopId,
+					String stopSequence, String stopHeadSign, String pickUpType, String dropOffType){
 		//converting stopTimeID into int for keys
 		byte[] stopTimeTripIdBytes = tripId.getBytes(StandardCharsets.US_ASCII);
 		StringBuilder stopTimeTripIDByteString = new StringBuilder();
@@ -69,7 +69,7 @@ public class StopTimes {
 	 * 
 	 * @param stopId
 	 */
-	public StopTimes searchStopIDTime(String stopId){
+	public StopTime searchStopIDTime(String stopId){
 		return null;
 	}
 
@@ -137,7 +137,7 @@ public class StopTimes {
 	 * 
 	 * @param tripId
 	 */
-	public StopTimes searchTripIdTimes(String tripId){
+	public StopTime searchTripIdTimes(String tripId){
 		return null;
 	}
 

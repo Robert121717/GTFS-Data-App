@@ -9,12 +9,12 @@ import java.nio.charset.StandardCharsets;
  * @version 1.0
  * @created 05-Oct-2022 8:14:32 PM
  */
-public class Trips {
+public class Trip {
 
 	private int tripId;
 	private String routeId;
 	private String tripHeadsign;
-	private StopTimes stopTimesInTrip;
+	private StopTime stopTimesInTrip;
 	private String serviceId;
 	private String directionId;
 	private String blockId;
@@ -22,8 +22,8 @@ public class Trips {
 	//private StopTimes allStopTimes; Do we need this?
 
 
-	public Trips(String tripId, String routeId, String serviceId, String tripHeadsign, String directionId,
-				 String blockId, String shapeId){
+	public Trip(String tripId, String routeId, String serviceId, String tripHeadsign, String directionId,
+				String blockId, String shapeId){
 		//converting tripID into int for keys
 		byte[] tripIdBytes = tripId.getBytes(StandardCharsets.US_ASCII);
 		StringBuilder tripIDByteString = new StringBuilder();
@@ -72,7 +72,7 @@ public class Trips {
 	 * NOT IMPLEMENTED
 	 * @param tripId
 	 */
-	public Trips searchTripId(String tripId){
+	public Trip searchTripId(String tripId){
 		return null;
 	}
 
@@ -80,7 +80,7 @@ public class Trips {
 	 * NOT IMPLEMENTED
 	 * @param routeId
 	 */
-	public Trips searchByRouteId(String routeId){
+	public Trip searchByRouteId(String routeId){
 		return null;
 	}
 
@@ -128,7 +128,7 @@ public class Trips {
 	 * NOT IMPLEMENTED
 	 * @param tripId
 	 */
-	public Trips searchForTrip(String tripId){
+	public Trip searchForTrip(String tripId){
 		return null;
 	}
 
