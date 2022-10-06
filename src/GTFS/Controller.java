@@ -34,6 +34,7 @@ public class Controller{
 	 * @param
 	 */
 	private boolean importFiles(){
+		//TODO
 		//if stop file call importstop method.
 		//else if trip file call importtrip
 		//else if route file call importroute
@@ -43,7 +44,7 @@ public class Controller{
 	}
 
 	/**
-	 *
+	 * NOT IMPLEMENTED
 	 * @param
 	 */
 	private void exportFiles(){
@@ -55,20 +56,28 @@ public class Controller{
 	 * @param
 	 */
 	private void importRoute(){
+		//TODO
+		//make file into a list of Route objects
 	//make list of all the routes in the file and call the importRoute in gtfs to import each stop in list
 	}
 
 	private void importStop(){
+		//TODO
+		//make file into a list of Stop objects
 		//make list of all the stops in the file and call the importStop in gtfs to import each stop in list
 
 	}
 
 	private void importStopTime(){
+		//TODO
+		//make file into a list of StopTime objects
 		//make list of all the stopTimes in the file and call the importStopTimes in gtfs to import each stoptime in list
 
 	}
 
 	private void importTrip(){
+		//TODO
+		//make file into a list of Route objects
 		//make list of all the trips in the file and call the importTrip in gtfs to import each trip in list
 
 	}
