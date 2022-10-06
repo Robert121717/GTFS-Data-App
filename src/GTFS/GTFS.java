@@ -25,7 +25,12 @@ public class GTFS {
 
 	}
 
-	private Route importRoute(Route newRoute){
+	/**
+	 * puts a new route into the routes hashmap
+	 * @param newRoute- route being added to hashtable
+	 * @return returns the newly added Route
+	 */
+	public Route importRoute(Route newRoute){
 		return routes.put(newRoute.getRouteId(), newRoute);
 		//maybe we can use the Route for something in the future. Otherwise, change to void/boolean
 		//Same goes for other import methods in GTFS
@@ -33,17 +38,32 @@ public class GTFS {
 
 	}
 
-	private Stop importStop(Stop newStop){
+	/**
+	 * puts a new stop into the stops hashtable
+	 * @param newStop- stop being added to hashtable
+	 * @return returns the newly added Stop
+	 */
+	public Stop importStop(Stop newStop){
 		return stops.put(newStop.getStopId(), newStop);
 
 	}
 
-	private StopTime importStopTime(StopTime newStopTime){
+	/**
+	 * puts a new stoptime into the stoptimes hashtable
+	 * @param newStopTime - stoptime being added to hashtable
+	 * @return returns newly added stoptime
+	 */
+	public StopTime importStopTime(StopTime newStopTime){
 		return stopTimes.put(newStopTime.getStopTimeID(), newStopTime);
 
 	}
 
-	private Trip importTrip(Trip newTrip){
+	/**
+	 * puts a new trip into the trips hashtable
+	 * @param newTrip- trip being added to hashtable
+	 * @return returns newly added stoptime
+	 */
+	public Trip importTrip(Trip newTrip){
 		return trips.put(newTrip.getTripId(), newTrip);
 
 
