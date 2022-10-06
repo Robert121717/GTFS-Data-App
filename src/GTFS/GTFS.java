@@ -25,19 +25,27 @@ public class GTFS {
 
 	}
 
-	private void importRoute(Route rout){
+	private Route importRoute(Route newRoute){
+		return routes.put(newRoute.getRouteId(), newRoute);
+		//maybe we can use the Route for something in the future. Otherwise, change to void/boolean
+		//Same goes for other import methods in GTFS
+
 
 	}
 
-	private void importStop(){
+	private Stop importStop(Stop newStop){
+		return stops.put(newStop.getStopId(), newStop);
 
 	}
 
-	private void importStopTime(){
+	private StopTime importStopTime(StopTime newStopTime){
+		return stopTimes.put(newStopTime.getStopTimeID(), newStopTime);
 
 	}
 
-	private void importTrip(){
+	private Trip importTrip(Trip newTrip){
+		return trips.put(newTrip.getTripId(), newTrip);
+
 
 	}
 

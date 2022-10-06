@@ -55,18 +55,21 @@ public class Controller{
 	 * @param
 	 */
 	private void importRoute(){
-
+	//make list of all the routes in the file and call the importRoute in gtfs to import each stop in list
 	}
 
 	private void importStop(){
+		//make list of all the stops in the file and call the importStop in gtfs to import each stop in list
 
 	}
 
 	private void importStopTime(){
+		//make list of all the stopTimes in the file and call the importStopTimes in gtfs to import each stoptime in list
 
 	}
 
 	private void importTrip(){
+		//make list of all the trips in the file and call the importTrip in gtfs to import each trip in list
 
 	}
 

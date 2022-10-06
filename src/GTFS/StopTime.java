@@ -125,6 +125,10 @@ public class StopTime {
 		return "";
 	}
 
+	public int getStopTimeID() {
+		return stopTimeID;
+	}
+
 	/**
 	 * 
 	 * @param
