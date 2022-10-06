@@ -3,3 +3,4 @@ GTFS data structures - use a hashset. Allows for objects to be paired to their r
     representations. Use the decimal representation as the key.
         -Ex: A stop with stop_ID 12 would have the key 4950.
         -Ex: A route with route_ID RR5 would have the key 828253
+        Must have hashsets in a list.
