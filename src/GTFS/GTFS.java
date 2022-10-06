@@ -7,29 +7,21 @@ import java.util.List;
 /**
  * @author nairac
  * @version 1.0
- * @created 05-Oct-2022 8:14:32 PM
  */
 public class GTFS {
 
 	//Change UML to show that GTFS has four hashtables, not Lists.
-	private Hashtable<Integer, Routes> routes;
-	private Hashtable<Integer, Stops> stops;
-	private Hashtable<Integer,StopTimes> stopTimes;
-	private Hashtable<Integer, Trips> trips;
-	public Routes m_Routes;
-	public Stops m_Stops;
-	public StopTimes m_StopTimes;
-	public Trips m_Trips;
+	protected Hashtable<Integer, Routes> routes;
+	protected Hashtable<Integer, Stops> stops;
+	protected Hashtable<Integer,StopTimes> stopTimes;
+	protected Hashtable<Integer, Trips> trips;
+
 
 	public GTFS(){
-		routes = new Hashtable<Integer, Routes>();
-		stops = new Hashtable<Integer, Stops>();
-		stopTimes = new Hashtable<Integer, StopTimes>();
-		trips = new Hashtable<Integer, Trips>();
-
-	}
-
-	public void finalize() throws Throwable {
+		routes = new Hashtable<>();
+		stops = new Hashtable<>();
+		stopTimes = new Hashtable<>();
+		trips = new Hashtable<>();
 
 	}
 
@@ -50,11 +42,13 @@ public class GTFS {
 	}
 
 	/**
-	 * 
+	 * Searches for a stop, given the stopID. Returns the Stop
 	 * @param stopId
 	 */
-	public Stops searchStopId(String stopId){
-		return null;
+	public Stops searchStopId(int stopId){
+		return stops.get(stopId);
+
+
 	}
 
 	/**
@@ -62,6 +56,7 @@ public class GTFS {
 	 * @param routeId
 	 */
 	public Routes searchRouteId(String routeId){
+
 		return null;
 	}
 
