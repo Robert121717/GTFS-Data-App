@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author nairac
  * @version 1.0
@@ -16,6 +18,7 @@ public class Driver extends Application {
 
     public static void main(String[] args) {
         launch(args);
+
     }
 
     @Override

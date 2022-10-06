@@ -2,6 +2,7 @@ package GTFS;
 
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author nairac
@@ -10,7 +11,8 @@ import java.io.File;
  */
 public class Routes {
 
-	private String routeID;
+	//none should be final because we can update info.
+	private int routeID;
 	private String routeColor;
 	private String agencyId;
 	private String routeShortName;
@@ -22,16 +24,33 @@ public class Routes {
 
 
 
-	public void finalize() throws Throwable {
 
-	}
+	public Routes(String routeID, String agencyId, String routeShortName, String routeLongName, String routeDesc,
+				  String routeType, String routeURL, String routeColor, String routeTextColor){
 
-	public Routes(){
+		//converting routID into int for keys
+		byte[] routeIdBytes = routeID.getBytes(StandardCharsets.US_ASCII);
+		StringBuilder routIDByteString = new StringBuilder();
+		for (byte routeIdByte : routeIdBytes) {
+			routIDByteString.append(routeIdByte);
+		}
+		this.routeID = Integer.parseInt(routIDByteString.toString());
+		this.agencyId = agencyId;
+		this.routeShortName = routeShortName;
+		this.routeLongName = routeLongName;
+		this.routeDesc = routeDesc;
+		this.routeType = routeType;
+		this.routeURL = routeURL;
+		this.routeColor = routeColor;
+		this.routeTextColor = routeTextColor;
+
+
+
 
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param file
 	 */
 	public boolean importRoute(File file){
@@ -39,7 +58,7 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param file
 	 */
 	public File exportRoute(File file){
@@ -51,7 +70,7 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
 	public void displayRoute(String stopId){
@@ -59,7 +78,7 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
 	public void routeVerify(String routeId){
@@ -67,7 +86,7 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
 	public void filterRoute(String routeId){
@@ -75,7 +94,7 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
 	public void plotCoord(Routes routeId){
@@ -83,7 +102,7 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
 	public void plotLocation(Routes routeId){
@@ -91,7 +110,7 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
 	public Routes searchRouteId(String routeId){
@@ -99,7 +118,7 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
 	public void searchRouteForStop(String stopId){
@@ -107,7 +126,7 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param
 	 */
 	public void setRouteId(String routeId){
@@ -115,19 +134,19 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param routeColor
 	 */
 	public void setRouteColor(String routeColor){
 
 	}
 
-	public String getRouteId(){
-		return "";
+	public int getRouteId(){
+		return routeID;
 	}
 
 	public String getRouteColor(){
-		return "";
+		return routeColor;
 	}
 
 	public double getDistance(){
@@ -143,7 +162,7 @@ public class Routes {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param obj
 	 */
 	public void update(Object obj){
