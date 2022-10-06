@@ -1,6 +1,7 @@
 package GTFS;
 
 
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -10,10 +11,11 @@ import java.util.List;
  */
 public class GTFS {
 
-	private List<Routes> routes;
-	private List<Stops> stops;
-	private List<StopTimes> stopTimes;
-	private List<Trips> trips;
+	//Change UML to show that GTFS has four hashtables, not Lists.
+	private Hashtable<Integer, Routes> routes;
+	private Hashtable<Integer, Stops> stops;
+	private Hashtable<Integer,StopTimes> stopTimes;
+	private Hashtable<Integer, Trips> trips;
 	public Routes m_Routes;
 	public Stops m_Stops;
 	public StopTimes m_StopTimes;
