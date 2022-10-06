@@ -2,6 +2,7 @@ package GTFS;
 
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author nairac
@@ -9,8 +10,8 @@ import java.io.File;
  * @created 05-Oct-2022 8:14:32 PM
  */
 public class Stops {
-
-	private String stopID;
+//these can be updated so not private
+	private int stopID;
 	private String stopName;
 	private double stopLat;
 	private double stopLon;
@@ -20,12 +21,23 @@ public class Stops {
 
 
 
-	public Stops(){
+	public Stops(String stopID, String stopName, String stopLat, String stopLon, String stopDesc){
+		//converting routID into int for keys
+		byte[] stopIdBytes = stopID.getBytes(StandardCharsets.US_ASCII);
+		StringBuilder routIDByteString = new StringBuilder();
+		for (byte stopIdByte : stopIdBytes) {
+			routIDByteString.append(stopIdByte);
+		}
+		this.stopID = Integer.parseInt(routIDByteString.toString());
+		this.stopName = stopName;
+		this.stopLat = Double.parseDouble(stopLat);
+		this.stopLon = Double.parseDouble(stopLon);
+		this.stopDesc = stopDesc;
 
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
 	public Stops searchStopId(String stopId){
@@ -33,7 +45,7 @@ public class Stops {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param file
 	 */
 	public boolean importStop(File file){
@@ -41,7 +53,7 @@ public class Stops {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param file
 	 */
 	public File exportStops(File file){
@@ -49,7 +61,7 @@ public class Stops {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param routeID
 	 */
 	public boolean displayStop(String routeID){
@@ -57,7 +69,7 @@ public class Stops {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
 	public void stopVerify(String stopId){
@@ -65,7 +77,7 @@ public class Stops {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
 	public void setStopId(String stopId){
@@ -73,7 +85,7 @@ public class Stops {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param name
 	 */
 	public void setStopName(String name){
@@ -81,7 +93,7 @@ public class Stops {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param latitutde
 	 */
 	public void setStopLat(double latitutde){
@@ -89,31 +101,31 @@ public class Stops {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param longitude
 	 */
 	public void setStopLon(double longitude){
 
 	}
 
-	public String getStopId(){
-		return "";
+	public int getStopId(){
+		return stopID;
 	}
 
 	public String getStopName(){
-		return "";
+		return stopName;
 	}
 
 	public double getStopLat(){
-		return 0;
+		return stopLat;
 	}
 
 	public double getStopLon(){
-		return 0;
+		return stopLon;
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED YET
 	 * @param obj
 	 */
 	public void update(Object obj){
