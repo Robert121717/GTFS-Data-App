@@ -2,6 +2,9 @@ package GTFS;
 
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -12,11 +15,15 @@ import javafx.stage.Stage;
 public class Driver extends Application {
 
     public static void main(String[] args) {
-        System.out.println("Hello ryan!");
+        launch(args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-
+        FXMLLoader fxmlLoader = new FXMLLoader(Driver.class.getResource("GTFSController.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        stage.setTitle("Hello!");
+        stage.setScene(scene);
+        stage.show();
     }
 }

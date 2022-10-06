@@ -1,26 +1,36 @@
 package GTFS;
+import javafx.fxml.Initializable;
 
+import java.awt.*;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 
 /**
  * @author nairac
  * @version 1.0
  * @created 05-Oct-2022 8:14:31 PM
  */
-public class Controller {
+public class Controller{
+	@FXML
+	private Label test;
 
-	private GTFS gtfs;
-	public GTFS m_GTFS;
+	@FXML
+	protected void testButton(){
+		test.setText("TEST");
+	}
 
 
 
 
 
-	private Controller(){
+
+	public Controller(){
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param
 	 */
 	private boolean importFiles(){
@@ -28,7 +38,7 @@ public class Controller {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param
 	 */
 	private void exportFiles(){
@@ -36,7 +46,7 @@ public class Controller {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param
 	 */
 	private void importRoute(){
@@ -138,5 +148,6 @@ public class Controller {
 	private void search(){
 
 	}
+
 
 }
