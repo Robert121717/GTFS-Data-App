@@ -2,6 +2,7 @@ package GTFS;
 
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author nairac
@@ -10,7 +11,7 @@ import java.io.File;
  */
 public class Trips {
 
-	private String tripId;
+	private int tripId;
 	private String routeId;
 	private String tripHeadsign;
 	private StopTimes stopTimesInTrip;
@@ -18,28 +19,37 @@ public class Trips {
 	private String directionId;
 	private String blockId;
 	private String shapeId;
-	private StopTimes allStopTimes;
+	//private StopTimes allStopTimes; Do we need this?
 
 
-
-	public void finalize() throws Throwable {
+	public Trips(String tripId, String routeId, String serviceId, String tripHeadsign, String directionId,
+				 String blockId, String shapeId){
+		//converting tripID into int for keys
+		byte[] tripIdBytes = tripId.getBytes(StandardCharsets.US_ASCII);
+		StringBuilder tripIDByteString = new StringBuilder();
+		for (byte tripIdByte : tripIdBytes) {
+			tripIDByteString.append(tripIdByte);
+		}
+		this.tripId = Integer.parseInt(tripIDByteString.toString());
+		this.routeId = routeId;
+		this.serviceId = serviceId;
+		this.tripHeadsign = tripHeadsign;
+		this.directionId = directionId;
+		this.blockId = blockId;
+		this.shapeId = shapeId;
 
 	}
 
-	public Trips(){
-
-	}
-
-	public String getTripId(){
-		return "";
+	public int getTripId(){
+		return tripId;
 	}
 
 	public String getRouteId(){
-		return "";
+		return routeId;
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param tripId
 	 */
 	public void setTripId(String tripId){
@@ -47,7 +57,7 @@ public class Trips {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param routeId
 	 */
 	public void setRouteId(String routeId){
@@ -59,7 +69,7 @@ public class Trips {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param tripId
 	 */
 	public Trips searchTripId(String tripId){
@@ -67,7 +77,7 @@ public class Trips {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param routeId
 	 */
 	public Trips searchByRouteId(String routeId){
@@ -75,7 +85,7 @@ public class Trips {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param tripId
 	 */
 	public void tripVerify(String tripId){
@@ -83,7 +93,7 @@ public class Trips {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param stopId
 	 */
 	public void searchForNextTrip(String stopId){
@@ -91,7 +101,7 @@ public class Trips {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param file
 	 */
 	public void importTrip(File file){
@@ -99,7 +109,7 @@ public class Trips {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param file
 	 */
 	public void exportTrip(File file){
@@ -107,7 +117,7 @@ public class Trips {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param tripId
 	 */
 	public void displayTrip(String tripId){
@@ -115,7 +125,7 @@ public class Trips {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param tripId
 	 */
 	public Trips searchForTrip(String tripId){
@@ -123,7 +133,7 @@ public class Trips {
 	}
 
 	/**
-	 * 
+	 * NOT IMPLEMENTED
 	 * @param obj
 	 */
 	public void update(Object obj){
