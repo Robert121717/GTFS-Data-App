@@ -51,7 +51,7 @@ public class Controller{
 		File file;
 		String header1 = "";
 		String header2 = "";
-		int i = 1;
+
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Open File");
 		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.txt"));
@@ -68,13 +68,13 @@ public class Controller{
 			header2 = splitHeader[1];
 
 			if(header1.equalsIgnoreCase("stop_id")){
-				importStop();
+				importStop(file);
 			} else if (header1.equalsIgnoreCase("route_id") && header2.equalsIgnoreCase("agency_id")){
-				importRoute();
+				importRoute(file);
 			} else if (header1.equalsIgnoreCase("trip_id") && header2.equalsIgnoreCase("arrival_time")){
-				importStopTime();
+				importStopTime(file);
 			} else if (header1.equalsIgnoreCase("route_id") && header2.equalsIgnoreCase("service_id")){
-				importTrip();
+				importTrip(file);
 			}else{
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setTitle("Error Dialog");
@@ -107,27 +107,27 @@ public class Controller{
 	 *
 	 * @param
 	 */
-	private void importRoute(){
+	private void importRoute(File file){
 		//TODO
 		//make file into a list of Route objects
 	//make list of all the routes in the file and call the importRoute in gtfs to import each stop in list
 	}
 
-	private void importStop(){
+	private void importStop(File file){
 		//TODO
 		//make file into a list of Stop objects
 		//make list of all the stops in the file and call the importStop in gtfs to import each stop in list
 
 	}
 
-	private void importStopTime(){
+	private void importStopTime(File file){
 		//TODO
 		//make file into a list of StopTime objects
 		//make list of all the stopTimes in the file and call the importStopTimes in gtfs to import each stoptime in list
 
 	}
 
-	private void importTrip(){
+	private void importTrip(File file){
 		//TODO
 		//make file into a list of Route objects
 		//make list of all the trips in the file and call the importTrip in gtfs to import each trip in list
