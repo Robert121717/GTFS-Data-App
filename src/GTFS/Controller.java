@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javafx.fxml.FXML;
@@ -40,7 +41,7 @@ public class Controller{
 	 * @param
 	 */
 	@FXML
-	private boolean importFiles(){
+	private void importFiles(){
 		//TODO
 		//if stop file call importstop method.
 		//else if trip file call importtrip
@@ -51,34 +52,51 @@ public class Controller{
 		File file;
 		String header1 = "";
 		String header2 = "";
+		FileChooser chooser = new FileChooser();
+		chooser.setTitle("Open File");
+		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.txt"));
+		List<File> files = chooser.showOpenMultipleDialog(null);
+
 		try{
-			FileChooser chooser = new FileChooser();
-			chooser.setTitle("Open File");
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.txt"));
-			file = chooser.showOpenDialog(null);
-			if(file != null){
-				Scanner in = new Scanner(file);
-				ArrayList<String> lines = new ArrayList<>();
-				while (in.hasNextLine()) {
-					lines.add(in.nextLine());
-				}
-				String[] splitHeader = lines.get(1).split(",");
-				header1 = splitHeader[0];
-				header2 = splitHeader[1];
-				if(header1.equalsIgnoreCase("stop_id")){
-					importStop(file);
-				} else if (header1.equalsIgnoreCase("route_id") && header2.equalsIgnoreCase("agency_id")){
-					importRoute(file);
-				} else if (header1.equalsIgnoreCase("trip_id") && header2.equalsIgnoreCase("arrival_time")){
-					importStopTime(file);
-				} else if (header1.equalsIgnoreCase("route_id") && header2.equalsIgnoreCase("service_id")){
-					importTrip(file);
-				}else{
-					Alert alert = new Alert(Alert.AlertType.ERROR);
-					alert.setTitle("Error Dialog");
-					alert.setHeaderText("Incorrect Format");
-					alert.setContentText("Cannot import this file");
-					alert.showAndWait();
+			int size = files.size();
+
+			for(int i = 0; i<size; i++){
+				file = files.get(i);
+				if(file != null){
+					Scanner in = new Scanner(file);
+					ArrayList<String> lines = new ArrayList<>();
+					while (in.hasNextLine()) {
+						lines.add(in.nextLine());
+					}
+					if (lines.size() < 2) {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setTitle("Error Dialog");
+						alert.setHeaderText("Incorrect Format");
+						alert.setContentText("File has too few lines, cannot process");
+						alert.showAndWait();
+						continue;
+					}
+
+					String[] splitHeader = lines.get(1).split(",");
+					header1 = splitHeader[0];
+					header2 = splitHeader[1];
+					if(header1.equalsIgnoreCase("stop_id")){
+						importStop(file);
+					} else if (header1.equalsIgnoreCase("route_id") && header2.equalsIgnoreCase("agency_id")){
+						importRoute(file);
+
+					} else if (header1.equalsIgnoreCase("trip_id") && header2.equalsIgnoreCase("arrival_time")){
+						importStopTime(file);
+					} else if (header1.equalsIgnoreCase("route_id") && header2.equalsIgnoreCase("service_id")){
+						importTrip(file);
+					} else {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setTitle("Error Dialog");
+						alert.setHeaderText("Incorrect Format");
+						alert.setContentText("Cannot import this file");
+						alert.showAndWait();
+					}
+					in.close();
 				}
 			}
 		} catch (FileNotFoundException ex){
@@ -88,9 +106,6 @@ public class Controller{
 			alert.setContentText(ex.getMessage());
 			alert.showAndWait();
 		}
-
-
-		return false;
 	}
 
 	/**
