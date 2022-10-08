@@ -1,9 +1,5 @@
 package GTFS;
 
-
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author nairac
  * @version 1.0
@@ -14,16 +10,26 @@ public class Trip {
 	private final int tripId;
 	private final int routeId;
 	private final int hashId;
-	private String headSign;
-	private String serviceId;
-	private String directionId;
-	private String blockId;
-	private String shapeId;
+	private String headSign = "";
+	private String serviceId = "";
+	private String directionId = "";
+	private String blockId = "";
+	private String shapeId = "";
 
 	protected Trip(int tripId, int routeId, int hashId) {
 		this.tripId = tripId;
 		this.routeId = routeId;
 		this.hashId = hashId;
+	}
+
+	/**
+	 * Verify that the trip ID used for the search matches the ID of this trip.
+	 * @param id The ID used for the search. This ID can be either of the following:
+	 *          the trip ID (String representation).
+	 *          the hash ID (ID used to store this object in the hash table).
+	 */
+	protected boolean verifyTrip(int id){
+		return tripId == id || hashId == id;
 	}
 
 	protected void setHeadSign(String headSign) {
@@ -76,15 +82,5 @@ public class Trip {
 
 	protected String getShapeId() {
 		return shapeId;
-	}
-
-	/**
-	 * Verify that the trip ID used for the search matches the ID of this trip.
-	 * @param id The ID used for the search. This ID can be either of the following:
-	 *          the trip ID (String representation).
-	 *          the hash ID (ID used to store this object in the hash table).
-	 */
-	protected boolean verifyTrip(int id){
-		return tripId == id || hashId == id;
 	}
 }

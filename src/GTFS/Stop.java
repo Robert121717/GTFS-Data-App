@@ -1,15 +1,12 @@
 package GTFS;
 
-
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author nairac
  * @version 1.0
  * @created 05-Oct-2022 8:14:32 PM
  */
 public class Stop {
-//these can be updated so not private
+
 	private final int stopID;
 	private String stopName;
 	private double stopLat;
@@ -20,7 +17,7 @@ public class Stop {
 	 * constructor for Stop
 	 * @param stopID the string of the stopID
 	 */
-	public Stop(int stopID){
+	protected Stop(int stopID){
 		this.stopID = stopID;
 		this.stopName = "";
 		this.stopLat = 0;
@@ -32,7 +29,7 @@ public class Stop {
 	 * verify that the stop_id used for finding the stop matches what the stop has.
 	 * @param stopId the stop_id used for finding the stop
 	 */
-	protected boolean stopVerify(int stopId){
+	protected boolean verifyStop(int stopId){
 		return this.stopID == stopId;
 	}
 
@@ -88,5 +85,4 @@ public class Stop {
 	protected String getStopDesc() {
 		return stopDesc;
 	}
-
 }

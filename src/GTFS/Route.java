@@ -1,7 +1,5 @@
 package GTFS;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author nairac
  * @version 1.0
@@ -10,17 +8,25 @@ import java.nio.charset.StandardCharsets;
 public class Route {
 
 	private final int routeID;
-	private String agencyID;
-	private String shortName;
-	private String longName;
-	private String routeType;
-	private String routeDesc;
-	private String routeURL;
-	private String routeColor;
-	private String routeTextColor;
+	private String agencyID = "";
+	private String shortName = "";
+	private String longName = "";
+	private String routeType = "";
+	private String routeDesc = "";
+	private String routeURL = "";
+	private String routeColor = "";
+	private String routeTextColor = "";
 
 	protected Route(int routeID) {
 		this.routeID = routeID;
+	}
+
+	/**
+	 * Verify that the Route_ID used for the search matches the actual Route_ID.
+	 * @param routeID the Route_ID used for the search.
+	 */
+	protected boolean verifyRoute(int routeID){
+		return this.routeID == routeID;
 	}
 
 	protected void setAgencyID(String agencyID) {
@@ -53,14 +59,6 @@ public class Route {
 
 	protected void setRouteColor(String routeColor) {
 		this.routeColor = routeColor;
-	}
-
-	/**
-	 * Verify that the Route_ID used for the search matches the actual Route_ID.
-	 * @param routeID the Route_ID used for the search.
-	 */
-	protected boolean verifyRoute(int routeID){
-		return this.routeID == routeID;
 	}
 
 	protected int getRouteId(){
