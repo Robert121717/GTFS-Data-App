@@ -11,133 +11,80 @@ import java.nio.charset.StandardCharsets;
  */
 public class Trip {
 
-	private int tripId;
-	private String routeId;
-	private String tripHeadsign;
-	private StopTime stopTimesInTrip;
+	private final int tripId;
+	private final int routeId;
+	private final int hashId;
+	private String headSign;
 	private String serviceId;
 	private String directionId;
 	private String blockId;
 	private String shapeId;
-	//private StopTimes allStopTimes; Do we need this?
 
-
-	public Trip(String tripId, String routeId, String serviceId, String tripHeadsign, String directionId,
-				String blockId, String shapeId){
-		//converting tripID into int for keys
-		byte[] tripIdBytes = tripId.getBytes(StandardCharsets.US_ASCII);
-		StringBuilder tripIDByteString = new StringBuilder();
-		for (byte tripIdByte : tripIdBytes) {
-			tripIDByteString.append(tripIdByte);
-		}
-		this.tripId = Integer.parseInt(tripIDByteString.toString());
+	protected Trip(int tripId, int routeId, int hashId) {
+		this.tripId = tripId;
 		this.routeId = routeId;
-		this.serviceId = serviceId;
-		this.tripHeadsign = tripHeadsign;
-		this.directionId = directionId;
-		this.blockId = blockId;
-		this.shapeId = shapeId;
-
+		this.hashId = hashId;
 	}
 
-	public int getTripId(){
+	protected void setHeadSign(String headSign) {
+		this.headSign = headSign;
+	}
+
+	protected void setServiceId(String serviceId) {
+		this.serviceId = serviceId;
+	}
+
+	protected void setDirectionId(String directionId) {
+		this.directionId = directionId;
+	}
+
+	protected void setBlockId(String blockId) {
+		this.blockId = blockId;
+	}
+
+	protected void setShapeId(String shapeId) {
+		this.shapeId = shapeId;
+	}
+
+	protected int getTripId(){
 		return tripId;
 	}
 
-	public String getRouteId(){
+	protected int getRouteId(){
 		return routeId;
 	}
 
-	/**
-	 * NOT IMPLEMENTED
-	 * @param tripId
-	 */
-	public void setTripId(String tripId){
+	protected int getHashId() {
+		return hashId;
+	}
 
+	protected String getHeadSign() {
+		return headSign;
+	}
+
+	protected String getServiceId() {
+		return serviceId;
+	}
+
+	protected String getDirectionId() {
+		return directionId;
+	}
+
+	protected String getBlockId() {
+		return blockId;
+	}
+
+	protected String getShapeId() {
+		return shapeId;
 	}
 
 	/**
-	 * NOT IMPLEMENTED
-	 * @param routeId
+	 * Verify that the trip ID used for the search matches the ID of this trip.
+	 * @param id The ID used for the search. This ID can be either of the following:
+	 *          the trip ID (String representation).
+	 *          the hash ID (ID used to store this object in the hash table).
 	 */
-	public void setRouteId(String routeId){
-
+	protected boolean verifyTrip(int id){
+		return tripId == id || hashId == id;
 	}
-
-	public void updateTrip(){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * @param tripId
-	 */
-	public Trip searchTripId(String tripId){
-		return null;
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * @param routeId
-	 */
-	public Trip searchByRouteId(String routeId){
-		return null;
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * @param tripId
-	 */
-	public void tripVerify(String tripId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * @param stopId
-	 */
-	public void searchForNextTrip(String stopId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * @param file
-	 */
-	public void importTrip(File file){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * @param file
-	 */
-	public void exportTrip(File file){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * @param tripId
-	 */
-	public void displayTrip(String tripId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * @param tripId
-	 */
-	public Trip searchForTrip(String tripId){
-		return null;
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * @param obj
-	 */
-	public void update(Object obj){
-
-	}
-
 }

@@ -9,24 +9,18 @@ import java.nio.charset.StandardCharsets;
  */
 public class Route {
 
-	// route ID should not be changed to prevent bugs in the HashTable.
-	// The route ID is the primary identifier of the object, thus it should not be changed.
 	private final int routeID;
-	private String routeColor;
 	private String agencyID;
 	private String shortName;
 	private String longName;
-	private String routeDesc;
 	private String routeType;
+	private String routeDesc;
 	private String routeURL;
+	private String routeColor;
 	private String routeTextColor;
 
-	/**
-	 * Creates a new Route object.
-	 * @param routeID The ID of the Route as a String, where the integer value of the ID will be determined automatically.
-	 */
-	public Route(String routeID) {
-		this.routeID = toDecimal(routeID);
+	protected Route(int routeID) {
+		this.routeID = routeID;
 	}
 
 	protected void setAgencyID(String agencyID) {
@@ -62,11 +56,11 @@ public class Route {
 	}
 
 	/**
-	 * verify that the Route_ID used for the search matches the actual Route_ID
-	 * @param routeId the Route_ID used for the search
+	 * Verify that the Route_ID used for the search matches the actual Route_ID.
+	 * @param routeID the Route_ID used for the search.
 	 */
-	protected boolean verifyRoute(String routeId){
-		return this.routeID == toDecimal(routeId);
+	protected boolean verifyRoute(int routeID){
+		return this.routeID == routeID;
 	}
 
 	protected int getRouteId(){
@@ -106,20 +100,5 @@ public class Route {
 	}
 	protected double getDistance(){
 		return 0;
-	}
-
-	/**
-	 * Converts each ASCII character in the Route_ID to its decimal representation and appends it an integer.
-	 * @param routeID The corresponding Route_ID as a String.
-	 * @return The Route_ID as an integer, where it will hold the key to the Route object in the relative data structure.
-	 */
-	private int toDecimal(String routeID) {
-		byte[] routeIdBytes = routeID.getBytes(StandardCharsets.US_ASCII);
-
-		StringBuilder routeIDByteString = new StringBuilder();
-		for (byte routeIdByte : routeIdBytes) {
-			routeIDByteString.append(routeIdByte);
-		}
-		return Integer.parseInt(routeIDByteString.toString());
-	}
+	} //TODO
 }
