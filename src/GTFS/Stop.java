@@ -38,8 +38,8 @@ public class Stop {
 	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
-	protected void stopVerify(String stopId){
-
+	protected boolean stopVerify(String stopId){
+		return true;
 	}
 
 	/**
