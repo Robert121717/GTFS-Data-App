@@ -11,3 +11,5 @@ GTFS data structures - use a hashset. Allows for objects to be paired to their r
         - GTFS class should not need individual route, trip, stoptime, and stop Objects.
         - add search stop times method into UML in GTFS class.
         - The controller has imports for each type of file. Copied same structure in GTFS
+
+Route/Stop/Stop-Time/Trip ID's should be immutable/final, since they're the primary identifier of each object. Changing them could lead to issues in the hash tables containing them.
