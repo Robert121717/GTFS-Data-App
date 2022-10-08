@@ -13,7 +13,7 @@ public class Route {
 	// The route ID is the primary identifier of the object, thus it should not be changed.
 	private final int routeID;
 	private String routeColor;
-	private String agency_ID;
+	private String agencyID;
 	private String shortName;
 	private String longName;
 	private String routeDesc;
@@ -29,8 +29,8 @@ public class Route {
 		this.routeID = toDecimal(routeID);
 	}
 
-	protected void setAgency_ID(String agency_ID) {
-		this.agency_ID = agency_ID;
+	protected void setAgencyID(String agencyID) {
+		this.agencyID = agencyID;
 	}
 
 	protected void setShortName(String shortName) {
@@ -74,7 +74,7 @@ public class Route {
 	}
 
 	protected String getAgencyID() {
-		return agency_ID;
+		return agencyID;
 	}
 
 	protected String getShortName() {
