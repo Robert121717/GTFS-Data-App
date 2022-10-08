@@ -22,9 +22,6 @@ public class Route {
 	private String routeURL;
 	private String routeTextColor;
 
-
-
-
 	public Route(String routeID, String agencyId, String routeShortName, String routeLongName, String routeDesc,
 				 String routeType, String routeURL, String routeColor, String routeTextColor){
 
