@@ -20,8 +20,8 @@ public class Stop {
 	 * constructor for Stop
 	 * @param stopID the string of the stopID
 	 */
-	public Stop(String stopID){
-		this.stopID = toDecimal(stopID);
+	public Stop(int stopID){
+		this.stopID = stopID;
 		this.stopName = "";
 		this.stopLat = 0;
 		this.stopLon = 0;
@@ -32,8 +32,8 @@ public class Stop {
 	 * verify that the stop_id used for finding the stop matches what the stop has.
 	 * @param stopId the stop_id used for finding the stop
 	 */
-	protected boolean stopVerify(String stopId){
-		return this.stopID == toDecimal(stopId);
+	protected boolean stopVerify(int stopId){
+		return this.stopID == stopId;
 	}
 
 	/**
@@ -87,22 +87,6 @@ public class Stop {
 
 	protected String getStopDesc() {
 		return stopDesc;
-	}
-
-	/**
-	 * Change each ASCII character from the string into their decimal values
-	 * and concatenates them into one int
-	 * @param stopID the stops stop_id
-	 * @return value of the stop_id
-	 */
-	private int toDecimal(String stopID) {
-		byte[] stopIdBytes = stopID.getBytes(StandardCharsets.US_ASCII);
-
-		StringBuilder routIDByteString = new StringBuilder();
-		for (byte stopIdByte : stopIdBytes) {
-			routIDByteString.append(stopIdByte);
-		}
-		return Integer.parseInt(routIDByteString.toString());
 	}
 
 }
