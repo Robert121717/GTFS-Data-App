@@ -28,13 +28,7 @@ public class Route {
 	public Route(String routeID, String agencyId, String routeShortName, String routeLongName, String routeDesc,
 				 String routeType, String routeURL, String routeColor, String routeTextColor){
 
-		//converting routID into int for keys
-		byte[] routeIdBytes = routeID.getBytes(StandardCharsets.US_ASCII);
-		StringBuilder routIDByteString = new StringBuilder();
-		for (byte routeIdByte : routeIdBytes) {
-			routIDByteString.append(routeIdByte);
-		}
-		this.routeID = Integer.parseInt(routIDByteString.toString());
+		this.routeID = toDecimal(routeID);
 		this.agencyId = agencyId;
 		this.routeShortName = routeShortName;
 		this.routeLongName = routeLongName;
@@ -47,29 +41,9 @@ public class Route {
 
 	/**
 	 * NOT IMPLEMENTED YET
-	 * @param file
-	 */
-	public boolean importRoute(File file){
-		return false;
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param file
-	 */
-	public File exportRoute(File file){
-		return null;
-	}
-
-	public void updateRoute(){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
-	public void displayRoute(String stopId){
+	protected void displayRoute(String stopId){
 
 	}
 
@@ -77,7 +51,7 @@ public class Route {
 	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
-	public void routeVerify(String routeId){
+	protected void routeVerify(String routeId){
 
 	}
 
@@ -85,7 +59,7 @@ public class Route {
 	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
-	public void filterRoute(String routeId){
+	protected void filterRoute(String routeId){
 
 	}
 
@@ -93,7 +67,7 @@ public class Route {
 	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
-	public void plotCoord(Route routeId){
+	protected void plotCoord(Route routeId){
 
 	}
 
@@ -101,7 +75,7 @@ public class Route {
 	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
-	public void plotLocation(Route routeId){
+	protected void plotLocation(Route routeId){
 
 	}
 
@@ -109,7 +83,7 @@ public class Route {
 	 * NOT IMPLEMENTED YET
 	 * @param routeId
 	 */
-	public Route searchRouteId(String routeId){
+	protected Route searchRouteId(String routeId){
 		return null;
 	}
 
@@ -117,7 +91,7 @@ public class Route {
 	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
-	public void searchRouteForStop(String stopId){
+	protected void searchRouteForStop(String stopId){
 
 	}
 
@@ -125,7 +99,7 @@ public class Route {
 	 * NOT IMPLEMENTED YET
 	 * @param
 	 */
-	public void setRouteId(String routeId){
+	protected void setRouteId(String routeId){
 
 	}
 
@@ -133,27 +107,27 @@ public class Route {
 	 * NOT IMPLEMENTED YET
 	 * @param routeColor
 	 */
-	public void setRouteColor(String routeColor){
+	protected void setRouteColor(String routeColor){
 
 	}
 
-	public int getRouteId(){
+	protected int getRouteId(){
 		return routeID;
 	}
 
-	public String getRouteColor(){
+	protected String getRouteColor(){
 		return routeColor;
 	}
 
-	public double getDistance(){
+	protected double getDistance(){
 		return 0;
 	}
 
-	public double getDuration(){
+	protected double getDuration(){
 		return 0;
 	}
 
-	public double getSpeed(){
+	protected double getSpeed(){
 		return 0;
 	}
 
@@ -161,8 +135,17 @@ public class Route {
 	 * NOT IMPLEMENTED YET
 	 * @param obj
 	 */
-	public void update(Object obj){
+	protected void update(Object obj){
 
 	}
 
+	private int toDecimal(String routeID) {
+		byte[] routeIdBytes = routeID.getBytes(StandardCharsets.US_ASCII);
+
+		StringBuilder routeIDByteString = new StringBuilder();
+		for (byte routeIdByte : routeIdBytes) {
+			routeIDByteString.append(routeIdByte);
+		}
+		return Integer.parseInt(routeIDByteString.toString());
+	}
 }

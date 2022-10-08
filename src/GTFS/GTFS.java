@@ -45,7 +45,6 @@ public class GTFS {
 	 */
 	public Stop importStop(Stop newStop){
 		return stops.put(newStop.getStopId(), newStop);
-
 	}
 
 	/**
@@ -55,7 +54,6 @@ public class GTFS {
 	 */
 	public StopTime importStopTime(StopTime newStopTime){
 		return stopTimes.put(newStopTime.getStopTimeID(), newStopTime);
-
 	}
 
 	/**
@@ -65,8 +63,6 @@ public class GTFS {
 	 */
 	public Trip importTrip(Trip newTrip){
 		return trips.put(newTrip.getTripId(), newTrip);
-
-
 	}
 
 	/**
