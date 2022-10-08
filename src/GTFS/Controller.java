@@ -60,7 +60,7 @@ public class Controller{
 		try{
 			int size = files.size();
 
-			for(int i = 0; i<size; i++){
+			for(int i = 0; i < size; i++) {
 				file = files.get(i);
 				if(file != null){
 					Scanner in = new Scanner(file);
@@ -82,12 +82,15 @@ public class Controller{
 					header2 = splitHeader[1];
 					if(header1.equalsIgnoreCase("stop_id")){
 						importStop(file);
-					} else if (header1.equalsIgnoreCase("route_id") && header2.equalsIgnoreCase("agency_id")){
+					} else if (header1.equalsIgnoreCase("route_id")
+							&& header2.equalsIgnoreCase("agency_id")){
 						importRoute(file);
 
-					} else if (header1.equalsIgnoreCase("trip_id") && header2.equalsIgnoreCase("arrival_time")){
+					} else if (header1.equalsIgnoreCase("trip_id")
+							&& header2.equalsIgnoreCase("arrival_time")){
 						importStopTime(file);
-					} else if (header1.equalsIgnoreCase("route_id") && header2.equalsIgnoreCase("service_id")){
+					} else if (header1.equalsIgnoreCase("route_id")
+							&& header2.equalsIgnoreCase("service_id")){
 						importTrip(file);
 					} else {
 						Alert alert = new Alert(Alert.AlertType.ERROR);

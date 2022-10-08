@@ -43,10 +43,6 @@ public class Route {
 		this.routeURL = routeURL;
 		this.routeColor = routeColor;
 		this.routeTextColor = routeTextColor;
-
-
-
-
 	}
 
 	/**

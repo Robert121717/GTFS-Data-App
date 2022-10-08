@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * @author nairac
@@ -23,10 +24,12 @@ public class Driver extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("GTFSController.fxml"));
+        Parent root = FXMLLoader.load(
+                Objects.requireNonNull(getClass().getResource("GTFSController.fxml")));
         Scene scene = new Scene(root);
         stage.setTitle("GTFS Application");
         stage.setScene(scene);
+        stage.setMaximized(true);
         //hi
         stage.show();
     }

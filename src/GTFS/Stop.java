@@ -17,18 +17,8 @@ public class Stop {
 	private double stopLon;
 	private String stopDesc;
 
-
-
-
-
 	public Stop(String stopID, String stopName, String stopLat, String stopLon, String stopDesc){
-		//converting stopID into int for keys
-		byte[] stopIdBytes = stopID.getBytes(StandardCharsets.US_ASCII);
-		StringBuilder routIDByteString = new StringBuilder();
-		for (byte stopIdByte : stopIdBytes) {
-			routIDByteString.append(stopIdByte);
-		}
-		this.stopID = Integer.parseInt(routIDByteString.toString());
+		this.stopID = toDecimal(stopID);
 		this.stopName = stopName;
 		this.stopLat = Double.parseDouble(stopLat);
 		this.stopLon = Double.parseDouble(stopLon);
@@ -38,33 +28,9 @@ public class Stop {
 
 	/**
 	 * NOT IMPLEMENTED YET
-	 * @param stopId
-	 */
-	public Stop searchStopId(String stopId){
-		return null;
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param file
-	 */
-	public boolean importStop(File file){
-		return false;
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param file
-	 */
-	public File exportStops(File file){
-		return null;
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
 	 * @param routeID
 	 */
-	public boolean displayStop(String routeID){
+	protected boolean displayStop(String routeID){
 		return false;
 	}
 
@@ -72,7 +38,7 @@ public class Stop {
 	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
-	public void stopVerify(String stopId){
+	protected void stopVerify(String stopId){
 
 	}
 
@@ -80,56 +46,65 @@ public class Stop {
 	 * NOT IMPLEMENTED YET
 	 * @param stopId
 	 */
-	public void setStopId(String stopId){
-
+	protected void setStopId(String stopId){
+		this.stopID = toDecimal(stopId);
 	}
 
 	/**
 	 * NOT IMPLEMENTED YET
 	 * @param name
 	 */
-	public void setStopName(String name){
-
+	protected void setStopName(String name){
+		this.stopName = name;
 	}
 
 	/**
 	 * NOT IMPLEMENTED YET
 	 * @param latitutde
 	 */
-	public void setStopLat(double latitutde){
-
+	protected void setStopLat(double latitutde){
+		this.stopLat = latitutde;
 	}
 
 	/**
 	 * NOT IMPLEMENTED YET
 	 * @param longitude
 	 */
-	public void setStopLon(double longitude){
-
+	protected void setStopLon(double longitude){
+		this.stopLon = longitude;
 	}
 
-	public int getStopId(){
+	protected int getStopId(){
 		return stopID;
 	}
 
-	public String getStopName(){
+	protected String getStopName(){
 		return stopName;
 	}
 
-	public double getStopLat(){
+	protected double getStopLat(){
 		return stopLat;
 	}
 
-	public double getStopLon(){
+	protected double getStopLon(){
 		return stopLon;
+	}
+
+	private int toDecimal(String stopID) {
+		byte[] stopIdBytes = stopID.getBytes(StandardCharsets.US_ASCII);
+
+		StringBuilder routIDByteString = new StringBuilder();
+		for (byte stopIdByte : stopIdBytes) {
+			routIDByteString.append(stopIdByte);
+		}
+		return Integer.parseInt(routIDByteString.toString());
 	}
 
 	/**
 	 * NOT IMPLEMENTED YET
 	 * @param obj
 	 */
-	public void update(Object obj){
-
+	protected void update(Object obj){
 	}
 
 }
