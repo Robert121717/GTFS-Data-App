@@ -27,14 +27,6 @@ public class Stop {
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param routeID
-	 */
-	protected boolean displayStop(String routeID){
-		return false;
-	}
-
-	/**
 	 * verify that the stop_id used for finding the stop matches what the stop has.
 	 * @param stopId the stop_id used for finding the stop
 	 */
@@ -98,13 +90,6 @@ public class Stop {
 			routIDByteString.append(stopIdByte);
 		}
 		return Integer.parseInt(routIDByteString.toString());
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param obj
-	 */
-	protected void update(Object obj){
 	}
 
 }
