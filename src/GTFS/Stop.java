@@ -1,7 +1,6 @@
 package GTFS;
 
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -11,19 +10,18 @@ import java.nio.charset.StandardCharsets;
  */
 public class Stop {
 //these can be updated so not private
-	private int stopID;
+	private final int stopID;
 	private String stopName;
 	private double stopLat;
 	private double stopLon;
 	private String stopDesc;
 
-	public Stop(String stopID, String stopName, String stopLat, String stopLon, String stopDesc){
+	public Stop(String stopID){
 		this.stopID = toDecimal(stopID);
-		this.stopName = stopName;
-		this.stopLat = Double.parseDouble(stopLat);
-		this.stopLon = Double.parseDouble(stopLon);
-		this.stopDesc = stopDesc;
-
+		this.stopName = "";
+		this.stopLat = 0;
+		this.stopLon = 0;
+		this.stopDesc = "";
 	}
 
 	/**
@@ -35,37 +33,38 @@ public class Stop {
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param stopId
-	 */
-	protected void setStopId(String stopId){
-		this.stopID = toDecimal(stopId);
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param name
+	 * set the name of the stop
+	 * @param name of the stop
 	 */
 	protected void setStopName(String name){
 		this.stopName = name;
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param latitutde
+	 * set latitude of the stop
+	 * @param latitude of the stop
 	 */
-	protected void setStopLat(double latitutde){
-		this.stopLat = latitutde;
+	protected void setStopLat(double latitude){
+		this.stopLat = latitude;
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param longitude
+	 * set longitude of the stop
+	 * @param longitude of stop
 	 */
 	protected void setStopLon(double longitude){
 		this.stopLon = longitude;
 	}
 
+	/**
+	 * set a description of the stop
+	 * @param description description of the stop
+	 */
+	protected void setStopDesc(String description) {
+		this.stopDesc = description;
+	}
+
+	// start of getters
 	protected int getStopId(){
 		return stopID;
 	}
@@ -82,6 +81,16 @@ public class Stop {
 		return stopLon;
 	}
 
+	protected String getStopDesc() {
+		return stopDesc;
+	}
+
+	/**
+	 * Change each ASCII character from the string into their decimal values
+	 * and concatenates them into one int
+	 * @param stopID the stops stop_id
+	 * @return value of the stop_id
+	 */
 	private int toDecimal(String stopID) {
 		byte[] stopIdBytes = stopID.getBytes(StandardCharsets.US_ASCII);
 
