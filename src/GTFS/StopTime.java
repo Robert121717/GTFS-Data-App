@@ -110,32 +110,25 @@ public class StopTime {
 	}
 
 	public String getArrivalTime(){
-		return "";
+		return arrivalTime;
 	}
 
 	public String getDepartureTime(){
-		return "";
+		return departureTime;
 	}
 
 	public String getStopId(){
-		return "";
+		return stopId;
 	}
 
 	public String getTripId(){
-		return "";
+		return tripId;
 	}
 
 	public int getStopTimeID() {
 		return stopTimeID;
 	}
 
-	/**
-	 * 
-	 * @param
-	 */
-	public boolean displaySpeed(String arrivalTime, String departureTime){
-		return false;
-	}
 
 	/**
 	 * 
@@ -145,12 +138,6 @@ public class StopTime {
 		return null;
 	}
 
-	/**
-	 * 
-	 * @param obj
-	 */
-	public void update(Object obj){
 
-	}
 
 }
