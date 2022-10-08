@@ -27,11 +27,6 @@ public class Controller{
 	@FXML
 	private Button importFile;
 
-
-
-
-
-
 	public Controller(){
 		gtfs = new GTFS();
 	}
