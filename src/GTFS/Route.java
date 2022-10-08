@@ -45,11 +45,11 @@ public class Route {
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param routeId
+	 * verify that the route_id used for the search matches what the route has
+	 * @param routeId the route_id used for the search
 	 */
-	protected void routeVerify(String routeId){
-
+	protected boolean routeVerify(String routeId){
+		return this.routeID == toDecimal(routeId);
 	}
 
 	/**

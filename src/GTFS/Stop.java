@@ -35,11 +35,11 @@ public class Stop {
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param stopId
+	 * verify that the stop_id used for finding the stop matches what the stop has.
+	 * @param stopId the stop_id used for finding the stop
 	 */
 	protected boolean stopVerify(String stopId){
-		return true;
+		return this.stopID == toDecimal(stopId);
 	}
 
 	/**
