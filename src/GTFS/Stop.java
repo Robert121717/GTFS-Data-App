@@ -16,6 +16,10 @@ public class Stop {
 	private double stopLon;
 	private String stopDesc;
 
+	/**
+	 * constructor for Stop
+	 * @param stopID the string of the stopID
+	 */
 	public Stop(String stopID){
 		this.stopID = toDecimal(stopID);
 		this.stopName = "";
