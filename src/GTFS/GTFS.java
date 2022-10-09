@@ -12,7 +12,7 @@ import java.util.Scanner;
 import static GTFS.Controller.newAlert;
 
 /**
- * @author nairac, atkinsonr
+ * @author nairac, atkinsonr, morrowc, schmidtrj
  * @version 1.0
  */
 public class GTFS {

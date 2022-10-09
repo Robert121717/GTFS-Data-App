@@ -6,12 +6,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
-import java.io.FileNotFoundException;
 import java.util.Objects;
 
 /**
- * @author nairac
+ * @author nairac, schmidtrj
  * @version 1.0
  * @created 05-Oct-2022 8:14:31 PM
  */

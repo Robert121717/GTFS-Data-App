@@ -3,7 +3,7 @@ package GTFS;
 import java.math.BigInteger;
 
 /**
- * @author nairac, atkinsonr
+ * @author nairac, atkinsonr, morrowc, schmidtrj
  * @version 1.0
  * @created 05-Oct-2022 8:14:32 PM
  */
