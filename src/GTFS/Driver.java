@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.io.FileNotFoundException;
 import java.util.Objects;
 
 /**
@@ -17,7 +19,6 @@ public class Driver extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
     }
 
     @Override
@@ -29,7 +30,12 @@ public class Driver extends Application {
         Scene scene = new Scene(root);
         stage.setTitle("GTFS Application");
         stage.setScene(scene);
-        stage.getIcons().add(new Image("stage icon.png"));
+        try {
+            stage.getIcons().add(new Image("stage icon.png"));
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Please download the stage icon image for it to be displayed.");
+        }
         //hi
         Controller controller = loader.getController();
         controller.setStage(stage);
