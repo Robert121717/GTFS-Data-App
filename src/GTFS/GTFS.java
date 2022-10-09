@@ -86,7 +86,7 @@ public class GTFS {
 	}
 
 	private void importRoute(boolean hasLine, Scanner in) {
-		if(hasLine) {
+		while(hasLine) {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
 			Route route = new Route(toDecimal(parts[0]));
@@ -103,7 +103,7 @@ public class GTFS {
 
 			routes.put(route.getRouteId(), route);
 			lastAdded += route.toString();
-			importRoute(in.hasNextLine(), in);
+			hasLine = in.hasNextLine();
 		}
 	}
 
@@ -126,7 +126,7 @@ public class GTFS {
 	}
 
 	private void importStop(boolean hasLine, Scanner in) {
-		if(hasLine) {
+		while(hasLine) {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
 			Stop stop = new Stop(toDecimal(parts[0]));
@@ -137,7 +137,7 @@ public class GTFS {
 
 			stops.put(stop.getStopId(), stop);
 			lastAdded += stop.toString();
-			importStop(in.hasNextLine(), in);
+			hasLine = in.hasNextLine();
 		}
 	}
 
@@ -160,7 +160,7 @@ public class GTFS {
 	}
 
 	private void importStopTime(boolean hasLine, Scanner in) {
-		if(hasLine) {
+		while(hasLine) {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
 			StopTime ST = new StopTime(toDecimal(parts[3]), toDecimal(parts[0]),
@@ -172,7 +172,7 @@ public class GTFS {
 
 			stopTimes.put(ST.getHashId(), ST);
 			lastAdded += ST.toString();
-			importStop(in.hasNextLine(), in);
+			hasLine = in.hasNextLine();
 		}
 	}
 
