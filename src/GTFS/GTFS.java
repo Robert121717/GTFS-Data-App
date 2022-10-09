@@ -1,8 +1,13 @@
 package GTFS;
 
 
+import javafx.scene.control.Alert;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
+import java.util.Scanner;
 
 /**
  * @author nairac
@@ -35,12 +40,33 @@ public class GTFS {
 	 * @param newRoute- route being added to hashtable
 	 * @return returns the newly added Route
 	 */
-	public Route importRoute(Route newRoute){
-		return routes.put(newRoute.getRouteId(), newRoute);
-		//maybe we can use the Route for something in the future. Otherwise, change to void/boolean
-		//Same goes for other import methods in GTFS
+	public void importRoute(File file){
+		try (Scanner in = new Scanner(file)){
+			in.nextLine();
+			importRoute(in.hasNextLine(), in);
+		} catch(NumberFormatException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("Unexpected Value");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		} catch(FileNotFoundException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("File Not Found");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		}
+	}
+	private void importRoute(boolean hasLine, Scanner in){
+		if(hasLine) {
+			String line = in.nextLine();
+			String[] parts = line.split(",");
+			Route route = new Route(toDecimal(parts[0]));
 
-
+			routes.put(route.getRouteId(), route);
+			importStop(in.hasNextLine(), in);
+		}
 	}
 
 	/**
@@ -48,8 +74,36 @@ public class GTFS {
 	 * @param newStop- stop being added to hashtable
 	 * @return returns the newly added Stop
 	 */
-	public Stop importStop(Stop newStop){
-		return stops.put(newStop.getStopId(), newStop);
+	public void importStop(File file){
+		try (Scanner in = new Scanner(file)){
+			in.nextLine();
+			importStop(in.hasNextLine(), in);
+		} catch(NumberFormatException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("Unexpected Value");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		} catch(FileNotFoundException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("File Not Found");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		}
+	}
+	private void importStop(boolean hasLine, Scanner in){
+		if(hasLine) {
+			String line = in.nextLine();
+			String[] parts = line.split(",");
+			Stop stop = new Stop(toDecimal(parts[0]));
+			stop.setStopName(parts[1]);
+			stop.setStopDesc(parts[2]);
+			stop.setStopLat(Double.parseDouble(parts[3]));
+			stop.setStopLon(Double.parseDouble(parts[4]));
+			stops.put(stop.getStopId(), stop);
+			importStop(in.hasNextLine(), in);
+		}
 	}
 
 	/**
