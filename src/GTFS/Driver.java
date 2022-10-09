@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.util.Objects;
 
@@ -24,12 +25,11 @@ public class Driver extends Application {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(
                 getClass().getResource("GTFSController.fxml")));
         Parent root = loader.load();
+
         Scene scene = new Scene(root);
         stage.setTitle("GTFS Application");
         stage.setScene(scene);
-//        TODO keep
-//        stage.setMaximized(true);
-//        stage.getIcons().add([insert image path here]) to add icon to application
+        stage.getIcons().add(new Image("stage icon.png"));
         //hi
         Controller controller = loader.getController();
         controller.setStage(stage);

@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -30,51 +31,58 @@ import javafx.stage.Stage;
 public class Controller implements Initializable {
 	private final GTFS gtfs;
 	private Stage stage;
-
 	private Popup importPu;
 	@FXML
 	private VBox dropImportVBox;
-
-	@FXML
 	private TextArea importEntry;
 	@FXML
-	private TextArea recentUploadDisp;
+	private TextArea recentUploadDisplay;
 	@FXML
 	private Label recentUploadLabel;
-
 	@FXML
-	private Label test;
-
+	private TextField searchTF;
 	@FXML
-	private Button importFile;
+	private VBox mainVBox;
+	@FXML
+	private MenuItem stopMI;
+	@FXML
+	private MenuItem stopTimeMI;
+	@FXML
+	private MenuItem routeMI;
+	@FXML
+	private MenuItem tripMI;
+	@FXML
+	private MenuItem closeMI;
+	@FXML
+	private Menu menu;
+	private String searchType;
 
 	public Controller(){
 		gtfs = new GTFS();
 	}
 
 	public void initialize(URL url, ResourceBundle rb) {
+		searchTF.setDisable(true);
 		recentUploadLabel.setVisible(false);
 		initializeDropBox();
+		initializeMenuItems();
+		mainVBox.setStyle("-fx-background-color: " +
+				"radial-gradient(focus-distance 0% , center 50% 50% , radius 40% , #E5E6E4, #F9F9F8);");
 	}
 
-	/**
-	 *checks what kind of file we are importing and calls the related methods
-	 * @param
-	 */
 	@FXML
 	private void importFiles() {
+		FileChooser fc = new FileChooser();
 
-		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Import Files");
-		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.txt"));
-		List<File> files = chooser.showOpenMultipleDialog(null);
+		fc.setTitle("Import Files");
+		fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.txt"));
+		List<File> files = fc.showOpenMultipleDialog(null);
 
 		if (files != null) {
 			for (File file : files) {
 				gtfs.importFile(file);
 			}
-
-			recentUploadDisp.setText(gtfs.getNewestImport());
+			recentUploadDisplay.setText(gtfs.getNewestImport());
 			recentUploadLabel.setVisible(true);
 		}
 	}
@@ -83,7 +91,7 @@ public class Controller implements Initializable {
 	private void importPopup() {
 		if (importPu != null && importPu.isShowing()) importPu.hide();
 
-		importPu = new Popup();								//create prompt for user to type data into
+		importPu = new Popup();								//create popup prompt for user to type data into
 		importPu.setWidth(400); importPu.setHeight(200);
 
 		Pane background = new Pane();
@@ -94,63 +102,42 @@ public class Controller implements Initializable {
 		stack.setPadding(new Insets(5, 5, 10, 5));
 
 		HBox header = new HBox(5);
-		header.setPrefWidth(400); header.setPrefHeight(50); header.setAlignment(Pos.TOP_LEFT);
+		header.setPrefWidth(400); header.setPrefHeight(50); header.setAlignment(Pos.TOP_RIGHT);
 
-		Button closeButton = new Button("Close"); closeButton.setOnAction(e -> importPu.hide()); 	//close popup
+		Button closeButton = new Button("Cancel"); closeButton.setOnAction(e -> importPu.hide()); 	//close popup
 
-		header.getChildren().addAll(closeButton,
-				new Label("Please enter the data you'd like to import below:"));
-		Label formatRequired = new Label("Format: {Stop Time/Stop/Route/Trip}, {data being imported}");
+		header.getChildren().addAll(closeButton);
+		Label inputPrompt = new Label("Please Enter the Data to Import Below");
+		inputPrompt.setFont(new Font(15));
 
 		importEntry = new TextArea();
+		importEntry.setPromptText("Format: {Stop / Stop Time / Route / Trip}, data");
 		importEntry.setPadding(new Insets(0, 10, 0, 10));
 
-		Button send = new Button("Import");
+		Button send = new Button("Send");
 		send.setOnAction(e -> {
-			gtfs.importText(importEntry.getText());				//import the user input into the gtfs data structures
-			recentUploadDisp.setText(gtfs.getNewestImport()); 		//display the imported data to user to show it was successful
+			gtfs.importText(importEntry.getText());					//import the user input into the gtfs data structures
+			recentUploadDisplay.setText(gtfs.getNewestImport()); 	//display the imported data to user to show it was successful
 			recentUploadLabel.setVisible(true); importPu.hide();
 		});
 
-		stack.getChildren().addAll(header, formatRequired, importEntry, send);
+		stack.getChildren().addAll(header, inputPrompt, importEntry, send);
 		background.getChildren().add(stack);
 
-		background.setStyle("-fx-background-color: white;");
-		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.BLACK, 15, 0.05, 0, 0);
+		background.setStyle("-fx-background-color: white; -fx-background-radius: 8 8 8 8;" +
+				"-fx-background-color: " +
+				"radial-gradient(focus-distance 0% , center 50% 50% , radius 40% , #E5E6E4, #F9F9F8);");
+		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
 		background.setEffect(shadow);
 
 		importPu.getContent().add(background);
 		importPu.show(stage);
 	}
 
-	private void initializeDropBox() {
-		dropImportVBox.setOnDragOver(event -> {
-			Dragboard dropBox = event.getDragboard();
-
-			if (dropBox.hasFiles()) {
-				event.acceptTransferModes(TransferMode.COPY);
-			} else {
-				event.consume();
-			}
-		});
-		dropImportVBox.setOnDragDropped(event -> {
-			Dragboard dropBox = event.getDragboard();
-
-			if (dropBox.hasFiles()) {
-				for (File file : dropBox.getFiles()) {
-					gtfs.importFile(file);
-				}
-				recentUploadDisp.setText(gtfs.getNewestImport());
-			}
-			event.consume();
-		});
-	}
-
 	@FXML
 	private void exportFiles() {
 
 	}
-
 
 	private void searchStopId() {
 
@@ -206,6 +193,53 @@ public class Controller implements Initializable {
 
 	private void search(){
 
+	}
+
+	private void initializeDropBox() {
+		dropImportVBox.setOnDragOver(event -> {			// allows user to drag files into VBox
+			Dragboard dropBox = event.getDragboard();
+
+			if (dropBox.hasFiles()) {
+				event.acceptTransferModes(TransferMode.COPY);
+			} else {
+				event.consume();
+			}
+		});
+		dropImportVBox.setOnDragDropped(event -> {			// handles files once dropped into VBox
+			Dragboard dropBox = event.getDragboard();
+
+			if (dropBox.hasFiles()) {
+				for (File file : dropBox.getFiles()) {
+					gtfs.importFile(file);
+				}
+				recentUploadDisplay.setText(gtfs.getNewestImport());
+				recentUploadLabel.setVisible(true);
+			}
+			event.consume();
+		});
+	}
+
+	private void initializeMenuItems() {
+		stopMI.setOnAction(e -> {
+			menu.setText("Stop"); searchType = "Stop";
+			searchTF.setDisable(false);
+		});
+		stopTimeMI.setOnAction(e -> {
+			menu.setText("Time"); searchType = "Stop Time";
+			searchTF.setDisable(false);
+		});
+		routeMI.setOnAction(e -> {
+			menu.setText("Route"); searchType = "Route";
+			searchTF.setDisable(false);
+		});
+		tripMI.setOnAction(e -> {
+			menu.setText("Trip"); searchType = "Trip";
+			searchTF.setDisable(false);
+		});
+		closeMI.setOnAction(e -> {
+			menu.setText("Select"); searchType = "";
+			searchTF.setDisable(true);
+		});
 	}
 
 	protected void setStage(Stage stage) {

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GTFS.Controller">
+<VBox fx:id="mainVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GTFS.Controller">
    <children>
       <HBox alignment="CENTER" prefHeight="58.0" prefWidth="600.0">
          <children>
@@ -26,13 +26,13 @@
             </Label>
             <MenuBar prefHeight="26.0" prefWidth="98.0">
               <menus>
-                <Menu mnemonicParsing="false" text="Select">
+                <Menu fx:id="menu" mnemonicParsing="false" text="Select">
                   <items>
-                        <MenuItem mnemonicParsing="false" text="Stop" />
-                        <MenuItem mnemonicParsing="false" text="Stop Time" />
-                        <MenuItem mnemonicParsing="false" text="Route" />
-                        <MenuItem mnemonicParsing="false" text="Trip" />
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem fx:id="stopMI" mnemonicParsing="false" text="Stop" />
+                        <MenuItem fx:id="stopTimeMI" mnemonicParsing="false" text="Stop Time" />
+                        <MenuItem fx:id="routeMI" mnemonicParsing="false" text="Route" />
+                        <MenuItem fx:id="tripMI" mnemonicParsing="false" text="Trip" />
+                        <MenuItem fx:id="closeMI" mnemonicParsing="false" text="Close" />
                   </items>
                 </Menu>
               </menus>
@@ -40,7 +40,7 @@
                   <Insets right="20.0" top="9.0" />
                </HBox.margin>
             </MenuBar>
-            <TextField fx:id="search" alignment="TOP_LEFT" onAction="#exportFiles" text="Search">
+            <TextField fx:id="searchTF" alignment="TOP_LEFT" onAction="#exportFiles" promptText="Search">
                <HBox.margin>
                   <Insets right="10.0" top="10.0" />
                </HBox.margin>
@@ -82,10 +82,13 @@
                               <Font size="17.0" />
                            </font>
                         </Label>
-                        <TextArea fx:id="recentUploadDisp" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="174.0" wrapText="true">
+                        <TextArea fx:id="recentUploadDisplay" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="174.0" promptText="Recently uploaded files will be shown here." wrapText="true">
                            <VBox.margin>
                               <Insets bottom="8.0" right="8.0" />
                            </VBox.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
                         </TextArea>
                      </children>
                   </VBox>

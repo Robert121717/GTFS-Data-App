@@ -17,27 +17,23 @@ import static GTFS.Controller.newAlert;
  */
 public class GTFS {
 
-	//Change UML to show that GTFS has four hashtables, not Lists.
-	//Do we need to put all of these in a single list??? or keep separate?
 	private final Hashtable<Integer, Route> routes;
 	private final Hashtable<Integer, Stop> stops;
 	private final Hashtable<Integer, StopTime> stopTimes;
 	private final Hashtable<Integer, Trip> trips;
 	private String lastAdded;
 
-
-
 	public GTFS(){
 		routes = new Hashtable<>();
 		stops = new Hashtable<>();
 		stopTimes = new Hashtable<>();
 		trips = new Hashtable<>();
-
 	}
 
 	protected void importText(String text) {
 
 	}
+
 	protected void importFile(File file) {
 		try(Scanner in = new Scanner(file)) {
 
@@ -75,7 +71,7 @@ public class GTFS {
 	 * @param newRoute- route being added to hashtable
 	 * @return returns the newly added Route
 	 */
-	public void importRoute(File file) {
+	protected void importRoute(File file) {
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importRoute(in.hasNextLine(), in);
@@ -110,7 +106,7 @@ public class GTFS {
 	 * @param newStop- stop being added to hashtable
 	 * @return returns the newly added Stop
 	 */
-	public void importStop(File file) {
+	protected void importStop(File file) {
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importStop(in.hasNextLine(), in);
@@ -128,10 +124,11 @@ public class GTFS {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
 			Stop stop = new Stop(toDecimal(parts[0]));
-			stop.setStopName(parts[1]);
-			stop.setStopDesc(parts[2]);
+
+			stop.setStopName(parts[1]); stop.setStopDesc(parts[2]);
 			stop.setStopLat(Double.parseDouble(parts[3]));
 			stop.setStopLon(Double.parseDouble(parts[4]));
+
 			stops.put(stop.getStopId(), stop);
 			lastAdded += stop.toString();
 			importStop(in.hasNextLine(), in);
@@ -143,7 +140,7 @@ public class GTFS {
 	 * @param newStopTime - stoptime being added to hashtable
 	 * @return returns newly added stoptime
 	 */
-	public void importStopTime(File file) {
+	protected void importStopTime(File file) {
 		try(Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importStopTime(in.hasNextLine(), in);
@@ -178,7 +175,7 @@ public class GTFS {
 	 * @param newTrip- trip being added to hashtable
 	 * @return returns newly added stoptime
 	 */
-	public void importTrip(File file) {
+	protected void importTrip(File file) {
 		try(Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importTrip(in.hasNextLine(), in);
