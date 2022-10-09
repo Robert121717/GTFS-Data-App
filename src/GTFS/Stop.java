@@ -89,8 +89,6 @@ public class Stop {
 	}
 
 	public String toString(){
-		String info = "";
-		info = "" + stopID + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
-		return info;
+		return "" + stopID + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
 	}
 }

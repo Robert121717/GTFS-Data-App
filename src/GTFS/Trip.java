@@ -85,4 +85,9 @@ public class Trip {
 	protected String getShapeId() {
 		return shapeId;
 	}
+
+	public String toString(){
+		return "" + tripId + "," + routeId + "," + hashId + "," + headSign + "," +
+				serviceId + "," + directionId + "," + blockId + "," + shapeId;
+	}
 }

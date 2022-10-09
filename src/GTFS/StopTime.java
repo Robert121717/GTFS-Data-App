@@ -94,4 +94,9 @@ public class StopTime {
 	protected BigInteger getHashId() {
 		return hashId;
 	}
+
+	public String toString(){
+		return "" + stopId + "," + tripId + "," + hashId + "," + arrivalTime + "," +
+				departureTime + "," + stopHeadSign + "," + pickUpType + "," + dropOffType + "," + stopSequence;
+	}
 }

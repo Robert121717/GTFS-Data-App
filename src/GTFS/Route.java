@@ -101,4 +101,9 @@ public class Route {
 	protected double getDistance(){
 		return 0;
 	} //TODO
+
+	public String toString(){
+		return "" + routeID + "," + agencyID + "," + shortName + "," + longName +
+				"," +routeType + "," + routeDesc + "," + routeURL  + "," + routeColor + "," + routeTextColor;
+	}
 }
