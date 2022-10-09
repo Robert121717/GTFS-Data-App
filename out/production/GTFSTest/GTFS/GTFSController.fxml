@@ -8,8 +8,10 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <VBox fx:id="mainVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GTFS.Controller">
@@ -62,12 +64,22 @@
                   <Insets />
                </opaqueInsets>
             </VBox>
+            <Line endX="-100.0" endY="311.0" startX="-100.0" />
             <VBox fx:id="dropImportVBox" alignment="CENTER" prefHeight="274.0" prefWidth="251.0">
                <children>
-                  <Label alignment="TOP_CENTER" prefHeight="134.0" prefWidth="114.0" text="Drag and Drop File" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="24.0" />
-                     </font></Label>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <BorderPane fx:id="dropBorderPane" prefHeight="198.0" prefWidth="198.0">
+                           <center>
+                              <Label alignment="TOP_CENTER" prefHeight="89.0" prefWidth="123.0" text="Drag and Drop File" textAlignment="CENTER" wrapText="true">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                           </center>
+                        </BorderPane>
+                     </children>
+                  </HBox>
                </children>
             </VBox>
             <VBox prefHeight="312.0" prefWidth="178.0">
