@@ -1,6 +1,6 @@
 package GTFS;
 
-import java.awt.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,7 +11,14 @@ import java.util.Scanner;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 
 /**
  * @author nairac
@@ -20,6 +27,10 @@ import javafx.stage.FileChooser;
  */
 public class Controller{
 	private final GTFS gtfs;
+	private Stage stage;
+
+	@FXML
+	private TextField importEntry;
 
 	@FXML
 	private Label test;
@@ -36,7 +47,7 @@ public class Controller{
 	 * @param
 	 */
 	@FXML
-	private void importFiles(){
+	private void importFiles() {
 		//TODO
 		//if stop file call importstop method.
 		//else if trip file call importtrip
@@ -52,132 +63,127 @@ public class Controller{
 		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.txt"));
 		List<File> files = chooser.showOpenMultipleDialog(null);
 
-		try{
-			int size = files.size();
-
-			for(int i = 0; i < size; i++) {
-				file = files.get(i);
-				if(file != null){
-					Scanner in = new Scanner(file);
-					ArrayList<String> lines = new ArrayList<>();
-					while (in.hasNextLine()) {
-						lines.add(in.nextLine());
-					}
-					if (lines.size() < 2) {
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						alert.setTitle("Error Dialog");
-						alert.setHeaderText("Incorrect Format");
-						alert.setContentText("File has too few lines, cannot process");
-						alert.showAndWait();
-						continue;
-					}
-
-					String[] splitHeader = lines.get(1).split(",");
-					header1 = splitHeader[0];
-					header2 = splitHeader[1];
-					if(header1.equalsIgnoreCase("stop_id")){
-						importStop(file);
-					} else if (header1.equalsIgnoreCase("route_id")
-							&& header2.equalsIgnoreCase("agency_id")){
-						importRoute(file);
-
-					} else if (header1.equalsIgnoreCase("trip_id")
-							&& header2.equalsIgnoreCase("arrival_time")){
-						importStopTime(file);
-					} else if (header1.equalsIgnoreCase("route_id")
-							&& header2.equalsIgnoreCase("service_id")){
-						importTrip(file);
-					} else {
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						alert.setTitle("Error Dialog");
-						alert.setHeaderText("Incorrect Format");
-						alert.setContentText("Cannot import this file");
-						alert.showAndWait();
-					}
-					in.close();
-				}
-			}
-		} catch (FileNotFoundException ex){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("File Not Found");
-			alert.setContentText(ex.getMessage());
-			alert.showAndWait();
-		}
+//		try{
+//			int size = files.size();
+//
+//			for(int i = 0; i < size; i++) {
+//				file = files.get(i);
+//				if(file != null){
+//					Scanner in = new Scanner(file);
+//					ArrayList<String> lines = new ArrayList<>();
+//					while (in.hasNextLine()) {
+//						lines.add(in.nextLine());
+//					}
+//					if (lines.size() < 2) {
+//						Alert alert = new Alert(Alert.AlertType.ERROR);
+//						alert.setTitle("Error Dialog");
+//						alert.setHeaderText("Incorrect Format");
+//						alert.setContentText("File has too few lines, cannot process");
+//						alert.showAndWait();
+//						continue;
+//					}
+//
+//					String[] splitHeader = lines.get(1).split(",");
+//					header1 = splitHeader[0];
+//					header2 = splitHeader[1];
+//					if(header1.equalsIgnoreCase("stop_id")){
+//
+//					} else if (header1.equalsIgnoreCase("route_id")
+//							&& header2.equalsIgnoreCase("agency_id")){
+//
+//
+//					} else if (header1.equalsIgnoreCase("trip_id")
+//							&& header2.equalsIgnoreCase("arrival_time")){
+//
+//					} else if (header1.equalsIgnoreCase("route_id")
+//							&& header2.equalsIgnoreCase("service_id")){
+//
+//					} else {
+//						Alert alert = new Alert(Alert.AlertType.ERROR);
+//						alert.setTitle("Error Dialog");
+//						alert.setHeaderText("Incorrect Format");
+//						alert.setContentText("Cannot import this file");
+//						alert.showAndWait();
+//					}
+//					in.close();
+//				}
+//			}
+//		} catch (FileNotFoundException ex){
+//			Alert alert = new Alert(Alert.AlertType.ERROR);
+//			alert.setTitle("Error Dialog");
+//			alert.setHeaderText("File Not Found");
+//			alert.setContentText(ex.getMessage());
+//			alert.showAndWait();
+//		}
 	}
 
-	/**
-	 * NOT IMPLEMENTED
-	 * @param
-	 */
-	private void exportFiles(){
+	@FXML
+	private void importPopup() {
+		Popup pu = new Popup();
+		pu.setWidth(400); pu.setHeight(200);
+		pu.setX(968); pu.setY(532);
 
+		VBox stack = new VBox(18);
+		stack.setPrefWidth(400); stack.setPrefHeight(200);
+
+		HBox header = new HBox(20);
+		header.setPrefWidth(400); header.setPrefHeight(50);
+
+		Button closeButton = new Button("Minimize");
+		closeButton.setOnAction(e -> pu.hide());
+
+		header.getChildren().addAll(closeButton,
+				new Label("Please enter the data you'd like to import below, in the following format:"));
+		Label formatRequired = new Label("{Stop Time/Stop/Route/Trip}, {data being imported}");
+
+		importEntry = new TextField();
+		importEntry.setOnAction(e -> gtfs.importText(importEntry.getText()));
+
+		stack.getChildren().addAll(header, formatRequired, importEntry);
+		pu.getContent().add(stack);
+		pu.show(stage);
+		stage.setOnShowing(e -> pu.hide());
 	}
 
-	/**
-	 *
-	 * @param
-	 */
-	private void importRoute(File file){
-		//TODO
-		//make file into a list of Route objects
-	//make list of all the routes in the file and call the importRoute in gtfs to import each stop in list
-	}
 
-	private void importStop(File file){
-		//TODO
-		//make file into a list of Stop objects
-		//make list of all the stops in the file and call the importStop in gtfs to import each stop in list
-
-	}
-
-	private void importStopTime(File file){
-		//TODO
-		//make file into a list of StopTime objects
-		//make list of all the stopTimes in the file and call the importStopTimes in gtfs to import each stoptime in list
-
-	}
-
-	private void importTrip(File file){
-		//TODO
-		//make file into a list of Route objects
-		//make list of all the trips in the file and call the importTrip in gtfs to import each trip in list
+	private void exportFiles() {
 
 	}
 
-	private void searchStopId(){
+
+	private void searchStopId() {
 
 	}
 
-	private void searchRouteId(){
+	private void searchRouteId() {
 
 	}
 
-	private boolean displayDistance(){
+	private boolean displayDistance() {
 		return false;
 	}
 
-	private boolean displaySpeed(){
+	private boolean displaySpeed() {
 		return false;
 	}
 
-	private boolean displayRoute(){
+	private boolean displayRoute() {
 		return false;
 	}
 
-	private boolean displayStop(){
+	private boolean displayStop() {
 		return false;
 	}
 
-	private boolean displayTrip(){
+	private boolean displayTrip() {
 		return false;
 	}
 
-	private void plotCoord(){
+	private void plotCord() {
 
 	}
 
-	private void plotLocation(){
+	private void plotLocation() {
 
 	}
 
@@ -185,19 +191,7 @@ public class Controller{
 
 	}
 
-	private void exportStops(){
-
-	}
-
-	private void exportRoutes(){
-
-	}
-
-	private void exportStopTimes(){
-
-	}
-
-	private void exportTrips(){
+	private void exportFile() {
 
 	}
 
@@ -205,29 +199,15 @@ public class Controller{
 
 	}
 
-	private void routeVerify(){
-
-	}
-
-	private void stopVerify(){
-
-	}
-
-	private void tripVerify(){
-
-	}
-
 	private Trip searchForNextTrip(){
 		return null;
-	}
-
-	private void update(){
-
 	}
 
 	private void search(){
 
 	}
 
-
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
 }

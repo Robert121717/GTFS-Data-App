@@ -26,6 +26,10 @@ public class GTFS {
 
 	}
 
+	protected void importText(String text) {
+
+	}
+
 	/**
 	 * puts a new route into the routes hashmap
 	 * @param newRoute- route being added to hashtable
@@ -54,7 +58,7 @@ public class GTFS {
 	 * @return returns newly added stoptime
 	 */
 	public StopTime importStopTime(StopTime newStopTime){
-		return stopTimes.put(newStopTime.getStopTimeID(), newStopTime);
+		return stopTimes.put(newStopTime.getHashId(), newStopTime);
 	}
 
 	/**

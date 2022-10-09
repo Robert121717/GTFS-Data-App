@@ -56,7 +56,7 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Manually Import" />
+                  <Button mnemonicParsing="false" onAction="#importPopup" text="Manually Import" />
                </children>
                <opaqueInsets>
                   <Insets />

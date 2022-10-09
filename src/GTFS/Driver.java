@@ -24,13 +24,18 @@ public class Driver extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(
-                Objects.requireNonNull(getClass().getResource("GTFSController.fxml")));
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(
+                getClass().getResource("GTFSController.fxml")));
+        Parent root = loader.load();
         Scene scene = new Scene(root);
         stage.setTitle("GTFS Application");
         stage.setScene(scene);
-        stage.setMaximized(true);
+//        TODO keep
+//        stage.setMaximized(true);
+//        stage.getIcons().add([insert image path here] to add icon to application
         //hi
+        Controller controller = loader.getController();
+        controller.setStage(stage);
         stage.show();
     }
 }
