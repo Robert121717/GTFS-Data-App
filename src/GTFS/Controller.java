@@ -203,7 +203,7 @@ public class Controller implements Initializable {
 		dropImportVBox.setOnDragOver(e -> {			// allows user to drag files into VBox
 			Dragboard dropBox = e.getDragboard();
 
-			if (dropBox.hasFiles()) { //TODO check for right kind of files
+			if (dropBox.hasFiles()) {
 				e.acceptTransferModes(TransferMode.COPY);
 			} else {
 				e.consume();
@@ -213,11 +213,17 @@ public class Controller implements Initializable {
 			Dragboard dropBox = e.getDragboard();
 
 			if (dropBox.hasFiles()) {
+				boolean imported = false;
 				for (File file : dropBox.getFiles()) {
-					gtfs.importFile(file);
+					if (file.getName().endsWith(".txt")) {
+						gtfs.importFile(file);
+						imported = true;
+					}
 				}
-				recentUploadDisplay.setText(gtfs.getNewestImport());
-				recentUploadLabel.setVisible(true);
+				if (imported) {
+					recentUploadDisplay.setText(gtfs.getNewestImport());
+					recentUploadLabel.setVisible(true);
+				}
 			}
 			e.consume();
 		});
