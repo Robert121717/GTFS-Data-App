@@ -199,7 +199,7 @@ public class Controller implements Initializable {
 		dropImportVBox.setOnDragOver(e -> {			// allows user to drag files into VBox
 			Dragboard dropBox = e.getDragboard();
 
-			if (dropBox.hasFiles()) {
+			if (dropBox.hasFiles()) { //TODO check for right kind of files
 				e.acceptTransferModes(TransferMode.COPY);
 			} else {
 				e.consume();
