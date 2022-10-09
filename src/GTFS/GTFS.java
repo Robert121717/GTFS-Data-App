@@ -1,6 +1,5 @@
 package GTFS;
 
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 import java.io.File;
@@ -13,7 +12,7 @@ import java.util.Scanner;
 import static GTFS.Controller.newAlert;
 
 /**
- * @author nairac
+ * @author nairac, atkinsonr
  * @version 1.0
  */
 public class GTFS {
@@ -69,8 +68,8 @@ public class GTFS {
 
 	/**
 	 * puts a new route into the routes hashmap
-	 * @param newRoute- route being added to hashtable
-	 * @return returns the newly added Route
+	 * @param file- route file being added to hashtable
+	 *
 	 */
 	protected void importRoute(File file) {
 		try (Scanner in = new Scanner(file)) {
@@ -109,8 +108,8 @@ public class GTFS {
 
 	/**
 	 * puts a new stop into the stops hashtable
-	 * @param newStop- stop being added to hashtable
-	 * @return returns the newly added Stop
+	 * @param - stop file being added to hashtable
+	 *
 	 */
 	protected void importStop(File file) {
 		try (Scanner in = new Scanner(file)) {
@@ -143,8 +142,8 @@ public class GTFS {
 
 	/**
 	 * puts a new stoptime into the stoptimes hashtable
-	 * @param newStopTime - stoptime being added to hashtable
-	 * @return returns newly added stoptime
+	 * @param file - stoptime file being added to hashtable
+	 *
 	 */
 	protected void importStopTime(File file) {
 		try(Scanner in = new Scanner(file)) {
@@ -177,8 +176,8 @@ public class GTFS {
 
 	/**
 	 * puts a new trip into the trips hashtable
-	 * @param newTrip- trip being added to hashtable
-	 * @return returns newly added stoptime
+	 * @param file- trip file being added to hashtable
+	 *
 	 */
 	protected void importTrip(File file) {
 		try(Scanner in = new Scanner(file)) {
@@ -215,9 +214,9 @@ public class GTFS {
 
 	/**
 	 * NOT IMPLEMENTED YET
-	 * @param String
+	 * @param string- not implemented yet
 	 */
-	public boolean export(String String) {
+	public boolean export(String string) {
 		return false;
 	}
 
