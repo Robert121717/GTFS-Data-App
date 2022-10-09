@@ -1,5 +1,7 @@
 package GTFS;
 
+import java.math.BigInteger;
+
 /**
  * @author nairac
  * @version 1.0
@@ -7,16 +9,16 @@ package GTFS;
  */
 public class Trip {
 
-	private final int tripId;
-	private final int routeId;
-	private final int hashId;
+	private final BigInteger tripId;
+	private final BigInteger routeId;
+	private final BigInteger hashId;
 	private String headSign = "";
 	private String serviceId = "";
 	private String directionId = "";
 	private String blockId = "";
 	private String shapeId = "";
 
-	protected Trip(int tripId, int routeId, int hashId) {
+	protected Trip(BigInteger tripId, BigInteger routeId, BigInteger hashId) {
 		this.tripId = tripId;
 		this.routeId = routeId;
 		this.hashId = hashId;
@@ -28,8 +30,8 @@ public class Trip {
 	 *          the trip ID (String representation).
 	 *          the hash ID (ID used to store this object in the hash table).
 	 */
-	protected boolean verifyTrip(int id){
-		return tripId == id || hashId == id;
+	protected boolean verifyTrip(BigInteger id){
+		return tripId.equals(id) || hashId.equals(id);
 	}
 
 	protected void setHeadSign(String headSign) {
@@ -52,15 +54,15 @@ public class Trip {
 		this.shapeId = shapeId;
 	}
 
-	protected int getTripId(){
+	protected BigInteger getTripId(){
 		return tripId;
 	}
 
-	protected int getRouteId(){
+	protected BigInteger getRouteId(){
 		return routeId;
 	}
 
-	protected int getHashId() {
+	protected BigInteger getHashId() {
 		return hashId;
 	}
 

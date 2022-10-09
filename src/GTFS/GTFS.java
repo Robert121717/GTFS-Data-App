@@ -5,6 +5,7 @@ import javafx.scene.control.Alert.AlertType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 import java.util.Scanner;
@@ -17,10 +18,10 @@ import static GTFS.Controller.newAlert;
  */
 public class GTFS {
 
-	private final Hashtable<Integer, Route> routes;
-	private final Hashtable<Integer, Stop> stops;
-	private final Hashtable<Integer, StopTime> stopTimes;
-	private final Hashtable<Integer, Trip> trips;
+	private final Hashtable<BigInteger, Route> routes;
+	private final Hashtable<BigInteger, Stop> stops;
+	private final Hashtable<BigInteger, StopTime> stopTimes;
+	private final Hashtable<BigInteger, Trip> trips;
 	private String lastAdded;
 
 	public GTFS(){
@@ -196,14 +197,16 @@ public class GTFS {
 	protected void importTrip(boolean hasLine, Scanner in) {
 		if(hasLine){
 			String line = in.nextLine();
+			System.out.println("String: " + line);
+			if(line.charAt(line.length()-1) == '-') {
+				line += in.nextLine();
+			}
 			String[] parts = line.split(",");
 			Trip trip = new Trip(toDecimal(parts[2]), toDecimal(parts[0]),
 					mergeIDs(toDecimal(parts[2]), toDecimal(parts[0])));
-
 			trip.setBlockId(parts[5]); trip.setDirectionId(parts[4]);
 			trip.setServiceId(parts[1]); trip.setHeadSign(parts[3]);
 			trip.setShapeId(parts[6]);
-
 			trips.put(trip.getHashId(), trip);
 			lastAdded = trip.toString();
 			importTrip(in.hasNextLine(), in);
@@ -222,7 +225,7 @@ public class GTFS {
 	 * Searches for a stop, given the stopID. Returns the Stop
 	 * @param stopId- ID turned into ascii decimal used as a key for each stop.
 	 */
-	public Stop searchStopId(int stopId) {
+	public Stop searchStopId(BigInteger stopId) {
 		return stops.get(stopId);
 	}
 
@@ -230,7 +233,7 @@ public class GTFS {
 	 * Searches for a route, given the routeId. Returns the route
 	 * @param routeId- ID turned into ascii decimal used as a key for each stop
 	 */
-	public Route searchRouteId(int routeId) {
+	public Route searchRouteId(BigInteger routeId) {
 		return routes.get(routeId);
 	}
 
@@ -238,14 +241,14 @@ public class GTFS {
 	 * Searches for a trip, given the tripId. Returns the trip
 	 * @param tripId- ID turned into ascii decimal used as a key for each trip
 	 */
-	public Trip searchTrips(int tripId) {
+	public Trip searchTrips(BigInteger tripId) {
 		return trips.get(tripId);
 	}
 	/**
 	 * Searches for a stop time, given the stopTimeId. Returns the stop time.
 	 * @param stopTimeId- ID turned into ascii decimal used as a key for each stop time
 	 */
-	public StopTime searchStopTimes(int stopTimeId) {
+	public StopTime searchStopTimes(BigInteger stopTimeId) {
 		return stopTimes.get(stopTimeId);
 	}
 
@@ -259,14 +262,15 @@ public class GTFS {
 	 * @return The ID as an appended integer. This ID will represent an attribute of the relative class,
 	 * but may not be the ID be used when storing this object in a hash table.
 	 */
-	private int toDecimal(String id) {
+	private BigInteger toDecimal(String id) {
 		byte[] idBytes = id.getBytes(StandardCharsets.US_ASCII);
 
 		StringBuilder idByteString = new StringBuilder();
 		for (byte idByte : idBytes) {
 			idByteString.append(idByte);
 		}
-		return Integer.parseInt(idByteString.toString());
+
+		return new BigInteger(idByteString.toString());
 	}
 
 	/**
@@ -276,9 +280,9 @@ public class GTFS {
 	 * @return A single ID to be used when storing this object in a hash table,
 	 * where the first IDs value comes before the second IDs value (such that hashId: [v1i][v2i]).
 	 */
-	private int mergeIDs(int v1i, int v2i) {
+	private BigInteger mergeIDs(BigInteger v1i, BigInteger v2i) {
 		String v1 = String.valueOf(v1i), v2 = String.valueOf(v2i);
 
-		return Integer.parseInt(v1 + v2);
+		return new BigInteger(v1 + v2);
 	}
 }

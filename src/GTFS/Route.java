@@ -1,5 +1,7 @@
 package GTFS;
 
+import java.math.BigInteger;
+
 /**
  * @author nairac
  * @version 1.0
@@ -7,7 +9,7 @@ package GTFS;
  */
 public class Route {
 
-	private final int routeID;
+	private final BigInteger routeID;
 	private String agencyID = "";
 	private String shortName = "";
 	private String longName = "";
@@ -17,7 +19,7 @@ public class Route {
 	private String routeColor = "";
 	private String routeTextColor = "";
 
-	protected Route(int routeID) {
+	protected Route(BigInteger routeID) {
 		this.routeID = routeID;
 	}
 
@@ -25,8 +27,8 @@ public class Route {
 	 * Verify that the Route_ID used for the search matches the actual Route_ID.
 	 * @param routeID the Route_ID used for the search.
 	 */
-	protected boolean verifyRoute(int routeID){
-		return this.routeID == routeID;
+	protected boolean verifyRoute(BigInteger routeID){
+		return this.routeID.equals(routeID);
 	}
 
 	protected void setAgencyID(String agencyID) {
@@ -61,7 +63,7 @@ public class Route {
 		this.routeColor = routeColor;
 	}
 
-	protected int getRouteId(){
+	protected BigInteger getRouteId(){
 		return routeID;
 	}
 

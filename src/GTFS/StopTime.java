@@ -1,5 +1,7 @@
 package GTFS;
 
+import java.math.BigInteger;
+
 /**
  * @author nairac
  * @version 1.0
@@ -7,9 +9,9 @@ package GTFS;
  */
 public class StopTime {
 
-	private final int stopId;
-	private final int tripId;
-	private final int hashId;
+	private final BigInteger stopId;
+	private final BigInteger tripId;
+	private final BigInteger hashId;
 	private String arrivalTime = "";
 	private String departureTime = "";
 	private String stopHeadSign = "";
@@ -17,7 +19,7 @@ public class StopTime {
 	private String dropOffType = "";
 	private String stopSequence = "";
 
-	protected StopTime(int stopId, int tripId, int hashId) {
+	protected StopTime(BigInteger stopId, BigInteger tripId, BigInteger hashId) {
 		this.stopId = stopId;
 		this.tripId = tripId;
 		this.hashId = hashId;
@@ -29,8 +31,8 @@ public class StopTime {
 	 *          the stop ID (String representation).
 	 *          the hash ID (ID used to store this object in the hash table).
 	 */
-	protected boolean verifyStopTime(int id) {
-		return stopId == id || hashId == id;
+	protected boolean verifyStopTime(BigInteger id) {
+		return stopId.equals(id) || hashId.equals(id);
 	}
 
 	protected void setArrivalTime(String arrivalTime) {
@@ -81,15 +83,15 @@ public class StopTime {
 		return departureTime;
 	}
 
-	protected int getStopId() {
+	protected BigInteger getStopId() {
 		return stopId;
 	}
 
-	protected int getTripId() {
+	protected BigInteger getTripId() {
 		return tripId;
 	}
 
-	protected int getHashId() {
+	protected BigInteger getHashId() {
 		return hashId;
 	}
 }

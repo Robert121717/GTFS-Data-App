@@ -1,5 +1,7 @@
 package GTFS;
 
+import java.math.BigInteger;
+
 /**
  * @author nairac
  * @version 1.0
@@ -7,7 +9,7 @@ package GTFS;
  */
 public class Stop {
 
-	private final int stopID;
+	private final BigInteger stopID;
 	private String stopName;
 	private double stopLat;
 	private double stopLon;
@@ -17,7 +19,7 @@ public class Stop {
 	 * constructor for Stop
 	 * @param stopID the string of the stopID
 	 */
-	protected Stop(int stopID){
+	protected Stop(BigInteger stopID){
 		this.stopID = stopID;
 		this.stopName = "";
 		this.stopLat = 0;
@@ -29,8 +31,8 @@ public class Stop {
 	 * verify that the stop_id used for finding the stop matches what the stop has.
 	 * @param stopId the stop_id used for finding the stop
 	 */
-	protected boolean verifyStop(int stopId){
-		return this.stopID == stopId;
+	protected boolean verifyStop(BigInteger stopId){
+		return this.stopID.equals(stopId);
 	}
 
 	/**
@@ -66,7 +68,7 @@ public class Stop {
 	}
 
 	// start of getters
-	protected int getStopId(){
+	protected BigInteger getStopId(){
 		return stopID;
 	}
 
