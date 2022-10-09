@@ -195,21 +195,22 @@ public class GTFS {
 	}
 
 	protected void importTrip(boolean hasLine, Scanner in) {
-		if(hasLine){
+
+		while(hasLine) {
 			String line = in.nextLine();
-			System.out.println("String: " + line);
-			if(line.charAt(line.length()-1) == '-') {
-				line += in.nextLine();
-			}
+
 			String[] parts = line.split(",");
 			Trip trip = new Trip(toDecimal(parts[2]), toDecimal(parts[0]),
 					mergeIDs(toDecimal(parts[2]), toDecimal(parts[0])));
-			trip.setBlockId(parts[5]); trip.setDirectionId(parts[4]);
-			trip.setServiceId(parts[1]); trip.setHeadSign(parts[3]);
+			trip.setBlockId(parts[5]);
+			trip.setDirectionId(parts[4]);
+			trip.setServiceId(parts[1]);
+			trip.setHeadSign(parts[3]);
 			trip.setShapeId(parts[6]);
 			trips.put(trip.getHashId(), trip);
 			lastAdded = trip.toString();
-			importTrip(in.hasNextLine(), in);
+			hasLine = in.hasNextLine();
+
 		}
 	}
 
