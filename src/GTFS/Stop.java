@@ -85,4 +85,10 @@ public class Stop {
 	protected String getStopDesc() {
 		return stopDesc;
 	}
+
+	public String toString(){
+		String info = "";
+		info = "" + stopID + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
+		return info;
+	}
 }

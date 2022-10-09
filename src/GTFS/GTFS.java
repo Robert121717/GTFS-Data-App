@@ -17,10 +17,12 @@ public class GTFS {
 
 	//Change UML to show that GTFS has four hashtables, not Lists.
 	//Do we need to put all of these in a single list??? or keep separate?
-	protected Hashtable<Integer, Route> routes;
-	protected Hashtable<Integer, Stop> stops;
-	protected Hashtable<Integer, StopTime> stopTimes;
-	protected Hashtable<Integer, Trip> trips;
+	private final Hashtable<Integer, Route> routes;
+	private final Hashtable<Integer, Stop> stops;
+	private final Hashtable<Integer, StopTime> stopTimes;
+	private final Hashtable<Integer, Trip> trips;
+	private String lastAdded;
+
 
 
 	public GTFS(){
@@ -97,6 +99,7 @@ public class GTFS {
 			alert.showAndWait();
 		}
 	}
+
 	private void importRoute(boolean hasLine, Scanner in){
 		if(hasLine) {
 			String line = in.nextLine();
@@ -111,6 +114,7 @@ public class GTFS {
 			route.setRouteColor(parts[7]);
 			route.setRouteTextColor(parts[8]);
 			routes.put(route.getRouteId(), route);
+			lastAdded += route.toString();
 			importRoute(in.hasNextLine(), in);
 		}
 	}
@@ -138,6 +142,7 @@ public class GTFS {
 			alert.showAndWait();
 		}
 	}
+
 	private void importStop(boolean hasLine, Scanner in){
 		if(hasLine) {
 			String line = in.nextLine();
@@ -148,6 +153,7 @@ public class GTFS {
 			stop.setStopLat(Double.parseDouble(parts[3]));
 			stop.setStopLon(Double.parseDouble(parts[4]));
 			stops.put(stop.getStopId(), stop);
+			lastAdded += stop.toString();
 			importStop(in.hasNextLine(), in);
 		}
 	}
@@ -189,6 +195,7 @@ public class GTFS {
 			ST.setPickUpType(parts[6]);
 			ST.setDropOffType(parts[7]);
 			stopTimes.put(ST.getHashId(), ST);
+			lastAdded += ST.toString();
 			importStop(in.hasNextLine(), in);
 		}
 	}
@@ -229,6 +236,7 @@ public class GTFS {
 			trip.setHeadSign(parts[3]);
 			trip.setShapeId(parts[6]);
 			trips.put(trip.getHashId(), trip);
+			lastAdded = trip.toString();
 			importTrip(in.hasNextLine(), in);
 		}
 	}
@@ -273,7 +281,7 @@ public class GTFS {
 	}
 
 	protected String getNewestImport() {
-		return "";
+		return lastAdded;
 	}
 
 	/**
