@@ -93,7 +93,12 @@ public class GTFS {
 			route.setAgencyID(parts[1]); route.setShortName(parts[2]);
 			route.setLongName(parts[3]); route.setRouteDesc(parts[4]);
 			route.setRouteType(parts[5]); route.setRouteURL(parts[6]);
-			route.setRouteColor(parts[7]); route.setRouteTextColor(parts[8]);
+			route.setRouteColor(parts[7]);
+			if(parts.length == 9) {
+				route.setRouteTextColor(parts[8]);
+			} else {
+				route.setRouteTextColor("");
+			}
 
 			routes.put(route.getRouteId(), route);
 			lastAdded += route.toString();
