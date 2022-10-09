@@ -66,73 +66,17 @@ public class Controller implements Initializable {
 	 */
 	@FXML
 	private void importFiles() {
-		//TODO
-		//if stop file call importstop method.
-		//else if trip file call importtrip
-		//else if route file call importroute
-		//else if stopTime file call importstopTime
-		//else error cannot import that file
 
-		File file;
-		String header1 = "";
-		String header2 = "";
 		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Open File");
+		chooser.setTitle("Import Files");
 		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.txt"));
 		List<File> files = chooser.showOpenMultipleDialog(null);
 
-//		try{
-//			int size = files.size();
-//
-//			for(int i = 0; i < size; i++) {
-//				file = files.get(i);
-//				if(file != null){
-//					Scanner in = new Scanner(file);
-//					ArrayList<String> lines = new ArrayList<>();
-//					while (in.hasNextLine()) {
-//						lines.add(in.nextLine());
-//					}
-//					if (lines.size() < 2) {
-//						Alert alert = new Alert(Alert.AlertType.ERROR);
-//						alert.setTitle("Error Dialog");
-//						alert.setHeaderText("Incorrect Format");
-//						alert.setContentText("File has too few lines, cannot process");
-//						alert.showAndWait();
-//						continue;
-//					}
-//
-//					String[] splitHeader = lines.get(1).split(",");
-//					header1 = splitHeader[0];
-//					header2 = splitHeader[1];
-//					if(header1.equalsIgnoreCase("stop_id")){
-//
-//					} else if (header1.equalsIgnoreCase("route_id")
-//							&& header2.equalsIgnoreCase("agency_id")){
-//
-//
-//					} else if (header1.equalsIgnoreCase("trip_id")
-//							&& header2.equalsIgnoreCase("arrival_time")){
-//
-//					} else if (header1.equalsIgnoreCase("route_id")
-//							&& header2.equalsIgnoreCase("service_id")){
-//
-//					} else {
-//						Alert alert = new Alert(Alert.AlertType.ERROR);
-//						alert.setTitle("Error Dialog");
-//						alert.setHeaderText("Incorrect Format");
-//						alert.setContentText("Cannot import this file");
-//						alert.showAndWait();
-//					}
-//					in.close();
-//				}
-//			}
-//		} catch (FileNotFoundException ex){
-//			Alert alert = new Alert(Alert.AlertType.ERROR);
-//			alert.setTitle("Error Dialog");
-//			alert.setHeaderText("File Not Found");
-//			alert.setContentText(ex.getMessage());
-//			alert.showAndWait();
-//		}
+		for (File file : files) {
+			gtfs.importFile(file);
+		}
+		recentUploadDisp.setText(gtfs.getNewestImport());
+		recentUploadLabel.setVisible(true);
 	}
 
 	@FXML
@@ -143,20 +87,17 @@ public class Controller implements Initializable {
 		importPu.setWidth(400); importPu.setHeight(200);
 
 		Pane background = new Pane();
-		background.setPrefWidth(400);
-		background.setPrefHeight(200);
+		background.setPrefWidth(400); background.setPrefHeight(200);
 
 		VBox stack = new VBox(18);
-		stack.setPrefWidth(400); stack.setPrefHeight(200);
-		stack.setAlignment(Pos.CENTER);
+		stack.setPrefWidth(400); stack.setPrefHeight(200); stack.setAlignment(Pos.CENTER);
 		stack.setPadding(new Insets(5, 5, 10, 5));
 
 		HBox header = new HBox(5);
-		header.setPrefWidth(400); header.setPrefHeight(50);
-		header.setAlignment(Pos.TOP_LEFT);
+		header.setPrefWidth(400); header.setPrefHeight(50); header.setAlignment(Pos.TOP_LEFT);
 
-		Button closeButton = new Button("Minimize");
-		closeButton.setOnAction(e -> importPu.hide()); 			//close popup
+		Button closeButton = new Button("Minimize"); closeButton.setOnAction(e -> importPu.hide()); 		//close popup
+
 		header.getChildren().addAll(closeButton,
 				new Label("Please enter the data you'd like to import below:"));
 		Label formatRequired = new Label("Format: {Stop Time/Stop/Route/Trip}, {data being imported}");
@@ -168,8 +109,7 @@ public class Controller implements Initializable {
 		send.setOnAction(e -> {
 			gtfs.importText(importEntry.getText());				//import the user input into the gtfs data structures
 			recentUploadDisp.setText(gtfs.getNewestImport()); 		//display the imported data to user to show it was successful
-			recentUploadLabel.setVisible(true);
-			importPu.hide();
+			recentUploadLabel.setVisible(true); importPu.hide();
 		});
 
 		stack.getChildren().addAll(header, formatRequired, importEntry, send);
@@ -179,8 +119,7 @@ public class Controller implements Initializable {
 		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.BLACK, 15, 0.05, 0, 0);
 		background.setEffect(shadow);
 
-		importPu.getContent().add(background);
-		importPu.show(stage);
+		importPu.getContent().add(background); importPu.show(stage);
 	}
 
 	@FXML
