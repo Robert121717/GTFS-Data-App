@@ -101,15 +101,31 @@ public class Controller implements Initializable {
 		background.setPrefWidth(400); background.setPrefHeight(200);
 
 		VBox stack = new VBox(18);
-		stack.setPrefWidth(400); stack.setPrefHeight(200); stack.setAlignment(Pos.CENTER);
+		stack.setPrefWidth(400); stack.setPrefHeight(200);
+		stack.setAlignment(Pos.CENTER);
 		stack.setPadding(new Insets(5, 5, 10, 5));
 
+		addPopupVBoxComponents(stack);
+		background.getChildren().add(stack);
+
+		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
+				"radial-gradient(focus-distance 0% , center 50% 50% , radius 40% , #E5E6E4, #F9F9F8);");
+		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
+		background.setEffect(shadow);
+
+		importPu.getContent().add(background);
+		importPu.show(stage);
+	}
+
+	private void addPopupVBoxComponents(VBox stack) {
 		HBox header = new HBox(5);
-		header.setPrefWidth(400); header.setPrefHeight(50); header.setAlignment(Pos.TOP_RIGHT);
+		header.setPrefWidth(400); header.setPrefHeight(50);
+		header.setAlignment(Pos.TOP_RIGHT);
 
-		Button closeButton = new Button("Cancel"); closeButton.setOnAction(e -> importPu.hide()); 	//close popup
-
+		Button closeButton = new Button("Cancel");
+		closeButton.setOnAction(e -> importPu.hide()); 	//close popup
 		header.getChildren().addAll(closeButton);
+
 		Label inputPrompt = new Label("Please Enter the Data to Import Below");
 		inputPrompt.setFont(new Font(15));
 
@@ -123,17 +139,7 @@ public class Controller implements Initializable {
 			recentUploadDisplay.setText(gtfs.getNewestImport()); 	//display the imported data to user to show it was successful
 			recentUploadLabel.setVisible(true); importPu.hide();
 		});
-
 		stack.getChildren().addAll(header, inputPrompt, importEntry, send);
-		background.getChildren().add(stack);
-
-		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
-				"radial-gradient(focus-distance 0% , center 50% 50% , radius 40% , #E5E6E4, #F9F9F8);");
-		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
-		background.setEffect(shadow);
-
-		importPu.getContent().add(background);
-		importPu.show(stage);
 	}
 
 	@FXML
