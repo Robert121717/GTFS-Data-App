@@ -34,6 +34,45 @@ public class GTFS {
 	protected void importText(String text) {
 
 	}
+	protected void importFile(File file){
+		try(Scanner in = new Scanner(file)){
+			String header = in.nextLine();
+			header = header.toUpperCase();
+			if(header.contains("ROUTE_ID")){
+				if(header.contains("STOP_ID")){
+					importStopTime(file);
+				} else {
+					importRoute(file);
+				}
+			} else if(header.contains("STOP_ID")){
+				if(header.contains("TRIP_ID")){
+					importTrip(file);
+				} else {
+					importStop(file);
+				}
+			} else{
+				throw new IllegalArgumentException();
+			}
+		} catch(NumberFormatException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("Unexpected Value");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		} catch(FileNotFoundException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("File Not Found");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		} catch(IllegalArgumentException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("Invalid Data");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		}
+	}
 
 	/**
 	 * puts a new route into the routes hashmap
@@ -63,9 +102,16 @@ public class GTFS {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
 			Route route = new Route(toDecimal(parts[0]));
-
+			route.setAgencyID(parts[1]);
+			route.setShortName(parts[2]);
+			route.setLongName(parts[3]);
+			route.setRouteDesc(parts[4]);
+			route.setRouteType(parts[5]);
+			route.setRouteURL(parts[6]);
+			route.setRouteColor(parts[7]);
+			route.setRouteTextColor(parts[8]);
 			routes.put(route.getRouteId(), route);
-			importStop(in.hasNextLine(), in);
+			importRoute(in.hasNextLine(), in);
 		}
 	}
 
@@ -111,8 +157,40 @@ public class GTFS {
 	 * @param newStopTime - stoptime being added to hashtable
 	 * @return returns newly added stoptime
 	 */
-	public StopTime importStopTime(StopTime newStopTime){
-		return stopTimes.put(newStopTime.getHashId(), newStopTime);
+	public void importStopTime(File file){
+		try(Scanner in = new Scanner(file)){
+			in.nextLine();
+			importStopTime(in.hasNextLine(), in);
+		} catch(NumberFormatException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("Unexpected Value");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		} catch(FileNotFoundException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("File Not Found");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		}
+	}
+
+	private void importStopTime(boolean hasLine, Scanner in){
+		if(hasLine){
+			String line = in.nextLine();
+			String[] parts = line.split(",");
+			StopTime ST = new StopTime(toDecimal(parts[3]), toDecimal(parts[0]),
+					mergeIDs(toDecimal(parts[3]), toDecimal(parts[0])));
+			ST.setArrivalTime(parts[1]);
+			ST.setDepartureTime(parts[2]);
+			ST.setStopSequence(parts[4]);
+			ST.setStopHeadSign(parts[5]);
+			ST.setPickUpType(parts[6]);
+			ST.setDropOffType(parts[7]);
+			stopTimes.put(ST.getHashId(), ST);
+			importStop(in.hasNextLine(), in);
+		}
 	}
 
 	/**
@@ -120,8 +198,39 @@ public class GTFS {
 	 * @param newTrip- trip being added to hashtable
 	 * @return returns newly added stoptime
 	 */
-	public Trip importTrip(Trip newTrip){
-		return trips.put(newTrip.getHashId(), newTrip);
+	public void importTrip(File file){
+		try(Scanner in = new Scanner(file)){
+			in.nextLine();
+			importTrip(in.hasNextLine(), in);
+		} catch(NumberFormatException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("Unexpected Value");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		} catch(FileNotFoundException e){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText("File Not Found");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		}
+	}
+
+	protected void importTrip(boolean hasLine, Scanner in){
+		if(hasLine){
+			String line = in.nextLine();
+			String[] parts = line.split(",");
+			Trip trip = new Trip(toDecimal(parts[2]), toDecimal(parts[0]),
+					mergeIDs(toDecimal(parts[2]), toDecimal(parts[0])));
+			trip.setBlockId(parts[5]);
+			trip.setDirectionId(parts[4]);
+			trip.setServiceId(parts[1]);
+			trip.setHeadSign(parts[3]);
+			trip.setShapeId(parts[6]);
+			trips.put(trip.getHashId(), trip);
+			importTrip(in.hasNextLine(), in);
+		}
 	}
 
 	/**
