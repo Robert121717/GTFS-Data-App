@@ -1,5 +1,6 @@
 package GTFS;
 
+import javax.swing.*;
 import java.math.BigInteger;
 
 /**
@@ -9,8 +10,8 @@ import java.math.BigInteger;
  */
 public class StopTime {
 
-	private final BigInteger stopId;
-	private final BigInteger tripId;
+	private final String stopId;
+	private final String tripId;
 	private final BigInteger hashId;
 	private String arrivalTime = "";
 	private String departureTime = "";
@@ -19,20 +20,18 @@ public class StopTime {
 	private String dropOffType = "";
 	private String stopSequence = "";
 
-	protected StopTime(BigInteger stopId, BigInteger tripId, BigInteger hashId) {
+	protected StopTime(String stopId, String tripId) {
 		this.stopId = stopId;
 		this.tripId = tripId;
-		this.hashId = hashId;
+		this.hashId = GTFS.mergeIDs(GTFS.toDecimal(stopId), GTFS.toDecimal(tripId));
 	}
 
 	/**
 	 * Verify that the stop time ID used for the search matches the ID of this stop time.
-	 * @param id The ID used for the search. This ID can be either of the following:
-	 *          the stop ID (String representation).
-	 *          the hash ID (ID used to store this object in the hash table).
+	 * @param id The ID used for the search. This must be the actual string representation of the stop time ID.
 	 */
-	protected boolean verifyStopTime(BigInteger id) {
-		return stopId.equals(id) || hashId.equals(id);
+	protected boolean verifyStopTime(String id) {
+		return stopId.equals(id);
 	}
 
 	protected void setArrivalTime(String arrivalTime) {
@@ -83,11 +82,11 @@ public class StopTime {
 		return departureTime;
 	}
 
-	protected BigInteger getStopId() {
+	protected String getStopId() {
 		return stopId;
 	}
 
-	protected BigInteger getTripId() {
+	protected String getTripId() {
 		return tripId;
 	}
 
@@ -96,7 +95,7 @@ public class StopTime {
 	}
 
 	public String toString(){
-		return "" + stopId + "," + tripId + "," + hashId + "," + arrivalTime + "," +
-				departureTime + "," + stopHeadSign + "," + pickUpType + "," + dropOffType + "," + stopSequence;
+		return "" + tripId + "," + arrivalTime + "," + departureTime + "," + stopId +
+				"," + stopSequence + "," + stopHeadSign + "," + pickUpType + "," + dropOffType;
 	}
 }

@@ -10,6 +10,7 @@ import java.math.BigInteger;
 public class Route {
 
 	private final BigInteger routeID;
+	private final String routeIdString;
 	private String agencyID = "";
 	private String shortName = "";
 	private String longName = "";
@@ -19,8 +20,9 @@ public class Route {
 	private String routeColor = "";
 	private String routeTextColor = "";
 
-	protected Route(BigInteger routeID) {
-		this.routeID = routeID;
+	protected Route(String routeID) {
+		this.routeID = GTFS.toDecimal(routeID);
+		this.routeIdString = routeID;
 	}
 
 	/**
@@ -103,7 +105,7 @@ public class Route {
 	} //TODO
 
 	public String toString(){
-		return "" + routeID + "," + agencyID + "," + shortName + "," + longName +
+		return "" + routeIdString + "," + agencyID + "," + shortName + "," + longName +
 				"," +routeType + "," + routeDesc + "," + routeURL  + "," + routeColor + "," + routeTextColor;
 	}
 }

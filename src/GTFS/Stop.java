@@ -10,6 +10,7 @@ import java.math.BigInteger;
 public class Stop {
 
 	private final BigInteger stopID;
+	private final String stopIdString;
 	private String stopName;
 	private double stopLat;
 	private double stopLon;
@@ -19,8 +20,9 @@ public class Stop {
 	 * constructor for Stop
 	 * @param stopID the string of the stopID
 	 */
-	protected Stop(BigInteger stopID){
-		this.stopID = stopID;
+	protected Stop(String stopID){
+		this.stopID = GTFS.toDecimal(stopID);
+		this.stopIdString = stopID;
 		this.stopName = "";
 		this.stopLat = 0;
 		this.stopLon = 0;
@@ -89,6 +91,6 @@ public class Stop {
 	}
 
 	public String toString(){
-		return "" + stopID + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
+		return "" + stopIdString + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
 	}
 }

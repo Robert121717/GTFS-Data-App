@@ -88,7 +88,7 @@ public class GTFS {
 		while(hasLine) {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
-			Route route = new Route(toDecimal(parts[0]));
+			Route route = new Route(parts[0]);
 
 			route.setAgencyID(parts[1]); route.setShortName(parts[2]);
 			route.setLongName(parts[3]); route.setRouteDesc(parts[4]);
@@ -130,7 +130,7 @@ public class GTFS {
 		while(hasLine) {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
-			Stop stop = new Stop(toDecimal(parts[0]));
+			Stop stop = new Stop(parts[0]);
 
 			stop.setStopName(parts[1]); stop.setStopDesc(parts[2]);
 			stop.setStopLat(Double.parseDouble(parts[3]));
@@ -166,8 +166,7 @@ public class GTFS {
 		while(hasLine) {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
-			StopTime ST = new StopTime(toDecimal(parts[3]), toDecimal(parts[0]),
-					mergeIDs(toDecimal(parts[3]), toDecimal(parts[0])));
+			StopTime ST = new StopTime(parts[3], parts[0]);
 
 			ST.setArrivalTime(parts[1]); ST.setDepartureTime(parts[2]);
 			ST.setStopSequence(parts[4]); ST.setStopHeadSign(parts[5]);
@@ -205,13 +204,14 @@ public class GTFS {
 			String line = in.nextLine();
 
 			String[] parts = line.split(",");
-			Trip trip = new Trip(toDecimal(parts[2]), toDecimal(parts[0]),
-					mergeIDs(toDecimal(parts[2]), toDecimal(parts[0])));
+			Trip trip = new Trip(parts[2], parts[0]);
+
 			trip.setBlockId(parts[5]);
 			trip.setDirectionId(parts[4]);
 			trip.setServiceId(parts[1]);
 			trip.setHeadSign(parts[3]);
 			trip.setShapeId(parts[6]);
+
 			trips.put(trip.getHashId(), trip);
 			if (!in.hasNextLine()) {
 				lastAdded = trip.toString();
@@ -269,7 +269,7 @@ public class GTFS {
 	 * @return The ID as an appended integer. This ID will represent an attribute of the relative class,
 	 * but may not be the ID be used when storing this object in a hash table.
 	 */
-	private BigInteger toDecimal(String id) {
+	protected static BigInteger toDecimal(String id) {
 		byte[] idBytes = id.getBytes(StandardCharsets.US_ASCII);
 
 		StringBuilder idByteString = new StringBuilder();
@@ -287,7 +287,7 @@ public class GTFS {
 	 * @return A single ID to be used when storing this object in a hash table,
 	 * where the first IDs value comes before the second IDs value (such that hashId: [v1i][v2i]).
 	 */
-	private BigInteger mergeIDs(BigInteger v1i, BigInteger v2i) {
+	protected static BigInteger mergeIDs(BigInteger v1i, BigInteger v2i) {
 		String v1 = String.valueOf(v1i), v2 = String.valueOf(v2i);
 
 		return new BigInteger(v1 + v2);

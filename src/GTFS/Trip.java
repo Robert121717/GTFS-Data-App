@@ -9,8 +9,8 @@ import java.math.BigInteger;
  */
 public class Trip {
 
-	private final BigInteger tripId;
-	private final BigInteger routeId;
+	private final String tripId;
+	private final String routeId;
 	private final BigInteger hashId;
 	private String headSign = "";
 	private String serviceId = "";
@@ -18,20 +18,18 @@ public class Trip {
 	private String blockId = "";
 	private String shapeId = "";
 
-	protected Trip(BigInteger tripId, BigInteger routeId, BigInteger hashId) {
+	protected Trip(String tripId, String routeId) {
 		this.tripId = tripId;
 		this.routeId = routeId;
-		this.hashId = hashId;
+		this.hashId = GTFS.mergeIDs(GTFS.toDecimal(tripId), GTFS.toDecimal(routeId));
 	}
 
 	/**
 	 * Verify that the trip ID used for the search matches the ID of this trip.
-	 * @param id The ID used for the search. This ID can be either of the following:
-	 *          the trip ID (String representation).
-	 *          the hash ID (ID used to store this object in the hash table).
+	 * @param id The ID used for the search. This must be the actual string representation of the trip ID.
 	 */
-	protected boolean verifyTrip(BigInteger id){
-		return tripId.equals(id) || hashId.equals(id);
+	protected boolean verifyTrip(String id){
+		return tripId.equals(id);
 	}
 
 	protected void setHeadSign(String headSign) {
@@ -54,11 +52,11 @@ public class Trip {
 		this.shapeId = shapeId;
 	}
 
-	protected BigInteger getTripId(){
+	protected String getTripId(){
 		return tripId;
 	}
 
-	protected BigInteger getRouteId(){
+	protected String getRouteId(){
 		return routeId;
 	}
 
@@ -87,7 +85,7 @@ public class Trip {
 	}
 
 	public String toString(){
-		return "" + tripId + "," + routeId + "," + hashId + "," + headSign + "," +
-				serviceId + "," + directionId + "," + blockId + "," + shapeId;
+		return "" + routeId + "," + serviceId + "," + tripId + "," + headSign +
+				"," + directionId + "," + blockId + "," + shapeId;
 	}
 }
