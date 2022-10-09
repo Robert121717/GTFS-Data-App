@@ -184,7 +184,6 @@ public class GTFS {
 		try(Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importTrip(in.hasNextLine(), in);
-			System.out.println(trips.size());
 
 		} catch(NumberFormatException e) {
 			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
