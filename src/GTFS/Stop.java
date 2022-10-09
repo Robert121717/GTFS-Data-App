@@ -1,135 +1,94 @@
 package GTFS;
 
-
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author nairac
  * @version 1.0
  * @created 05-Oct-2022 8:14:32 PM
  */
 public class Stop {
-//these can be updated so not private
-	private int stopID;
+
+	private final int stopID;
 	private String stopName;
 	private double stopLat;
 	private double stopLon;
 	private String stopDesc;
 
-
-
-
-
-	public Stop(String stopID, String stopName, String stopLat, String stopLon, String stopDesc){
-		//converting stopID into int for keys
-		byte[] stopIdBytes = stopID.getBytes(StandardCharsets.US_ASCII);
-		StringBuilder routIDByteString = new StringBuilder();
-		for (byte stopIdByte : stopIdBytes) {
-			routIDByteString.append(stopIdByte);
-		}
-		this.stopID = Integer.parseInt(routIDByteString.toString());
-		this.stopName = stopName;
-		this.stopLat = Double.parseDouble(stopLat);
-		this.stopLon = Double.parseDouble(stopLon);
-		this.stopDesc = stopDesc;
-
+	/**
+	 * constructor for Stop
+	 * @param stopID the string of the stopID
+	 */
+	protected Stop(int stopID){
+		this.stopID = stopID;
+		this.stopName = "";
+		this.stopLat = 0;
+		this.stopLon = 0;
+		this.stopDesc = "";
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param stopId
+	 * verify that the stop_id used for finding the stop matches what the stop has.
+	 * @param stopId the stop_id used for finding the stop
 	 */
-	public Stop searchStopId(String stopId){
-		return null;
+	protected boolean verifyStop(int stopId){
+		return this.stopID == stopId;
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param file
+	 * set the name of the stop
+	 * @param name of the stop
 	 */
-	public boolean importStop(File file){
-		return false;
+	protected void setStopName(String name){
+		this.stopName = name;
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param file
+	 * set latitude of the stop
+	 * @param latitude of the stop
 	 */
-	public File exportStops(File file){
-		return null;
+	protected void setStopLat(double latitude){
+		this.stopLat = latitude;
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param routeID
+	 * set longitude of the stop
+	 * @param longitude of stop
 	 */
-	public boolean displayStop(String routeID){
-		return false;
+	protected void setStopLon(double longitude){
+		this.stopLon = longitude;
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 * @param stopId
+	 * set a description of the stop
+	 * @param description description of the stop
 	 */
-	public void stopVerify(String stopId){
-
+	protected void setStopDesc(String description) {
+		this.stopDesc = description;
 	}
 
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param stopId
-	 */
-	public void setStopId(String stopId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param name
-	 */
-	public void setStopName(String name){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param latitutde
-	 */
-	public void setStopLat(double latitutde){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param longitude
-	 */
-	public void setStopLon(double longitude){
-
-	}
-
-	public int getStopId(){
+	// start of getters
+	protected int getStopId(){
 		return stopID;
 	}
 
-	public String getStopName(){
+	protected String getStopName(){
 		return stopName;
 	}
 
-	public double getStopLat(){
+	protected double getStopLat(){
 		return stopLat;
 	}
 
-	public double getStopLon(){
+	protected double getStopLon(){
 		return stopLon;
 	}
 
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param obj
-	 */
-	public void update(Object obj){
-
+	protected String getStopDesc() {
+		return stopDesc;
 	}
 
+	public String toString(){
+		String info = "";
+		info = "" + stopID + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
+		return info;
+	}
 }

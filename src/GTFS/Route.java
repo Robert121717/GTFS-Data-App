@@ -1,9 +1,5 @@
 package GTFS;
 
-
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author nairac
  * @version 1.0
@@ -11,162 +7,96 @@ import java.nio.charset.StandardCharsets;
  */
 public class Route {
 
-	//none should be final because we can update info.
-	private int routeID;
-	private String routeColor;
-	private String agencyId;
-	private String routeShortName;
-	private String routeLongName;
-	private String routeDesc;
-	private String routeType;
-	private String routeURL;
-	private String routeTextColor;
+	private final int routeID;
+	private String agencyID = "";
+	private String shortName = "";
+	private String longName = "";
+	private String routeType = "";
+	private String routeDesc = "";
+	private String routeURL = "";
+	private String routeColor = "";
+	private String routeTextColor = "";
 
+	protected Route(int routeID) {
+		this.routeID = routeID;
+	}
 
+	/**
+	 * Verify that the Route_ID used for the search matches the actual Route_ID.
+	 * @param routeID the Route_ID used for the search.
+	 */
+	protected boolean verifyRoute(int routeID){
+		return this.routeID == routeID;
+	}
 
+	protected void setAgencyID(String agencyID) {
+		this.agencyID = agencyID;
+	}
 
-	public Route(String routeID, String agencyId, String routeShortName, String routeLongName, String routeDesc,
-				 String routeType, String routeURL, String routeColor, String routeTextColor){
+	protected void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
 
-		//converting routID into int for keys
-		byte[] routeIdBytes = routeID.getBytes(StandardCharsets.US_ASCII);
-		StringBuilder routIDByteString = new StringBuilder();
-		for (byte routeIdByte : routeIdBytes) {
-			routIDByteString.append(routeIdByte);
-		}
-		this.routeID = Integer.parseInt(routIDByteString.toString());
-		this.agencyId = agencyId;
-		this.routeShortName = routeShortName;
-		this.routeLongName = routeLongName;
+	protected void setLongName(String longName) {
+		this.longName = longName;
+	}
+
+	protected void setRouteDesc(String routeDesc) {
 		this.routeDesc = routeDesc;
+	}
+
+	protected void setRouteType(String routeType) {
 		this.routeType = routeType;
+	}
+
+	protected void setRouteURL(String routeURL) {
 		this.routeURL = routeURL;
-		this.routeColor = routeColor;
+	}
+
+	protected void setRouteTextColor(String routeTextColor) {
 		this.routeTextColor = routeTextColor;
-
-
-
-
 	}
 
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param file
-	 */
-	public boolean importRoute(File file){
-		return false;
+	protected void setRouteColor(String routeColor) {
+		this.routeColor = routeColor;
 	}
 
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param file
-	 */
-	public File exportRoute(File file){
-		return null;
-	}
-
-	public void updateRoute(){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param stopId
-	 */
-	public void displayRoute(String stopId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param routeId
-	 */
-	public void routeVerify(String routeId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param routeId
-	 */
-	public void filterRoute(String routeId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param routeId
-	 */
-	public void plotCoord(Route routeId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param routeId
-	 */
-	public void plotLocation(Route routeId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param routeId
-	 */
-	public Route searchRouteId(String routeId){
-		return null;
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param stopId
-	 */
-	public void searchRouteForStop(String stopId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param
-	 */
-	public void setRouteId(String routeId){
-
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param routeColor
-	 */
-	public void setRouteColor(String routeColor){
-
-	}
-
-	public int getRouteId(){
+	protected int getRouteId(){
 		return routeID;
 	}
 
-	public String getRouteColor(){
+	protected String getAgencyID() {
+		return agencyID;
+	}
+
+	protected String getShortName() {
+		return shortName;
+	}
+
+	protected String getLongName() {
+		return longName;
+	}
+
+	protected String getRouteDesc() {
+		return routeDesc;
+	}
+
+	protected String getRouteType() {
+		return routeType;
+	}
+
+	protected String getRouteURL() {
+		return routeURL;
+	}
+
+	protected String getRouteColor(){
 		return routeColor;
 	}
 
-	public double getDistance(){
+	protected String getRouteTextColor() {
+		return routeTextColor;
+	}
+	protected double getDistance(){
 		return 0;
-	}
-
-	public double getDuration(){
-		return 0;
-	}
-
-	public double getSpeed(){
-		return 0;
-	}
-
-	/**
-	 * NOT IMPLEMENTED YET
-	 * @param obj
-	 */
-	public void update(Object obj){
-
-	}
-
+	} //TODO
 }

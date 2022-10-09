@@ -2,7 +2,7 @@ GTFS data structures - use a hashset. Allows for objects to be paired to their r
     -For the keys: strings cannot be used. So consider the stop/route/trip ID as ASCII characters and convert them to their decimal 
     representations. Use the decimal representation as the key.
         -Ex: A stop with stop_ID 12 would have the key 4950.
-        -Ex: A route with route_ID RR5 would have the key 828253
+        -Ex: A route with route_ID RR5 would have the key 828235
         Must have hashsets in a list. CHANGE - hashsets don't provide any useful methods. We would have to
         do a lot with iterators. I decided to go with Hashtables and we can do a check to make sure we don't have duplicate files.
 
@@ -11,3 +11,5 @@ GTFS data structures - use a hashset. Allows for objects to be paired to their r
         - GTFS class should not need individual route, trip, stoptime, and stop Objects.
         - add search stop times method into UML in GTFS class.
         - The controller has imports for each type of file. Copied same structure in GTFS
+
+Route/Stop/Stop-Time/Trip ID's should be immutable/final, since they're the primary identifier of each object. Changing them could lead to issues in the hash tables containing them.

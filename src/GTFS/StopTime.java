@@ -1,9 +1,5 @@
 package GTFS;
 
-
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author nairac
  * @version 1.0
@@ -11,146 +7,89 @@ import java.nio.charset.StandardCharsets;
  */
 public class StopTime {
 
-	private int stopTimeID; //COMBO OF THE TRIP ID AND STOP ID (used to make key for HASHTABLE)
-	private String arrivalTime;
-	private String departureTime;
-	private String stopId;
-	private String tripId;
-	//private int sequence; not in file change on UML
-	private String stopHeadSign;
-	private String pickUpType;
-	private String dropOffType;
-	private String stopSequence;
+	private final int stopId;
+	private final int tripId;
+	private final int hashId;
+	private String arrivalTime = "";
+	private String departureTime = "";
+	private String stopHeadSign = "";
+	private String pickUpType = "";
+	private String dropOffType = "";
+	private String stopSequence = "";
 
-	public StopTime(String tripId, String arrivalTime, String departureTime, String stopId,
-					String stopSequence, String stopHeadSign, String pickUpType, String dropOffType){
-		//converting stopTimeID into int for keys
-		byte[] stopTimeTripIdBytes = tripId.getBytes(StandardCharsets.US_ASCII);
-		StringBuilder stopTimeTripIDByteString = new StringBuilder();
-		for (byte stopIdByte : stopTimeTripIdBytes) {
-			stopTimeTripIDByteString.append(stopIdByte);
-		}
-		byte[] stopTimeStopIdBytes = stopId.getBytes(StandardCharsets.US_ASCII);
-		StringBuilder stopTimeStopIDByteString = new StringBuilder();
-		for (byte stopIdByte : stopTimeStopIdBytes) {
-			stopTimeStopIDByteString.append(stopIdByte);
-		}
-
-		this.stopTimeID = Integer.parseInt(stopTimeTripIDByteString.toString()
-				+ stopTimeStopIDByteString.toString());
-		this.tripId = tripId;
+	protected StopTime(int stopId, int tripId, int hashId) {
 		this.stopId = stopId;
+		this.tripId = tripId;
+		this.hashId = hashId;
+	}
+
+	/**
+	 * Verify that the stop time ID used for the search matches the ID of this stop time.
+	 * @param id The ID used for the search. This ID can be either of the following:
+	 *          the stop ID (String representation).
+	 *          the hash ID (ID used to store this object in the hash table).
+	 */
+	protected boolean verifyStopTime(int id) {
+		return stopId == id || hashId == id;
+	}
+
+	protected void setArrivalTime(String arrivalTime) {
 		this.arrivalTime = arrivalTime;
+	}
+
+	protected void setDepartureTime(String departureTime) {
 		this.departureTime = departureTime;
+	}
+
+	protected void setStopHeadSign(String stopHeadSign) {
 		this.stopHeadSign = stopHeadSign;
+	}
+
+	protected void setPickUpType(String pickUpType) {
 		this.pickUpType = pickUpType;
+	}
+
+	protected void setDropOffType(String dropOffType) {
 		this.dropOffType = dropOffType;
+	}
+
+	protected void setStopSequence(String stopSequence) {
 		this.stopSequence = stopSequence;
-
 	}
 
-	/**
-	 * 
-	 * @param file
-	 */
-	public boolean importStopTimes(File file){
-		return false;
+	protected String getStopHeadSign() {
+		return stopHeadSign;
 	}
 
-	/**
-	 * 
-	 * @param file
-	 */
-	public File exportStopTimes(File file){
-		return null;
+	protected String getPickUpType() {
+		return pickUpType;
 	}
 
-	/**
-	 * 
-	 * @param stopId
-	 */
-	public StopTime searchStopIDTime(String stopId){
-		return null;
+	protected String getDropOffType() {
+		return dropOffType;
 	}
 
-	public void searchStopTimesForStop(){
-
+	protected String getStopSequence() {
+		return stopSequence;
 	}
 
-	/**
-	 * 
-	 * @param arriveTime
-	 */
-	public void setArrivalTime(String arriveTime){
-
+	protected String getArrivalTime() {
+		return arrivalTime;
 	}
 
-	/**
-	 * 
-	 * @param departureTime
-	 */
-	public void setDepartureTime(String departureTime){
-
+	protected String getDepartureTime() {
+		return departureTime;
 	}
 
-	/**
-	 * 
-	 * @param stopId
-	 */
-	public void setStopId(String stopId){
-
+	protected int getStopId() {
+		return stopId;
 	}
 
-	/**
-	 * 
-	 * @param tripId
-	 */
-	public void setTripId(String tripId){
-
+	protected int getTripId() {
+		return tripId;
 	}
 
-	public String getArrivalTime(){
-		return "";
+	protected int getHashId() {
+		return hashId;
 	}
-
-	public String getDepartureTime(){
-		return "";
-	}
-
-	public String getStopId(){
-		return "";
-	}
-
-	public String getTripId(){
-		return "";
-	}
-
-	public int getStopTimeID() {
-		return stopTimeID;
-	}
-
-	/**
-	 * 
-	 * @param
-	 */
-	public boolean displaySpeed(String arrivalTime, String departureTime){
-		return false;
-	}
-
-	/**
-	 * 
-	 * @param tripId
-	 */
-	public StopTime searchTripIdTimes(String tripId){
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param obj
-	 */
-	public void update(Object obj){
-
-	}
-
 }
