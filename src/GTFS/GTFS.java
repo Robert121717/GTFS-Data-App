@@ -136,7 +136,7 @@ public class GTFS {
 			stop.setStopLon(Double.parseDouble(parts[4]));
 
 			stops.put(stop.getStopId(), stop);
-			lastAdded += stop.toString();
+			lastAdded += line;
 			hasLine = in.hasNextLine();
 		}
 	}
@@ -171,7 +171,6 @@ public class GTFS {
 			ST.setPickUpType(parts[6]); ST.setDropOffType(parts[7]);
 
 			stopTimes.put(ST.getHashId(), ST);
-			lastAdded += ST.toString();
 			hasLine = in.hasNextLine();
 		}
 	}
@@ -185,6 +184,7 @@ public class GTFS {
 		try(Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importTrip(in.hasNextLine(), in);
+			System.out.println(trips.size());
 
 		} catch(NumberFormatException e) {
 			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
@@ -208,7 +208,7 @@ public class GTFS {
 			trip.setHeadSign(parts[3]);
 			trip.setShapeId(parts[6]);
 			trips.put(trip.getHashId(), trip);
-			lastAdded = trip.toString();
+			lastAdded += trip.toString();
 			hasLine = in.hasNextLine();
 
 		}
