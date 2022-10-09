@@ -14,6 +14,7 @@ import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -55,6 +56,8 @@ public class Controller implements Initializable {
 	private MenuItem closeMI;
 	@FXML
 	private Menu menu;
+	@FXML
+	private BorderPane dropBorderPane;
 	private String searchType;
 
 	public Controller(){
@@ -68,6 +71,7 @@ public class Controller implements Initializable {
 		initializeMenuItems();
 		mainVBox.setStyle("-fx-background-color: " +
 				"radial-gradient(focus-distance 0% , center 50% 50% , radius 40% , #E5E6E4, #F9F9F8);");
+		dropBorderPane.setStyle("-fx-border-width: 3; -fx-border-color: #9e9e9e; -fx-border-style: segments(10, 10, 10, 10);");
 	}
 
 	@FXML
@@ -239,6 +243,7 @@ public class Controller implements Initializable {
 		closeMI.setOnAction(e -> {
 			menu.setText("Select"); searchType = "";
 			searchTF.setDisable(true);
+			searchTF.setText("");
 		});
 	}
 
