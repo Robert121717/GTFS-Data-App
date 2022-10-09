@@ -128,8 +128,7 @@ public class Controller implements Initializable {
 		stack.getChildren().addAll(header, inputPrompt, importEntry, send);
 		background.getChildren().add(stack);
 
-		background.setStyle("-fx-background-radius: 8 8 8 8;" +
-				"-fx-background-color: " +
+		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
 				"radial-gradient(focus-distance 0% , center 50% 50% , radius 40% , #E5E6E4, #F9F9F8);");
 		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
 		background.setEffect(shadow);
