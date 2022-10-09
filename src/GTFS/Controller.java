@@ -196,17 +196,17 @@ public class Controller implements Initializable {
 	}
 
 	private void initializeDropBox() {
-		dropImportVBox.setOnDragOver(event -> {			// allows user to drag files into VBox
-			Dragboard dropBox = event.getDragboard();
+		dropImportVBox.setOnDragOver(e -> {			// allows user to drag files into VBox
+			Dragboard dropBox = e.getDragboard();
 
 			if (dropBox.hasFiles()) {
-				event.acceptTransferModes(TransferMode.COPY);
+				e.acceptTransferModes(TransferMode.COPY);
 			} else {
-				event.consume();
+				e.consume();
 			}
 		});
-		dropImportVBox.setOnDragDropped(event -> {			// handles files once dropped into VBox
-			Dragboard dropBox = event.getDragboard();
+		dropImportVBox.setOnDragDropped(e -> {			// handles files once dropped into VBox
+			Dragboard dropBox = e.getDragboard();
 
 			if (dropBox.hasFiles()) {
 				for (File file : dropBox.getFiles()) {
@@ -215,7 +215,7 @@ public class Controller implements Initializable {
 				recentUploadDisplay.setText(gtfs.getNewestImport());
 				recentUploadLabel.setVisible(true);
 			}
-			event.consume();
+			e.consume();
 		});
 	}
 

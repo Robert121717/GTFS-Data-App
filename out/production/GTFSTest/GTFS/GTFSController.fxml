@@ -82,7 +82,7 @@
                               <Font size="17.0" />
                            </font>
                         </Label>
-                        <TextArea fx:id="recentUploadDisp" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="174.0" promptText="Recently uploaded files will be shown here." wrapText="true">
+                        <TextArea fx:id="recentUploadDisplay" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="174.0" promptText="Recently uploaded files will be shown here." wrapText="true">
                            <VBox.margin>
                               <Insets bottom="8.0" right="8.0" />
                            </VBox.margin>
