@@ -41,14 +41,14 @@ public class GTFS {
 			header = header.toUpperCase();
 
 			if(header.contains("ROUTE_ID")) {
-				if(header.contains("STOP_ID")) {
-					importStopTime(file);
+				if(header.contains("TRIP_ID")) {
+					importTrip(file);
 				} else {
 					importRoute(file);
 				}
 			} else if(header.contains("STOP_ID")) {
 				if(header.contains("TRIP_ID")) {
-					importTrip(file);
+					importStopTime(file);
 				} else {
 					importStop(file);
 				}
