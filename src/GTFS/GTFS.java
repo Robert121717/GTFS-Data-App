@@ -101,8 +101,10 @@ public class GTFS {
 			}
 
 			routes.put(route.getRouteId(), route);
-			lastAdded += route.toString();
-			hasLine = in.hasNextLine();
+			if (!in.hasNextLine()) {
+				lastAdded = route.toString();
+				hasLine = false;
+			}
 		}
 	}
 
@@ -135,8 +137,10 @@ public class GTFS {
 			stop.setStopLon(Double.parseDouble(parts[4]));
 
 			stops.put(stop.getStopId(), stop);
-			lastAdded += line;
-			hasLine = in.hasNextLine();
+			if (!in.hasNextLine()) {
+				lastAdded = stop.toString();
+				hasLine = false;
+			}
 		}
 	}
 
@@ -170,7 +174,10 @@ public class GTFS {
 			ST.setPickUpType(parts[6]); ST.setDropOffType(parts[7]);
 
 			stopTimes.put(ST.getHashId(), ST);
-			hasLine = in.hasNextLine();
+			if (!in.hasNextLine()) {
+				lastAdded = ST.toString();
+				hasLine = false;
+			}
 		}
 	}
 
@@ -206,9 +213,10 @@ public class GTFS {
 			trip.setHeadSign(parts[3]);
 			trip.setShapeId(parts[6]);
 			trips.put(trip.getHashId(), trip);
-			lastAdded += trip.toString();
-			hasLine = in.hasNextLine();
-
+			if (!in.hasNextLine()) {
+				lastAdded = trip.toString();
+				hasLine = false;
+			}
 		}
 	}
 
