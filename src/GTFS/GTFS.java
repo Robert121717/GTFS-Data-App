@@ -109,6 +109,10 @@ public class GTFS {
 		return stopTimes.get(stopTimeId);
 	}
 
+	protected String getNewestImport() {
+		return "";
+	}
+
 	/**
 	 * Converts each ASCII character in the ID to its decimal representation and appends it to an integer.
 	 * @param id The object's ID as a String.

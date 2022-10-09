@@ -40,14 +40,14 @@
                   <Insets right="20.0" top="9.0" />
                </HBox.margin>
             </MenuBar>
-            <TextField alignment="TOP_LEFT" text="Search">
+            <TextField alignment="TOP_LEFT" onAction="#exportFiles" text="Search">
                <HBox.margin>
                   <Insets right="10.0" top="10.0" />
                </HBox.margin>
             </TextField>
          </children>
       </HBox>
-      <HBox prefHeight="310.0" prefWidth="600.0">
+      <HBox prefHeight="343.0" prefWidth="600.0">
          <children>
             <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="199.0" prefWidth="173.0" spacing="20.0">
                <children>
@@ -67,18 +67,14 @@
                   <Label alignment="TOP_CENTER" text="Drag and drop file" />
                </children>
             </VBox>
-            <VBox prefHeight="345.0" prefWidth="183.0">
+            <VBox prefHeight="312.0" prefWidth="178.0">
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="255.0" prefWidth="174.0">
+                        <TextArea fx:id="recentUploadDisp" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="174.0" />
+                        <VBox prefHeight="75.0" prefWidth="178.0">
                            <children>
-                              <TextArea maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="254.0" prefWidth="174.0" />
-                           </children>
-                        </HBox>
-                        <HBox alignment="TOP_CENTER" prefHeight="89.0" prefWidth="179.0">
-                           <children>
-                              <Label text="Recently Uploaded">
+                              <Label fx:id="recentUploadLabel" alignment="TOP_CENTER" prefHeight="26.0" prefWidth="178.0" text="Recently Uploaded">
                                  <padding>
                                     <Insets top="15.0" />
                                  </padding>
@@ -87,7 +83,7 @@
                                  </font>
                               </Label>
                            </children>
-                        </HBox>
+                        </VBox>
                      </children>
                   </VBox>
                </children>
