@@ -1,13 +1,15 @@
 package GTFS;
 
-
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 import java.util.Scanner;
+
+import static GTFS.Controller.newAlert;
 
 /**
  * @author nairac
@@ -36,43 +38,35 @@ public class GTFS {
 	protected void importText(String text) {
 
 	}
-	protected void importFile(File file){
-		try(Scanner in = new Scanner(file)){
+	protected void importFile(File file) {
+		try(Scanner in = new Scanner(file)) {
+
 			String header = in.nextLine();
 			header = header.toUpperCase();
-			if(header.contains("ROUTE_ID")){
-				if(header.contains("STOP_ID")){
+
+			if(header.contains("ROUTE_ID")) {
+				if(header.contains("STOP_ID")) {
 					importStopTime(file);
 				} else {
 					importRoute(file);
 				}
-			} else if(header.contains("STOP_ID")){
-				if(header.contains("TRIP_ID")){
+			} else if(header.contains("STOP_ID")) {
+				if(header.contains("TRIP_ID")) {
 					importTrip(file);
 				} else {
 					importStop(file);
 				}
-			} else{
+			} else {
 				throw new IllegalArgumentException();
 			}
-		} catch(NumberFormatException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("Unexpected Value");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
-		} catch(FileNotFoundException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("File Not Found");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
-		} catch(IllegalArgumentException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("Invalid Data");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
+		} catch(NumberFormatException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
+
+		} catch(FileNotFoundException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found", e.getMessage());
+
+		} catch(IllegalArgumentException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "Invalid Data", e.getMessage());
 		}
 	}
 
@@ -81,38 +75,30 @@ public class GTFS {
 	 * @param newRoute- route being added to hashtable
 	 * @return returns the newly added Route
 	 */
-	public void importRoute(File file){
-		try (Scanner in = new Scanner(file)){
+	public void importRoute(File file) {
+		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importRoute(in.hasNextLine(), in);
-		} catch(NumberFormatException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("Unexpected Value");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
-		} catch(FileNotFoundException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("File Not Found");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
+
+		} catch(NumberFormatException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
+
+		} catch(FileNotFoundException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found", e.getMessage());
 		}
 	}
 
-	private void importRoute(boolean hasLine, Scanner in){
+	private void importRoute(boolean hasLine, Scanner in) {
 		if(hasLine) {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
 			Route route = new Route(toDecimal(parts[0]));
-			route.setAgencyID(parts[1]);
-			route.setShortName(parts[2]);
-			route.setLongName(parts[3]);
-			route.setRouteDesc(parts[4]);
-			route.setRouteType(parts[5]);
-			route.setRouteURL(parts[6]);
-			route.setRouteColor(parts[7]);
-			route.setRouteTextColor(parts[8]);
+
+			route.setAgencyID(parts[1]); route.setShortName(parts[2]);
+			route.setLongName(parts[3]); route.setRouteDesc(parts[4]);
+			route.setRouteType(parts[5]); route.setRouteURL(parts[6]);
+			route.setRouteColor(parts[7]); route.setRouteTextColor(parts[8]);
+
 			routes.put(route.getRouteId(), route);
 			lastAdded += route.toString();
 			importRoute(in.hasNextLine(), in);
@@ -124,26 +110,20 @@ public class GTFS {
 	 * @param newStop- stop being added to hashtable
 	 * @return returns the newly added Stop
 	 */
-	public void importStop(File file){
-		try (Scanner in = new Scanner(file)){
+	public void importStop(File file) {
+		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importStop(in.hasNextLine(), in);
-		} catch(NumberFormatException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("Unexpected Value");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
-		} catch(FileNotFoundException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("File Not Found");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
+
+		} catch(NumberFormatException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
+
+		} catch(FileNotFoundException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found", e.getMessage());
 		}
 	}
 
-	private void importStop(boolean hasLine, Scanner in){
+	private void importStop(boolean hasLine, Scanner in) {
 		if(hasLine) {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
@@ -163,37 +143,30 @@ public class GTFS {
 	 * @param newStopTime - stoptime being added to hashtable
 	 * @return returns newly added stoptime
 	 */
-	public void importStopTime(File file){
-		try(Scanner in = new Scanner(file)){
+	public void importStopTime(File file) {
+		try(Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importStopTime(in.hasNextLine(), in);
-		} catch(NumberFormatException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("Unexpected Value");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
-		} catch(FileNotFoundException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("File Not Found");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
+
+		} catch(NumberFormatException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
+
+		} catch(FileNotFoundException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found", e.getMessage());
 		}
 	}
 
-	private void importStopTime(boolean hasLine, Scanner in){
-		if(hasLine){
+	private void importStopTime(boolean hasLine, Scanner in) {
+		if(hasLine) {
 			String line = in.nextLine();
 			String[] parts = line.split(",");
 			StopTime ST = new StopTime(toDecimal(parts[3]), toDecimal(parts[0]),
 					mergeIDs(toDecimal(parts[3]), toDecimal(parts[0])));
-			ST.setArrivalTime(parts[1]);
-			ST.setDepartureTime(parts[2]);
-			ST.setStopSequence(parts[4]);
-			ST.setStopHeadSign(parts[5]);
-			ST.setPickUpType(parts[6]);
-			ST.setDropOffType(parts[7]);
+
+			ST.setArrivalTime(parts[1]); ST.setDepartureTime(parts[2]);
+			ST.setStopSequence(parts[4]); ST.setStopHeadSign(parts[5]);
+			ST.setPickUpType(parts[6]); ST.setDropOffType(parts[7]);
+
 			stopTimes.put(ST.getHashId(), ST);
 			lastAdded += ST.toString();
 			importStop(in.hasNextLine(), in);
@@ -205,36 +178,30 @@ public class GTFS {
 	 * @param newTrip- trip being added to hashtable
 	 * @return returns newly added stoptime
 	 */
-	public void importTrip(File file){
-		try(Scanner in = new Scanner(file)){
+	public void importTrip(File file) {
+		try(Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importTrip(in.hasNextLine(), in);
-		} catch(NumberFormatException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("Unexpected Value");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
-		} catch(FileNotFoundException e){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error Dialog");
-			alert.setHeaderText("File Not Found");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
+
+		} catch(NumberFormatException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
+
+		} catch(FileNotFoundException e) {
+			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found", e.getMessage());
 		}
 	}
 
-	protected void importTrip(boolean hasLine, Scanner in){
+	protected void importTrip(boolean hasLine, Scanner in) {
 		if(hasLine){
 			String line = in.nextLine();
 			String[] parts = line.split(",");
 			Trip trip = new Trip(toDecimal(parts[2]), toDecimal(parts[0]),
 					mergeIDs(toDecimal(parts[2]), toDecimal(parts[0])));
-			trip.setBlockId(parts[5]);
-			trip.setDirectionId(parts[4]);
-			trip.setServiceId(parts[1]);
-			trip.setHeadSign(parts[3]);
+
+			trip.setBlockId(parts[5]); trip.setDirectionId(parts[4]);
+			trip.setServiceId(parts[1]); trip.setHeadSign(parts[3]);
 			trip.setShapeId(parts[6]);
+
 			trips.put(trip.getHashId(), trip);
 			lastAdded = trip.toString();
 			importTrip(in.hasNextLine(), in);
@@ -245,7 +212,7 @@ public class GTFS {
 	 * NOT IMPLEMENTED YET
 	 * @param String
 	 */
-	public boolean export(String String){
+	public boolean export(String String) {
 		return false;
 	}
 
@@ -253,7 +220,7 @@ public class GTFS {
 	 * Searches for a stop, given the stopID. Returns the Stop
 	 * @param stopId- ID turned into ascii decimal used as a key for each stop.
 	 */
-	public Stop searchStopId(int stopId){
+	public Stop searchStopId(int stopId) {
 		return stops.get(stopId);
 	}
 
@@ -261,7 +228,7 @@ public class GTFS {
 	 * Searches for a route, given the routeId. Returns the route
 	 * @param routeId- ID turned into ascii decimal used as a key for each stop
 	 */
-	public Route searchRouteId(int routeId){
+	public Route searchRouteId(int routeId) {
 		return routes.get(routeId);
 	}
 
@@ -269,14 +236,14 @@ public class GTFS {
 	 * Searches for a trip, given the tripId. Returns the trip
 	 * @param tripId- ID turned into ascii decimal used as a key for each trip
 	 */
-	public Trip searchTrips(int tripId){
+	public Trip searchTrips(int tripId) {
 		return trips.get(tripId);
 	}
 	/**
 	 * Searches for a stop time, given the stopTimeId. Returns the stop time.
 	 * @param stopTimeId- ID turned into ascii decimal used as a key for each stop time
 	 */
-	public StopTime searchStopTimes(int stopTimeId){
+	public StopTime searchStopTimes(int stopTimeId) {
 		return stopTimes.get(stopTimeId);
 	}
 

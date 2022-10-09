@@ -21,12 +21,12 @@
                   <Font size="24.0" />
                </font>
                <HBox.margin>
-                  <Insets left="10.0" right="250.0" top="5.0" />
+                  <Insets left="10.0" right="200.0" top="5.0" />
                </HBox.margin>
             </Label>
-            <MenuBar prefHeight="26.0" prefWidth="71.0">
+            <MenuBar prefHeight="26.0" prefWidth="98.0">
               <menus>
-                <Menu mnemonicParsing="false" text="Attribute">
+                <Menu mnemonicParsing="false" text="Select">
                   <items>
                         <MenuItem mnemonicParsing="false" text="Stop" />
                         <MenuItem mnemonicParsing="false" text="Stop Time" />
@@ -40,7 +40,7 @@
                   <Insets right="20.0" top="9.0" />
                </HBox.margin>
             </MenuBar>
-            <TextField alignment="TOP_LEFT" onAction="#exportFiles" text="Search">
+            <TextField fx:id="search" alignment="TOP_LEFT" onAction="#exportFiles" text="Search">
                <HBox.margin>
                   <Insets right="10.0" top="10.0" />
                </HBox.margin>
@@ -62,28 +62,31 @@
                   <Insets />
                </opaqueInsets>
             </VBox>
-            <VBox alignment="TOP_CENTER" prefHeight="274.0" prefWidth="251.0">
+            <VBox fx:id="dropImportVBox" alignment="CENTER" prefHeight="274.0" prefWidth="251.0">
                <children>
-                  <Label alignment="TOP_CENTER" text="Drag and drop file" />
+                  <Label alignment="TOP_CENTER" prefHeight="134.0" prefWidth="114.0" text="Drag and Drop File" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                </children>
             </VBox>
             <VBox prefHeight="312.0" prefWidth="178.0">
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <TextArea fx:id="recentUploadDisp" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="174.0" wrapText="true" />
-                        <VBox prefHeight="75.0" prefWidth="178.0">
-                           <children>
-                              <Label fx:id="recentUploadLabel" alignment="TOP_CENTER" prefHeight="26.0" prefWidth="178.0" text="Recently Uploaded">
-                                 <padding>
-                                    <Insets top="15.0" />
-                                 </padding>
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </VBox>
+                        <Label fx:id="recentUploadLabel" alignment="TOP_CENTER" prefHeight="26.0" prefWidth="178.0" text="Recently Uploaded">
+                           <padding>
+                              <Insets top="15.0" />
+                           </padding>
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="recentUploadDisp" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="174.0" wrapText="true">
+                           <VBox.margin>
+                              <Insets bottom="8.0" right="8.0" />
+                           </VBox.margin>
+                        </TextArea>
                      </children>
                   </VBox>
                </children>

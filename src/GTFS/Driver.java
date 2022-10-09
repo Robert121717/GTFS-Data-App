@@ -1,13 +1,10 @@
 package GTFS;
 
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
@@ -32,7 +29,7 @@ public class Driver extends Application {
         stage.setScene(scene);
 //        TODO keep
 //        stage.setMaximized(true);
-//        stage.getIcons().add([insert image path here] to add icon to application
+//        stage.getIcons().add([insert image path here]) to add icon to application
         //hi
         Controller controller = loader.getController();
         controller.setStage(stage);

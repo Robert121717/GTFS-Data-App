@@ -2,16 +2,9 @@ package GTFS;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.channels.FileChannel;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Scanner;
-
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -19,12 +12,13 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -38,6 +32,8 @@ public class Controller implements Initializable {
 	private Stage stage;
 
 	private Popup importPu;
+	@FXML
+	private VBox dropImportVBox;
 
 	@FXML
 	private TextArea importEntry;
@@ -58,6 +54,7 @@ public class Controller implements Initializable {
 
 	public void initialize(URL url, ResourceBundle rb) {
 		recentUploadLabel.setVisible(false);
+		initializeDropBox();
 	}
 
 	/**
@@ -72,11 +69,14 @@ public class Controller implements Initializable {
 		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.txt"));
 		List<File> files = chooser.showOpenMultipleDialog(null);
 
-		for (File file : files) {
-			gtfs.importFile(file);
+		if (files != null) {
+			for (File file : files) {
+				gtfs.importFile(file);
+			}
+
+			recentUploadDisp.setText(gtfs.getNewestImport());
+			recentUploadLabel.setVisible(true);
 		}
-		recentUploadDisp.setText(gtfs.getNewestImport());
-		recentUploadLabel.setVisible(true);
 	}
 
 	@FXML
@@ -96,7 +96,7 @@ public class Controller implements Initializable {
 		HBox header = new HBox(5);
 		header.setPrefWidth(400); header.setPrefHeight(50); header.setAlignment(Pos.TOP_LEFT);
 
-		Button closeButton = new Button("Minimize"); closeButton.setOnAction(e -> importPu.hide()); 		//close popup
+		Button closeButton = new Button("Close"); closeButton.setOnAction(e -> importPu.hide()); 	//close popup
 
 		header.getChildren().addAll(closeButton,
 				new Label("Please enter the data you'd like to import below:"));
@@ -119,7 +119,31 @@ public class Controller implements Initializable {
 		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.BLACK, 15, 0.05, 0, 0);
 		background.setEffect(shadow);
 
-		importPu.getContent().add(background); importPu.show(stage);
+		importPu.getContent().add(background);
+		importPu.show(stage);
+	}
+
+	private void initializeDropBox() {
+		dropImportVBox.setOnDragOver(event -> {
+			Dragboard dropBox = event.getDragboard();
+
+			if (dropBox.hasFiles()) {
+				event.acceptTransferModes(TransferMode.COPY);
+			} else {
+				event.consume();
+			}
+		});
+		dropImportVBox.setOnDragDropped(event -> {
+			Dragboard dropBox = event.getDragboard();
+
+			if (dropBox.hasFiles()) {
+				for (File file : dropBox.getFiles()) {
+					gtfs.importFile(file);
+				}
+				recentUploadDisp.setText(gtfs.getNewestImport());
+			}
+			event.consume();
+		});
 	}
 
 	@FXML
