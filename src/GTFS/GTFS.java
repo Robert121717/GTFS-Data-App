@@ -22,6 +22,8 @@ public class GTFS {
 	private final Hashtable<BigInteger, StopTime> stopTimes;
 	private final Hashtable<BigInteger, Trip> trips;
 	private String lastAdded;
+	private final StringBuilder stringBuilder = new StringBuilder();
+
 
 	public GTFS(){
 		routes = new Hashtable<>();
@@ -85,8 +87,13 @@ public class GTFS {
 	}
 
 	private void importRoute(boolean hasLine, Scanner in) {
+		int lineCount = 0;
 		while(hasLine) {
 			String line = in.nextLine();
+			if(lineCount < 3) {
+				lineCount++;
+				stringBuilder.append(line);
+			}
 			String[] parts = line.split(",");
 			Route route = new Route(parts[0]);
 
@@ -102,7 +109,8 @@ public class GTFS {
 
 			routes.put(route.getRouteId(), route);
 			if (!in.hasNextLine()) {
-				lastAdded = route.toString();
+				lastAdded = stringBuilder.toString();
+				stringBuilder.setLength(0);
 				hasLine = false;
 			}
 		}
@@ -110,7 +118,7 @@ public class GTFS {
 
 	/**
 	 * puts a new stop into the stops hashtable
-	 * @param - stop file being added to hashtable
+	 * @param file - stop file being added to hashtable
 	 *
 	 */
 	protected void importStop(File file) {
@@ -127,8 +135,14 @@ public class GTFS {
 	}
 
 	private void importStop(boolean hasLine, Scanner in) {
+		int lineCount = 0;
 		while(hasLine) {
 			String line = in.nextLine();
+
+			if(lineCount < 3) {
+				lineCount++;
+				stringBuilder.append(line);
+			}
 			String[] parts = line.split(",");
 			Stop stop = new Stop(parts[0]);
 
@@ -138,7 +152,8 @@ public class GTFS {
 
 			stops.put(stop.getStopId(), stop);
 			if (!in.hasNextLine()) {
-				lastAdded = stop.toString();
+				lastAdded = stringBuilder.toString();
+				stringBuilder.setLength(0);
 				hasLine = false;
 			}
 		}
@@ -163,8 +178,15 @@ public class GTFS {
 	}
 
 	private void importStopTime(boolean hasLine, Scanner in) {
+		int lineCount = 0;
 		while(hasLine) {
 			String line = in.nextLine();
+
+			if(lineCount < 3) {
+				lineCount++;
+				stringBuilder.append(line);
+			}
+
 			String[] parts = line.split(",");
 			StopTime ST = new StopTime(parts[3], parts[0]);
 
@@ -174,7 +196,8 @@ public class GTFS {
 
 			stopTimes.put(ST.getHashId(), ST);
 			if (!in.hasNextLine()) {
-				lastAdded = ST.toString();
+				lastAdded = stringBuilder.toString();
+				stringBuilder.setLength(0);
 				hasLine = false;
 			}
 		}
@@ -199,9 +222,14 @@ public class GTFS {
 	}
 
 	protected void importTrip(boolean hasLine, Scanner in) {
-
+		int lineCount = 0;
 		while(hasLine) {
 			String line = in.nextLine();
+
+			if(lineCount < 3) {
+				lineCount++;
+				stringBuilder.append(line);
+			}
 
 			String[] parts = line.split(",");
 			Trip trip = new Trip(parts[2], parts[0]);
@@ -214,7 +242,8 @@ public class GTFS {
 
 			trips.put(trip.getHashId(), trip);
 			if (!in.hasNextLine()) {
-				lastAdded = trip.toString();
+				lastAdded = stringBuilder.toString();
+				stringBuilder.setLength(0);
 				hasLine = false;
 			}
 		}
