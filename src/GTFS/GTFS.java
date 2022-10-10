@@ -6,8 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.util.Hashtable;
-import java.util.Scanner;
+import java.util.*;
 
 import static GTFS.Controller.newAlert;
 
@@ -19,8 +18,8 @@ public class GTFS {
 
 	private final Hashtable<BigInteger, Route> routes;
 	private final Hashtable<BigInteger, Stop> stops;
-	private final Hashtable<BigInteger, StopTime> stopTimes;
-	private final Hashtable<BigInteger, Trip> trips;
+	private final ArrayList<StopTime> stopTimes;
+	private final ArrayList<Trip> trips;
 	private String lastAdded;
 	private final StringBuilder stringBuilder = new StringBuilder();
 
@@ -28,8 +27,8 @@ public class GTFS {
 	public GTFS(){
 		routes = new Hashtable<>();
 		stops = new Hashtable<>();
-		stopTimes = new Hashtable<>();
-		trips = new Hashtable<>();
+		stopTimes = new ArrayList<>();
+		trips = new ArrayList<>();
 	}
 
 	protected void importText(String text) {
@@ -188,13 +187,13 @@ public class GTFS {
 			}
 
 			String[] parts = line.split(",");
-			StopTime ST = new StopTime(parts[3], parts[0]);
+			StopTime st = new StopTime(parts[3], parts[0]);
 
-			ST.setArrivalTime(parts[1]); ST.setDepartureTime(parts[2]);
-			ST.setStopSequence(parts[4]); ST.setStopHeadSign(parts[5]);
-			ST.setPickUpType(parts[6]); ST.setDropOffType(parts[7]);
+			st.setArrivalTime(parts[1]); st.setDepartureTime(parts[2]);
+			st.setStopSequence(parts[4]); st.setStopHeadSign(parts[5]);
+			st.setPickUpType(parts[6]); st.setDropOffType(parts[7]);
 
-			stopTimes.put(ST.getHashId(), ST);
+			stopTimes.add(st);
 			if (!in.hasNextLine()) {
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
@@ -240,13 +239,23 @@ public class GTFS {
 			trip.setHeadSign(parts[3]);
 			trip.setShapeId(parts[6]);
 
-			trips.put(trip.getHashId(), trip);
+			trips.add(trip);
 			if (!in.hasNextLine()) {
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
 				hasLine = false;
 			}
 		}
+	}
+
+	public int numTripsWithStop(String stopId) {
+		int numTrips = 0;
+		for (StopTime stopTime: stopTimes) {
+			if(stopTime.hasStop(stopId)) {
+				numTrips++;
+			}
+		}
+		return numTrips;
 	}
 
 	/**
@@ -273,19 +282,19 @@ public class GTFS {
 		return routes.get(routeId);
 	}
 
-	/**
+	/** NOT IMPLEMENTED
 	 * Searches for a trip, given the tripId. Returns the trip
 	 * @param tripId- ID turned into ascii decimal used as a key for each trip
 	 */
 	public Trip searchTrips(BigInteger tripId) {
-		return trips.get(tripId);
+		return null;
 	}
-	/**
+	/** NOT IMPLEMENTED
 	 * Searches for a stop time, given the stopTimeId. Returns the stop time.
 	 * @param stopTimeId- ID turned into ascii decimal used as a key for each stop time
 	 */
 	public StopTime searchStopTimes(BigInteger stopTimeId) {
-		return stopTimes.get(stopTimeId);
+		return null;
 	}
 
 	protected String getNewestImport() {
