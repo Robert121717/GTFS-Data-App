@@ -31,7 +31,7 @@ public class GTFS {
 		trips = new ArrayList<>();
 	}
 
-	protected void importText(String text) {
+	protected void updateText(String text) {
 
 	}
 

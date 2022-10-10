@@ -126,16 +126,16 @@ public class Controller implements Initializable {
 		closeButton.setOnAction(e -> importPu.hide()); 	//close popup
 		header.getChildren().addAll(closeButton);
 
-		Label inputPrompt = new Label("Please Enter the Data to Import Below");
+		Label inputPrompt = new Label("Please Enter the Relevant Data Below");
 		inputPrompt.setFont(new Font(15));
 
 		importEntry = new TextArea();
 		importEntry.setPromptText("Format: {Stop / Stop Time / Route / Trip}, data");
 		importEntry.setPadding(new Insets(0, 10, 0, 10));
 
-		Button send = new Button("Send");
+		Button send = new Button("Update");
 		send.setOnAction(e -> {
-			gtfs.importText(importEntry.getText());					//import the user input into the gtfs data structures
+			gtfs.updateText(importEntry.getText());					//update the user input into the gtfs data structures
 			recentUploadDisplay.setText(gtfs.getNewestImport()); 	//display the imported data to user to show it was successful
 			recentUploadLabel.setVisible(true); importPu.hide();
 		});
