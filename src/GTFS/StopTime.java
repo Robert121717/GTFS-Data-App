@@ -58,6 +58,10 @@ public class StopTime {
 		this.stopSequence = stopSequence;
 	}
 
+	protected boolean hasStop(String stopId) {
+		return this.stopId.equals(stopId);
+	}
+
 	protected String getStopHeadSign() {
 		return stopHeadSign;
 	}
