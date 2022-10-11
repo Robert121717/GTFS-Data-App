@@ -9,8 +9,7 @@ import java.math.BigInteger;
  */
 public class Stop {
 
-	private final BigInteger stopID;
-	private final String stopIdString;
+	private final String stopID;
 	private String stopName;
 	private double stopLat;
 	private double stopLon;
@@ -21,8 +20,7 @@ public class Stop {
 	 * @param stopID the string of the stopID
 	 */
 	protected Stop(String stopID){
-		this.stopID = GTFS.toDecimal(stopID);
-		this.stopIdString = stopID;
+		this.stopID = stopID;
 		this.stopName = "";
 		this.stopLat = 0;
 		this.stopLon = 0;
@@ -70,7 +68,7 @@ public class Stop {
 	}
 
 	// start of getters
-	protected BigInteger getStopId(){
+	protected String getStopId(){
 		return stopID;
 	}
 
@@ -91,6 +89,6 @@ public class Stop {
 	}
 
 	public String toString(){
-		return "" + stopIdString + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
+		return "" + stopID + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
 	}
 }

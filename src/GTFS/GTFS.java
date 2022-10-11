@@ -19,8 +19,8 @@ import static GTFS.Controller.newAlert;
  */
 public class GTFS {
 
-	private final Hashtable<BigInteger, Route> routes;
-	private final Hashtable<BigInteger, Stop> stops;
+	private final ArrayList<Route> routes;
+	private final ArrayList<Stop> stops;
 	private final ArrayList<StopTime> stopTimes;
 	private final ArrayList<Trip> trips;
 	private String lastAdded;
@@ -30,8 +30,8 @@ public class GTFS {
 	 * This method represents the constructor for the GTFS class
 	 */
 	public GTFS(){
-		routes = new Hashtable<>();
-		stops = new Hashtable<>();
+		routes = new ArrayList<>();
+		stops = new ArrayList<>();
 		stopTimes = new ArrayList<>();
 		trips = new ArrayList<>();
 	}
@@ -117,7 +117,7 @@ public class GTFS {
 				route.setRouteTextColor("");
 			}
 
-			routes.put(route.getRouteId(), route);
+			routes.add(route);
 			if (!in.hasNextLine()) {
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
@@ -160,7 +160,7 @@ public class GTFS {
 			stop.setStopLat(Double.parseDouble(parts[3]));
 			stop.setStopLon(Double.parseDouble(parts[4]));
 
-			stops.put(stop.getStopId(), stop);
+			stops.add(stop);
 			if (!in.hasNextLine()) {
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
@@ -259,6 +259,11 @@ public class GTFS {
 		}
 	}
 
+	/**
+	 * search a stop and returns the number of trips that have the stop.
+	 * @param stopId - searched stop
+	 * @return returns the number of trips that contain the stop
+	 */
 	public int numTripsWithStop(String stopId) {
 		int numTrips = 0;
 		for (StopTime stopTime: stopTimes) {
@@ -277,20 +282,20 @@ public class GTFS {
 		return false;
 	}
 
-	/**
+	/** NOT IMPLEMENTED
 	 * Searches for a stop, given the stopID. Returns the Stop
 	 * @param stopId- ID turned into ascii decimal used as a key for each stop.
 	 */
-	public Stop searchStopId(BigInteger stopId) {
-		return stops.get(stopId);
+	public Stop searchStopId(String stopId) {
+		return null;
 	}
 
-	/**
+	/** NOT IMPLEMENTED
 	 * Searches for a route, given the routeId. Returns the route
 	 * @param routeId- ID turned into ascii decimal used as a key for each stop
 	 */
 	public Route searchRouteId(BigInteger routeId) {
-		return routes.get(routeId);
+		return null;
 	}
 
 	/** NOT IMPLEMENTED
@@ -312,7 +317,7 @@ public class GTFS {
 		return lastAdded;
 	}
 
-	/**
+	/** DEPRICATED
 	 * Converts each ASCII character in the ID to its decimal representation and appends it to an integer.
 	 *
 	 * @param id The object's ID as a String.
@@ -330,7 +335,7 @@ public class GTFS {
 		return new BigInteger(idByteString.toString());
 	}
 
-	/**
+	/** DEPRICATED
 	 * Appends one ID onto another. This method should only be used when both IDs correspond to a single object.
 	 * @param v1i Integer representation of the first ID.
 	 * @param v2i Integer representation of the second ID.

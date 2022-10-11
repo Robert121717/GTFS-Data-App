@@ -9,8 +9,7 @@ import java.math.BigInteger;
  */
 public class Route {
 
-	private final BigInteger routeID;
-	private final String routeIdString;
+	private final String routeID;
 	private String agencyID = "";
 	private String shortName = "";
 	private String longName = "";
@@ -21,15 +20,14 @@ public class Route {
 	private String routeTextColor = "";
 
 	protected Route(String routeID) {
-		this.routeID = GTFS.toDecimal(routeID);
-		this.routeIdString = routeID;
+		this.routeID = routeID;
 	}
 
 	/**
 	 * Verify that the Route_ID used for the search matches the actual Route_ID.
 	 * @param routeID the Route_ID used for the search.
 	 */
-	protected boolean verifyRoute(BigInteger routeID){
+	protected boolean verifyRoute(String routeID){
 		return this.routeID.equals(routeID);
 	}
 
@@ -65,7 +63,7 @@ public class Route {
 		this.routeColor = routeColor;
 	}
 
-	protected BigInteger getRouteId(){
+	protected String getRouteId(){
 		return routeID;
 	}
 
@@ -105,7 +103,7 @@ public class Route {
 	} //TODO
 
 	public String toString(){
-		return "" + routeIdString + "," + agencyID + "," + shortName + "," + longName +
+		return "" + routeID + "," + agencyID + "," + shortName + "," + longName +
 				"," +routeType + "," + routeDesc + "," + routeURL  + "," + routeColor + "," + routeTextColor;
 	}
 }

@@ -12,7 +12,6 @@ public class StopTime {
 
 	private final String stopId;
 	private final String tripId;
-	private final BigInteger hashId;
 	private String arrivalTime = "";
 	private String departureTime = "";
 	private String stopHeadSign = "";
@@ -23,7 +22,6 @@ public class StopTime {
 	protected StopTime(String stopId, String tripId) {
 		this.stopId = stopId;
 		this.tripId = tripId;
-		this.hashId = GTFS.mergeIDs(GTFS.toDecimal(stopId), GTFS.toDecimal(tripId));
 	}
 
 	/**
@@ -94,9 +92,6 @@ public class StopTime {
 		return tripId;
 	}
 
-	protected BigInteger getHashId() {
-		return hashId;
-	}
 
 	public String toString(){
 		return "" + tripId + "," + arrivalTime + "," + departureTime + "," + stopId +

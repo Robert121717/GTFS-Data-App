@@ -11,7 +11,6 @@ public class Trip {
 
 	private final String tripId;
 	private final String routeId;
-	private final BigInteger hashId;
 	private String headSign = "";
 	private String serviceId = "";
 	private String directionId = "";
@@ -21,7 +20,6 @@ public class Trip {
 	protected Trip(String tripId, String routeId) {
 		this.tripId = tripId;
 		this.routeId = routeId;
-		this.hashId = GTFS.mergeIDs(GTFS.toDecimal(tripId), GTFS.toDecimal(routeId));
 	}
 
 	/**
@@ -58,10 +56,6 @@ public class Trip {
 
 	protected String getRouteId(){
 		return routeId;
-	}
-
-	protected BigInteger getHashId() {
-		return hashId;
 	}
 
 	protected String getHeadSign() {
