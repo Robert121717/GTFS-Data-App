@@ -42,7 +42,7 @@
                   <Insets right="20.0" top="9.0" />
                </HBox.margin>
             </MenuBar>
-            <TextField fx:id="searchTF" alignment="TOP_LEFT" onAction="#exportFiles" promptText="Search">
+            <TextField fx:id="searchTF" alignment="TOP_LEFT" onAction="#search" promptText="Search">
                <HBox.margin>
                   <Insets right="10.0" top="10.0" />
                </HBox.margin>

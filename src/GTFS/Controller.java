@@ -91,6 +91,15 @@ public class Controller implements Initializable {
 	}
 
 	@FXML
+	private void search() {
+		if(menu.getText().equals(routeMI.getText())) {
+			searchRouteId();
+		} else if(menu.getText().equals(stopMI.getText())) {
+			searchStopId();
+		}
+	}
+
+	@FXML
 	private void importPopup() {
 		if (importPu != null && importPu.isShowing()) importPu.hide();
 
@@ -148,6 +157,12 @@ public class Controller implements Initializable {
 	}
 
 	private void searchStopId() {
+	//TODO check for incorrect inputs.
+		//In future this method could reveal lots of info. For now it gives info for #4
+		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText());
+		System.out.println(numTripsWithStop);
+		String searchRouteInfo = "Number of Trips with stop: " + numTripsWithStop  + "\n";
+		recentUploadDisplay.setText(searchRouteInfo);
 
 	}
 
@@ -197,10 +212,6 @@ public class Controller implements Initializable {
 
 	private Trip searchForNextTrip(){
 		return null;
-	}
-
-	private void search(){
-
 	}
 
 	private void initializeDropBox() {

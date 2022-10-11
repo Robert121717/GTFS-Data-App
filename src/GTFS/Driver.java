@@ -34,7 +34,6 @@ public class Driver extends Application {
         } catch (IllegalArgumentException e) {
             System.out.println("Please download the stage icon image for it to be displayed.");
         }
-        //hi
         Controller controller = loader.getController();
         controller.setStage(stage);
         stage.show();
