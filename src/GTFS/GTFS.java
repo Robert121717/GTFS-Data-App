@@ -11,6 +11,9 @@ import java.util.*;
 import static GTFS.Controller.newAlert;
 
 /**
+ * This class represents the database for the Routes, Stops, StopTimes, and Trips
+ *
+ *
  * @author nairac, atkinsonr, morrowc, schmidtrj
  * @version 1.0
  */
@@ -23,7 +26,9 @@ public class GTFS {
 	private String lastAdded;
 	private final StringBuilder stringBuilder = new StringBuilder();
 
-
+	/**
+	 * This method represents the constructor for the GTFS class
+	 */
 	public GTFS(){
 		routes = new Hashtable<>();
 		stops = new Hashtable<>();
@@ -35,6 +40,12 @@ public class GTFS {
 
 	}
 
+	/**
+	 * This method imports and loads the file. This method reads the file and reads the header of the file to determine
+	 * the type of import it should call
+	 *
+	 * @param file is the file that is to be imported
+	 */
 	protected void importFile(File file) {
 		try(Scanner in = new Scanner(file)) {
 
@@ -68,8 +79,8 @@ public class GTFS {
 	}
 
 	/**
-	 * puts a new route into the routes hashmap
-	 * @param file- route file being added to hashtable
+	 * This method puts a new route into the routes hashtable
+	 * @param file is the route file being added to hashtable
 	 *
 	 */
 	protected void importRoute(File file) {
@@ -116,8 +127,8 @@ public class GTFS {
 	}
 
 	/**
-	 * puts a new stop into the stops hashtable
-	 * @param file - stop file being added to hashtable
+	 * This method puts a new stop into the stops hashtable
+	 * @param file represent the stop file being added to hashtable
 	 *
 	 */
 	protected void importStop(File file) {
@@ -159,8 +170,8 @@ public class GTFS {
 	}
 
 	/**
-	 * puts a new stoptime into the stoptimes hashtable
-	 * @param file - stoptime file being added to hashtable
+	 * This method puts a new StopTime into the StopTimes ArrayList
+	 * @param file represents the StopTime file being added to ArrayList
 	 *
 	 */
 	protected void importStopTime(File file) {
@@ -203,8 +214,8 @@ public class GTFS {
 	}
 
 	/**
-	 * puts a new trip into the trips hashtable
-	 * @param file- trip file being added to hashtable
+	 * This method puts a new trip into the trips ArrayList
+	 * @param file represents the trip file being added to ArrayList
 	 *
 	 */
 	protected void importTrip(File file) {
@@ -303,6 +314,7 @@ public class GTFS {
 
 	/**
 	 * Converts each ASCII character in the ID to its decimal representation and appends it to an integer.
+	 *
 	 * @param id The object's ID as a String.
 	 * @return The ID as an appended integer. This ID will represent an attribute of the relative class,
 	 * but may not be the ID be used when storing this object in a hash table.
