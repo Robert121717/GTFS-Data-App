@@ -296,24 +296,24 @@ public class GTFS {
 		}
 	}
 
-	private boolean verifyRouteHeader(String header) {
+	public boolean verifyRouteHeader(String header) {
 		return header.equals("route_id,agency_id,route_short_name,route_long_name," +
 				"route_desc,route_type,route_url,route_color,route_text_color");
 	}
 
-	private boolean verifyStopHeader(String header) {
+	public boolean verifyStopHeader(String header) {
 		return header.equals("stop_id,stop_name,stop_desc,stop_lat,stop_lon");
 	}
 
-	private boolean verifyTripHeader(String header){
+	public boolean verifyTripHeader(String header){
 		return header.equals("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
 	}
-	private boolean verifyStopTimeHeader(String header) {
+	public boolean verifyStopTimeHeader(String header) {
 		return header.equals("trip_id,arrival_time,departure_time,stop_id,stop_sequence," +
 				"stop_headsign,pickup_type,drop_off_type");
 	}
 
-	private boolean validateRouteData(String[] data) {
+	public boolean validateRouteData(String[] data) {
 		boolean isValid = true;
 		if(data.length < 8 || data.length > 9) {
 			isValid = false;
@@ -328,7 +328,7 @@ public class GTFS {
 		return isValid;
 	}
 
-	private boolean validateStopData(String[] data) {
+	public boolean validateStopData(String[] data) {
 		boolean isValid = true;
 		if(data.length != 5) {
 			isValid = false;
@@ -346,7 +346,7 @@ public class GTFS {
 		return isValid;
 	}
 
-	private boolean validateTripData(String[] data) {
+	public boolean validateTripData(String[] data) {
 		boolean isValid = true;
 
 		if(data.length < 6 || data.length > 7) {
@@ -361,7 +361,7 @@ public class GTFS {
 		return isValid;
 	}
 
-	private boolean validateStopTimeData(String[] data) {
+	public boolean validateStopTimeData(String[] data) {
 		boolean isValid = true;
 		if(data.length < 7 || data.length > 8) {
 			System.out.println("size error");
@@ -379,7 +379,7 @@ public class GTFS {
 				if(!data[1].matches("(?:[012]\\d|2[0123]):[012345]\\d:[012345]\\d")){
 
 						isValid = false;
-						System.out.println("no mathcing regex");
+						System.out.println("no matching regex");
 
 
 				}  else if(Integer.parseInt(data[1].substring(3,5)) > 59) {
