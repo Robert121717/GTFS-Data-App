@@ -323,7 +323,6 @@ public class GTFS {
 			} else if(data[7].equals("")) {
 				isValid = false;
 			}
-
 		}
 		return isValid;
 	}
@@ -344,15 +343,12 @@ public class GTFS {
 			}else if(Double.parseDouble(data[4]) >= 90 || Double.parseDouble(data[4]) <= -90) {
 				isValid = false;
 			}
-
 		}
-
 		return isValid;
 	}
 
 	public boolean validateTripData(String[] data) {
 		boolean isValid = true;
-
 		if(data.length < 6 || data.length > 7) {
 			isValid = false;
 		} else {
@@ -368,59 +364,33 @@ public class GTFS {
 	public boolean validateStopTimeData(String[] data) {
 		boolean isValid = true;
 		if(data.length < 7 || data.length > 8) {
-			System.out.println("size error");
 			isValid = false;
 		} else {
 			if(data[3].equals("")) {
 				isValid = false;
-				System.out.println("no stop ID");
-
 			} else if(data[0].equals("")) {
 				isValid = false;
-				System.out.println("no trip id");
-
 			} else if(!data[1].equals("")) {
 				if(!data[1].matches("(?:[012]\\d|2[0123]):[012345]\\d:[012345]\\d")){
-
 						isValid = false;
-						System.out.println("no matching regex");
-
-
 				}  else if(Integer.parseInt(data[1].substring(3,5)) > 59) {
 					isValid = false;
-					System.out.println("minute over 60");
-
 				} else if(Integer.parseInt(data[1].substring(6)) > 59) {
 					isValid = false;
-					System.out.println("seconds over 60");
-
 				}
 			} else if(!data[2].equals("")) {
 				if(!data[2].matches("(?:[012]\\d|2[0123]):[012345]\\d:[012345]\\d")){
-
 						isValid = false;
-						System.out.println("not matching  regex");
-
-
 				}  else if(Integer.parseInt(data[2].substring(3,5)) > 59) {
 					isValid = false;
-					System.out.println("minutes over 60");
-
 				} else if(Integer.parseInt(data[2].substring(6)) > 59) {
 					isValid = false;
-					System.out.println("seconds over 60");
-
 				}
-
 			} else if(data[4].equals("")) {
 				isValid = false;
-				System.out.println("no sequence");
-
 			}
 		}
-
 		return isValid;
-
 	}
 
 	/**
