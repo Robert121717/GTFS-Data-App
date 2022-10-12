@@ -187,7 +187,7 @@ public class GTFS {
 	 *
 	 * @param file represents the StopTime file being added to ArrayList
 	 */
-	protected void importStopTime(File file) {
+	protected void importStopTime(File file)throws IllegalArgumentException {
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importStopTime(in.hasNextLine(), in);
@@ -200,7 +200,7 @@ public class GTFS {
 		}
 	}
 
-	private void importStopTime(boolean hasLine, Scanner in) {
+	private void importStopTime(boolean hasLine, Scanner in) throws IllegalArgumentException{
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
@@ -211,16 +211,29 @@ public class GTFS {
 			}
 			lineCount++;
 			String[] parts = line.split(",");
-			StopTime st = new StopTime(parts[3], parts[0]);
+			if(validateStopTimeData(parts)) {
+				StopTime st = new StopTime(parts[3], parts[0]);
 
-			st.setArrivalTime(parts[1]);
-			st.setDepartureTime(parts[2]);
-			st.setStopSequence(parts[4]);
-			st.setStopHeadSign(parts[5]);
-			st.setPickUpType(parts[6]);
-			st.setDropOffType(parts[7]);
+				st.setArrivalTime(parts[1]);
+				st.setDepartureTime(parts[2]);
+				st.setStopSequence(parts[4]);
+				st.setStopHeadSign(parts[5]);
+				st.setPickUpType(parts[6]);
+				if(parts.length == 7) {
+					st.setDropOffType("");
+				} else {
+					st.setDropOffType(parts[7]);
+				}
 
-			stopTimes.add(st);
+				stopTimes.add(st);
+			} else {
+				System.out.println(line);
+
+				for(int i = 0; i < parts.length; i++) {
+					System.out.println(parts[i]);
+				}
+				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+			}
 			if (!in.hasNextLine()) {
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
@@ -346,6 +359,64 @@ public class GTFS {
 			}
 		}
 		return isValid;
+	}
+
+	private boolean validateStopTimeData(String[] data) {
+		boolean isValid = true;
+		if(data.length < 7 || data.length > 8) {
+			System.out.println("size error");
+			isValid = false;
+		} else {
+			if(data[3].equals("")) {
+				isValid = false;
+				System.out.println("no stop ID");
+
+			} else if(data[0].equals("")) {
+				isValid = false;
+				System.out.println("no trip id");
+
+			} else if(!data[1].equals("")) {
+				if(!data[1].matches("(?:[012]\\d|2[0123]):(?:[012345]\\d):(?:[012345]\\d)")){
+
+						isValid = false;
+						System.out.println("no mathcing regex");
+
+
+				}  else if(Integer.parseInt(data[1].substring(3,5)) > 59) {
+					isValid = false;
+					System.out.println("minute over 60");
+
+				} else if(Integer.parseInt(data[1].substring(6)) > 59) {
+					isValid = false;
+					System.out.println("seconds over 60");
+
+				}
+			} else if(!data[2].equals("")) {
+				if(!data[2].matches("(?:[012]\\d|2[0123]):(?:[012345]\\d):(?:[012345]\\d)")){
+
+						isValid = false;
+						System.out.println("not mathcing  regex");
+
+
+				}  else if(Integer.parseInt(data[2].substring(3,5)) > 59) {
+					isValid = false;
+					System.out.println("minutes over 60");
+
+				} else if(Integer.parseInt(data[2].substring(6)) > 59) {
+					isValid = false;
+					System.out.println("seconds over 60");
+
+				}
+
+			} else if(data[4].equals("")) {
+				isValid = false;
+				System.out.println("no sequence");
+
+			}
+		}
+
+		return isValid;
+
 	}
 
 	/**
