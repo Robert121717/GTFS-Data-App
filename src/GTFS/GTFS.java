@@ -50,23 +50,19 @@ public class GTFS {
 		try (Scanner in = new Scanner(file)) {
 
 			String header = in.nextLine();
-			header = header.toUpperCase();
 
-			if (header.contains("ROUTE_ID")) {
-				if (header.contains("TRIP_ID")) {
-					importTrip(file);
-				} else {
-					importRoute(file);
-				}
-			} else if (header.contains("STOP_ID")) {
-				if (header.contains("TRIP_ID")) {
-					importStopTime(file);
-				} else {
-					importStop(file);
-				}
+			if(verifyRouteHeader(header)) {
+				importRoute(file);
+			} else if(verifyStopHeader(header)) {
+				importStop(file);
+			} else if(verifyTripHeader(header)) {
+				importTrip(file);
+			} else if(verifyStopTimeHeader(header)) {
+				importStopTime(file);
 			} else {
 				throw new IllegalArgumentException();
 			}
+
 		} catch (NumberFormatException e) {
 			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
 
@@ -251,6 +247,8 @@ public class GTFS {
 			String[] parts = line.split(",");
 			Trip trip = new Trip(parts[2], parts[0]);
 
+			//if verified
+			//then
 			trip.setBlockId(parts[5]);
 			trip.setDirectionId(parts[4]);
 			trip.setServiceId(parts[1]);
@@ -264,6 +262,23 @@ public class GTFS {
 				hasLine = false;
 			}
 		}
+	}
+
+	private boolean verifyRouteHeader(String header) {
+		return header.equals("route_id,agency_id,route_short_name,route_long_name," +
+				"route_desc,route_type,route_url,route_color,route_text_color");
+	}
+
+	private boolean verifyStopHeader(String header) {
+		return header.equals("stop_id,stop_name,stop_desc,stop_lat,stop_lon");
+	}
+
+	private boolean verifyTripHeader(String header){
+		return header.equals("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
+	}
+	private boolean verifyStopTimeHeader(String header) {
+		return header.equals("trip_id,arrival_time,departure_time,stop_id,stop_sequence," +
+				"stop_headsign,pickup_type,drop_off_type");
 	}
 
 	/**
