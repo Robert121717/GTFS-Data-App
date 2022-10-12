@@ -79,7 +79,7 @@ public class GTFS {
 	 *
 	 * @param file is the route file being added to hashtable
 	 */
-	protected void importRoute(File file) {
+	protected void importRoute(File file) throws IllegalArgumentException{
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importRoute(in.hasNextLine(), in);
@@ -92,31 +92,38 @@ public class GTFS {
 		}
 	}
 
-	private void importRoute(boolean hasLine, Scanner in) {
+	private void importRoute(boolean hasLine, Scanner in) throws IllegalArgumentException{
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
 			if (lineCount < 3) {
-				lineCount++;
+
 				stringBuilder.append(line);
 			}
+			lineCount++;
 			String[] parts = line.split(",");
-			Route route = new Route(parts[0]);
+			if(validateRouteData(parts)) {
 
-			route.setAgencyID(parts[1]);
-			route.setShortName(parts[2]);
-			route.setLongName(parts[3]);
-			route.setRouteDesc(parts[4]);
-			route.setRouteType(parts[5]);
-			route.setRouteURL(parts[6]);
-			route.setRouteColor(parts[7]);
-			if (parts.length == 9) {
-				route.setRouteTextColor(parts[8]);
+				Route route = new Route(parts[0]);
+
+				route.setAgencyID(parts[1]);
+				route.setShortName(parts[2]);
+				route.setLongName(parts[3]);
+				route.setRouteDesc(parts[4]);
+				route.setRouteType(parts[5]);
+				route.setRouteURL(parts[6]);
+				route.setRouteColor(parts[7]);
+				if (parts.length == 9) {
+					route.setRouteTextColor(parts[8]);
+				} else {
+					route.setRouteTextColor("");
+				}
+				routes.add(route);
 			} else {
-				route.setRouteTextColor("");
+				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+
 			}
 
-			routes.add(route);
 			if (!in.hasNextLine()) {
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
@@ -279,6 +286,21 @@ public class GTFS {
 	private boolean verifyStopTimeHeader(String header) {
 		return header.equals("trip_id,arrival_time,departure_time,stop_id,stop_sequence," +
 				"stop_headsign,pickup_type,drop_off_type");
+	}
+
+	private boolean validateRouteData(String[] data) {
+		boolean isValid = true;
+		if(data.length < 8 || data.length > 9) {
+			isValid = false;
+		} else {
+			if(data[0].equals("")) {
+				isValid = false;
+			} else if(data[7].equals("")) {
+				isValid = false;
+			}
+
+		}
+		return isValid;
 	}
 
 	/**
