@@ -234,7 +234,7 @@ public class GTFS {
 	 *
 	 * @param file represents the trip file being added to ArrayList
 	 */
-	protected void importTrip(File file) {
+	protected void importTrip(File file) throws IllegalArgumentException {
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importTrip(in.hasNextLine(), in);
@@ -247,28 +247,34 @@ public class GTFS {
 		}
 	}
 
-	protected void importTrip(boolean hasLine, Scanner in) {
+	protected void importTrip(boolean hasLine, Scanner in) throws IllegalArgumentException{
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
 
 			if (lineCount < 3) {
-				lineCount++;
 				stringBuilder.append(line);
 			}
+			lineCount++;
 
 			String[] parts = line.split(",");
-			Trip trip = new Trip(parts[2], parts[0]);
+			if(validateTripData(parts)) {
+				Trip trip = new Trip(parts[2], parts[0]);
 
-			//if verified
-			//then
-			trip.setBlockId(parts[5]);
-			trip.setDirectionId(parts[4]);
-			trip.setServiceId(parts[1]);
-			trip.setHeadSign(parts[3]);
-			trip.setShapeId(parts[6]);
+				trip.setBlockId(parts[5]);
+				trip.setDirectionId(parts[4]);
+				trip.setServiceId(parts[1]);
+				trip.setHeadSign(parts[3]);
+				if(parts.length == 6) {
+					trip.setShapeId("");
+				} else {
+					trip.setShapeId(parts[6]);
+				}
 
-			trips.add(trip);
+				trips.add(trip);
+			} else {
+				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+			}
 			if (!in.hasNextLine()) {
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
@@ -324,6 +330,21 @@ public class GTFS {
 
 		}
 
+		return isValid;
+	}
+
+	private boolean validateTripData(String[] data) {
+		boolean isValid = true;
+
+		if(data.length < 6 || data.length > 7) {
+			isValid = false;
+		} else {
+			if(data[0].equals("")) {
+				isValid = false;
+			} else if(data[2].equals("")) {
+				isValid = false;
+			}
+		}
 		return isValid;
 	}
 
