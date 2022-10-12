@@ -137,7 +137,7 @@ public class GTFS {
 	 *
 	 * @param file represent the stop file being added to hashtable
 	 */
-	protected void importStop(File file) {
+	protected void importStop(File file) throws IllegalArgumentException{
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importStop(in.hasNextLine(), in);
@@ -150,24 +150,30 @@ public class GTFS {
 		}
 	}
 
-	private void importStop(boolean hasLine, Scanner in) {
+	private void importStop(boolean hasLine, Scanner in) throws IllegalArgumentException {
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
 
 			if (lineCount < 3) {
-				lineCount++;
+
 				stringBuilder.append(line);
 			}
+			lineCount++;
 			String[] parts = line.split(",");
-			Stop stop = new Stop(parts[0]);
+			if(validateStopData(parts)) {
 
-			stop.setStopName(parts[1]);
-			stop.setStopDesc(parts[2]);
-			stop.setStopLat(Double.parseDouble(parts[3]));
-			stop.setStopLon(Double.parseDouble(parts[4]));
+				Stop stop = new Stop(parts[0]);
 
-			stops.add(stop);
+				stop.setStopName(parts[1]);
+				stop.setStopDesc(parts[2]);
+				stop.setStopLat(Double.parseDouble(parts[3]));
+				stop.setStopLon(Double.parseDouble(parts[4]));
+
+				stops.add(stop);
+			} else {
+				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+			}
 			if (!in.hasNextLine()) {
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
@@ -200,10 +206,10 @@ public class GTFS {
 			String line = in.nextLine();
 
 			if (lineCount < 3) {
-				lineCount++;
+
 				stringBuilder.append(line);
 			}
-
+			lineCount++;
 			String[] parts = line.split(",");
 			StopTime st = new StopTime(parts[3], parts[0]);
 
@@ -300,6 +306,24 @@ public class GTFS {
 			}
 
 		}
+		return isValid;
+	}
+
+	private boolean validateStopData(String[] data) {
+		boolean isValid = true;
+		if(data.length != 5) {
+			isValid = false;
+		} else {
+			if(data[0].equals("")) {
+				isValid = false;
+			} else if(data[3].equals("")) {
+				isValid = false;
+			} else if(data[4].equals("")) {
+				isValid = false;
+			}
+
+		}
+
 		return isValid;
 	}
 
