@@ -3,6 +3,7 @@ package GTFS;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -158,10 +159,12 @@ public class Controller implements Initializable {
 
 	private void searchStopId() {
 	//TODO check for incorrect inputs.
+		// in other stop files. Stop_ID's can be any length and have numbers/letters.
+		//Would be very difficult to check if the ID is valid or not.
 		//In future this method could reveal lots of info. For now it gives info for #4
-		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText());
-		System.out.println(numTripsWithStop);
-		String searchRouteInfo = "Number of Trips with stop: " + numTripsWithStop  + "\n";
+		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
+		String searchRouteInfo ="Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n" +
+				"Number of Trips with stop: " + numTripsWithStop  + "\n";
 		recentUploadDisplay.setText(searchRouteInfo);
 
 	}
