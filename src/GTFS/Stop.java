@@ -31,7 +31,7 @@ public class Stop {
 	 * verify that the stop_id used for finding the stop matches what the stop has.
 	 * @param stopId the stop_id used for finding the stop
 	 */
-	protected boolean verifyStop(BigInteger stopId){
+	protected boolean verifyStop(String stopId){
 		return this.stopID.equals(stopId);
 	}
 
