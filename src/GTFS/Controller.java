@@ -63,6 +63,9 @@ public class Controller implements Initializable {
 		gtfs = new GTFS();
 	}
 
+	/**
+	 * Initializes the components in the UI when an object of this class is created.
+	 */
 	public void initialize(URL url, ResourceBundle rb) {
 		searchTF.setDisable(true);
 		recentUploadLabel.setVisible(false);
@@ -73,6 +76,10 @@ public class Controller implements Initializable {
 		dropBorderPane.setStyle("-fx-border-width: 3; -fx-border-color: #9e9e9e; -fx-border-style: segments(10, 10, 10, 10);");
 	}
 
+	/**
+	 * Opens a file chooser for the user to select files they'd like to import,
+	 * then sends them to the GTFS database.
+	 */
 	@FXML
 	private void importFiles() {
 		FileChooser fc = new FileChooser();
@@ -99,6 +106,9 @@ public class Controller implements Initializable {
 		}
 	}
 
+	/**
+	 * Creates and displays a popup allowing the user to manually update data in the GTFS files.
+	 */
 	@FXML
 	private void importPopup() {
 		if (importPu != null && importPu.isShowing()) importPu.hide();
@@ -126,6 +136,15 @@ public class Controller implements Initializable {
 		importPu.show(stage);
 	}
 
+	/**
+	 * Helper method to importPopup().
+	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
+	 * Including:
+	 * 		a close window button,
+	 * 		a text area for user input
+	 * 		an update button, which well send the data to the GTFS files.
+	 * @param stack Main component of the popup.
+	 */
 	private void addPopupVBoxComponents(VBox stack) {
 		HBox header = new HBox(5);
 		header.setPrefWidth(400); header.setPrefHeight(50);
@@ -212,6 +231,10 @@ public class Controller implements Initializable {
 
 	}
 
+	/**
+	 * Adds event handlers to the drop box shown in the UI,
+	 * allowing the user to drag and drop files onto the screen to import them.
+	 */
 	private void initializeDropBox() {
 		dropImportVBox.setOnDragOver(e -> {			// allows user to drag files into VBox
 			Dragboard dropBox = e.getDragboard();
@@ -242,6 +265,9 @@ public class Controller implements Initializable {
 		});
 	}
 
+	/**
+	 * Adds event handlers to the menu items shown in the UI
+	 */
 	private void initializeMenuItems() {
 		stopMI.setOnAction(e -> {
 			menu.setText("Stop");
@@ -266,10 +292,21 @@ public class Controller implements Initializable {
 		});
 	}
 
+	/**
+	 * Assigns the current stage to an instance variable of this class
+	 * @param stage The stage currently in use
+	 */
 	protected void setStage(Stage stage) {
 		this.stage = stage;
 	}
 
+	/**
+	 * Displays an alert when called
+	 * @param type Alert type
+	 * @param title Title of alert
+	 * @param header Header of alert
+	 * @param content Content within the alert
+	 */
 	protected static void newAlert(Alert.AlertType type, String title, String header, String content) {
 		Alert alert = new Alert(type);
 		alert.setTitle(title);
