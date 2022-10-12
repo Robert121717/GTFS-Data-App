@@ -75,9 +75,9 @@ public class GTFS {
 	}
 
 	/**
-	 * This method puts a new route into the routes hashtable
+	 * This method puts a new route into the routes arraylist
 	 *
-	 * @param file is the route file being added to hashtable
+	 * @param file is the route file being added to arraylist
 	 */
 	protected void importRoute(File file) throws IllegalArgumentException{
 		try (Scanner in = new Scanner(file)) {
@@ -133,9 +133,9 @@ public class GTFS {
 	}
 
 	/**
-	 * This method puts a new stop into the stops hashtable
+	 * This method puts a new stop into the stops arraylist
 	 *
-	 * @param file represent the stop file being added to hashtable
+	 * @param file represent the stop file being added to arraylist
 	 */
 	protected void importStop(File file) throws IllegalArgumentException{
 		try (Scanner in = new Scanner(file)) {
@@ -260,7 +260,7 @@ public class GTFS {
 		}
 	}
 
-	protected void importTrip(boolean hasLine, Scanner in) throws IllegalArgumentException{
+	private void importTrip(boolean hasLine, Scanner in) throws IllegalArgumentException{
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
@@ -338,6 +338,10 @@ public class GTFS {
 			} else if(data[3].equals("")) {
 				isValid = false;
 			} else if(data[4].equals("")) {
+				isValid = false;
+			} else if(Double.parseDouble(data[3]) >= 90 || Double.parseDouble(data[3]) <= -90) {
+				isValid = false;
+			}else if(Double.parseDouble(data[4]) >= 90 || Double.parseDouble(data[4]) <= -90) {
 				isValid = false;
 			}
 
