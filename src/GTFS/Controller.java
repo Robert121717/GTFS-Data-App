@@ -104,6 +104,8 @@ public class Controller implements Initializable {
 		} else if(menu.getText().equals(stopMI.getText())) {
 			searchStopId();
 		}
+		recentUploadLabel.setVisible(false);
+
 	}
 
 	/**

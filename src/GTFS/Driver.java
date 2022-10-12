@@ -37,5 +37,6 @@ public class Driver extends Application {
         Controller controller = loader.getController();
         controller.setStage(stage);
         stage.show();
+
     }
 }
