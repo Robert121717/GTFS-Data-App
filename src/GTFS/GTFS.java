@@ -399,7 +399,7 @@ public class GTFS {
 				if(!data[2].matches("(?:[012]\\d|2[0123]):[012345]\\d:[012345]\\d")){
 
 						isValid = false;
-						System.out.println("not mathcing  regex");
+						System.out.println("not matching  regex");
 
 
 				}  else if(Integer.parseInt(data[2].substring(3,5)) > 59) {
@@ -448,48 +448,7 @@ public class GTFS {
 		return false;
 	}
 
-	/**
-	 * NOT IMPLEMENTED
-	 * Searches for a stop, given the stopID. Returns the Stop
-	 *
-	 * @param stopId- ID turned into ascii decimal used as a key for each stop.
-	 */
-	public Stop searchStopId(String stopId) {
-		return null;
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * Searches for a route, given the routeId. Returns the route
-	 *
-	 * @param routeId- ID turned into ascii decimal used as a key for each stop
-	 */
-	public Route searchRouteId(BigInteger routeId) {
-		return null;
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * Searches for a trip, given the tripId. Returns the trip
-	 *
-	 * @param tripId- ID turned into ascii decimal used as a key for each trip
-	 */
-	public Trip searchTrips(BigInteger tripId) {
-		return null;
-	}
-
-	/**
-	 * NOT IMPLEMENTED
-	 * Searches for a stop time, given the stopTimeId. Returns the stop time.
-	 *
-	 * @param stopTimeId- ID turned into ascii decimal used as a key for each stop time
-	 */
-	public StopTime searchStopTimes(BigInteger stopTimeId) {
-		return null;
-	}
-
 	protected String getNewestImport() {
 		return lastAdded;
 	}
-
 }

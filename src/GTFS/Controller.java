@@ -58,7 +58,6 @@ public class Controller implements Initializable {
 	private Menu menu;
 	@FXML
 	private BorderPane dropBorderPane;
-	private String searchType;
 
 	public Controller(){
 		gtfs = new GTFS();
@@ -213,10 +212,6 @@ public class Controller implements Initializable {
 
 	}
 
-	private Trip searchForNextTrip(){
-		return null;
-	}
-
 	private void initializeDropBox() {
 		dropImportVBox.setOnDragOver(e -> {			// allows user to drag files into VBox
 			Dragboard dropBox = e.getDragboard();
@@ -249,23 +244,23 @@ public class Controller implements Initializable {
 
 	private void initializeMenuItems() {
 		stopMI.setOnAction(e -> {
-			menu.setText("Stop"); searchType = "Stop";
+			menu.setText("Stop");
 			searchTF.setDisable(false);
 		});
 		stopTimeMI.setOnAction(e -> {
-			menu.setText("Time"); searchType = "Stop Time";
+			menu.setText("Time");
 			searchTF.setDisable(false);
 		});
 		routeMI.setOnAction(e -> {
-			menu.setText("Route"); searchType = "Route";
+			menu.setText("Route");
 			searchTF.setDisable(false);
 		});
 		tripMI.setOnAction(e -> {
-			menu.setText("Trip"); searchType = "Trip";
+			menu.setText("Trip");
 			searchTF.setDisable(false);
 		});
 		closeMI.setOnAction(e -> {
-			menu.setText("Select"); searchType = "";
+			menu.setText("Select");
 			searchTF.setDisable(true);
 			searchTF.setText("");
 		});
