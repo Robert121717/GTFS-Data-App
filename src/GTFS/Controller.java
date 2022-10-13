@@ -275,18 +275,12 @@ public class Controller implements Initializable {
 			menu.setText("Stop");
 			searchTF.setDisable(false);
 		});
-		stopTimeMI.setOnAction(e -> {
-			menu.setText("Time");
-			searchTF.setDisable(false);
-		});
+
 		routeMI.setOnAction(e -> {
 			menu.setText("Route");
 			searchTF.setDisable(false);
 		});
-		tripMI.setOnAction(e -> {
-			menu.setText("Trip");
-			searchTF.setDisable(false);
-		});
+
 		closeMI.setOnAction(e -> {
 			menu.setText("Select");
 			searchTF.setDisable(true);

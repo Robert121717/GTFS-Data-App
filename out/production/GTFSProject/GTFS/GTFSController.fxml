@@ -31,9 +31,7 @@
                 <Menu fx:id="menu" mnemonicParsing="false" text="Select">
                   <items>
                         <MenuItem fx:id="stopMI" mnemonicParsing="false" text="Stop" />
-                        <MenuItem fx:id="stopTimeMI" mnemonicParsing="false" text="Stop Time" />
                         <MenuItem fx:id="routeMI" mnemonicParsing="false" text="Route" />
-                        <MenuItem fx:id="tripMI" mnemonicParsing="false" text="Trip" />
                         <MenuItem fx:id="closeMI" mnemonicParsing="false" text="Close" />
                   </items>
                 </Menu>
@@ -94,7 +92,7 @@
                               <Font size="17.0" />
                            </font>
                         </Label>
-                        <TextArea fx:id="recentUploadDisplay" disable="true" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="174.0" promptText="Recently uploaded files will be shown here." wrapText="true">
+                        <TextArea fx:id="recentUploadDisplay" disable="true" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="174.0" promptText="Information will be displayed here" wrapText="true">
                            <VBox.margin>
                               <Insets bottom="8.0" right="8.0" />
                            </VBox.margin>

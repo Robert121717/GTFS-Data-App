@@ -120,6 +120,11 @@ public class GTFS {
 				}
 				routes.add(route);
 			} else {
+				System.out.println(line);
+
+				for(int i = 0; i < parts.length; i++) {
+					System.out.println(parts[i]);
+				}
 				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
 
 			}
@@ -227,11 +232,7 @@ public class GTFS {
 
 				stopTimes.add(st);
 			} else {
-				System.out.println(line);
 
-				for(int i = 0; i < parts.length; i++) {
-					System.out.println(parts[i]);
-				}
 				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
 			}
 			if (!in.hasNextLine()) {
@@ -322,6 +323,17 @@ public class GTFS {
 				isValid = false;
 			} else if(data[7].equals("")) {
 				isValid = false;
+			} else if(!data[7].matches("^[0-9A-Fa-f]+$")) {
+				isValid = false;
+			} else if(!data[5].equals("") && !(data[5].equals("1") || data[5].equals("2") ||data[5].equals("3")
+					||data[5].equals("4") || data[5].equals("5") || data[5].equals("6") || data[5].equals("7")
+					|| data[5].equals("11") || data[5].equals("12"))) {
+				isValid = false;
+			} else if(data.length == 9 && !data[8].matches("^[0-9A-Fa-f]+$")) {
+				isValid = false;
+			} else if(!data[6].equals("") && !data[6]
+					.matches("<\\\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]>\"")) {
+				isValid = false;
 			}
 		}
 		return isValid;
@@ -340,7 +352,7 @@ public class GTFS {
 				isValid = false;
 			} else if(Double.parseDouble(data[3]) >= 90 || Double.parseDouble(data[3]) <= -90) {
 				isValid = false;
-			}else if(Double.parseDouble(data[4]) >= 90 || Double.parseDouble(data[4]) <= -90) {
+			}else if(Double.parseDouble(data[4]) >= 180 || Double.parseDouble(data[4]) <= -180) {
 				isValid = false;
 			}
 		}
@@ -355,6 +367,8 @@ public class GTFS {
 			if(data[0].equals("")) {
 				isValid = false;
 			} else if(data[2].equals("")) {
+				isValid = false;
+			} else if(!data[4].equals("") && !(data[4].equals("0") || data[4].equals("1"))) {
 				isValid = false;
 			}
 		}
@@ -387,6 +401,14 @@ public class GTFS {
 					isValid = false;
 				}
 			} else if(data[4].equals("")) {
+				isValid = false;
+			} else if(!data[4].matches("[0-9]+")) {
+				isValid = false;
+			} else if(!data[6].equals("") && !(data[6].equals("0") || data[6].equals("1")
+					|| data[6].equals("2") || data[6].equals("3"))) {
+				isValid = false;
+			} else if(data.length == 8 && !data[7].equals("") && !(data[7].equals("0") || data[7].equals("1")
+					|| data[7].equals("2") || data[7].equals("3"))) {
 				isValid = false;
 			}
 		}
