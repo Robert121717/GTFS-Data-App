@@ -354,14 +354,12 @@ public class GTFS {
 			}
 			if(data[3].equals("")) {
 				isValid = false;
+			} else if(Double.parseDouble(data[3]) >= 90 || Double.parseDouble(data[3]) <= -90) {
+				isValid = false;
 			}
 			if(data[4].equals("")) {
 				isValid = false;
-			}
-			if(Double.parseDouble(data[3]) >= 90 || Double.parseDouble(data[3]) <= -90) {
-				isValid = false;
-			}
-			if(Double.parseDouble(data[4]) >= 180 || Double.parseDouble(data[4]) <= -180) {
+			} else if(Double.parseDouble(data[4]) >= 180 || Double.parseDouble(data[4]) <= -180) {
 				isValid = false;
 			}
 		}

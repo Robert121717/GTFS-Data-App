@@ -88,15 +88,64 @@ class GTFSTest {
         String[]  invalidRouteURLDataTest = invalidRouteURLDataString.split(",");
         assertFalse(gtfs.validateRouteData(invalidRouteURLDataTest));
     }
-
+    /**
+     * @author Ryan Atkinson
+     * This method tests the validateStopData method in the GTFS class
+     */
     @org.junit.jupiter.api.Test
     void validateStopData() {
+        String trueDataString = "6712,STATE & 5101 #6712,,43.0444475,-87.9779369";
+        String[] trueStopDataTest = trueDataString.split(",");
+        assertTrue(gtfs.validateStopData(trueStopDataTest));
+
+        String shortDataString = "6712,STATE & 5101 #6712";
+        String[] falseShortStopDataTest = shortDataString.split(",");
+        assertFalse(gtfs.validateStopData(falseShortStopDataTest));
+
+        String longDataString = "6712,STATE & 5101 #6712,,43.0444475,-87.9779369,33,44,55";
+        String[] falseLongStopDataTest = longDataString.split(",");
+        assertFalse(gtfs.validateStopData(falseLongStopDataTest));
+
+        String missingStopID = ",STATE & 5101 #6712,,43.0444475,-87.9779369";
+        String[] missingStopIDTest = missingStopID.split(",");
+        assertFalse(gtfs.validateStopData(missingStopIDTest));
+
+        String missingLat = ",STATE & 5101 #6712,,,-87.9779369";
+        String[] missingStopLat = missingLat.split(",");
+        assertFalse(gtfs.validateStopData(missingStopLat));
+
+        String missingLon = ",STATE & 5101 #6712,,43.0444475,,";
+        String[] missingStopLon = missingLon.split(",");
+        assertFalse(gtfs.validateStopData(missingStopLon));
+
+        String invalidLargeLat = ",STATE & 5101 #6712,,90.111,-87.9779369";
+        String[] invalidStopLargeLat = invalidLargeLat.split(",");
+        assertFalse(gtfs.validateStopData(invalidStopLargeLat));
+
+        String invalidSmallLat = ",STATE & 5101 #6712,,-90.111,-87.9779369";
+        String[] invalidStopSmallLat = invalidSmallLat.split(",");
+        assertFalse(gtfs.validateStopData(invalidStopSmallLat));
+
+        String invalidLargeLon = ",STATE & 5101 #6712,,43.0444475,181.2737";
+        String[] invalidStopLargeLon = invalidLargeLon.split(",");
+        assertFalse(gtfs.validateStopData(invalidStopLargeLon));
+
+        String invalidSmallLon = ",STATE & 5101 #6712,,43.0444475,-181.2737";
+        String[] invalidStopSmallLon = invalidSmallLon.split(",");
+        assertFalse(gtfs.validateStopData(invalidStopSmallLon));
+
+
     }
 
     @org.junit.jupiter.api.Test
     void validateTripData() {
+
     }
 
+    /**
+     * @author Achuth Nair and Ryan Atkinson
+     * This method tests the validateStopTimeData method in the GTFS class
+     */
     @org.junit.jupiter.api.Test
     void validateStopTimeData() {
         String trueDataString = "21736564_2535,08:51:00,08:51:00,9113,1,,0,0";
@@ -150,5 +199,33 @@ class GTFSTest {
         String invalidDepartureTimeFormatDataString = "21736564_2535,08:51:00,6:51:30,9113,1,,0,0";
         String[] invalidDepartureTimeFormatDataTest = invalidDepartureTimeFormatDataString.split(",");
         assertFalse(gtfs.validateStopTimeData(invalidDepartureTimeFormatDataTest));
+
+        String missingStopSequenceDataString = "21736564_2535,08:51:00,08:51:00,9113,,,0,0";
+        String[] missingStopSequenceDataTest = missingStopSequenceDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(missingStopSequenceDataTest));
+
+        String invalidStopSequenceDataString = "21736564_2535,08:51:00,08:51:00,9113,-50,,0,0";
+        String[] invalidStopSequenceDataTest = invalidStopSequenceDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(invalidStopSequenceDataTest));
+
+        String validStopSequenceDataString = "21736564_2535,08:51:00,08:51:00,9113,500,,0,0";
+        String[] validStopSequenceDataTest = validStopSequenceDataString.split(",");
+        assertTrue(gtfs.validateStopTimeData(validStopSequenceDataTest));
+
+        String validPickUpTypeDataString = "21736564_2535,08:51:00,08:51:00,9113,500,,3,0";
+        String[] validPickUpTypeDataTest = validPickUpTypeDataString.split(",");
+        assertTrue(gtfs.validateStopTimeData(validPickUpTypeDataTest));
+
+        String invalidPickUpTypeDataString = "21736564_2535,08:51:00,08:51:00,9113,500,,20,0";
+        String[] invalidPickUpTypeDataTest = invalidPickUpTypeDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(invalidPickUpTypeDataTest));
+
+        String validDropOffTypeDataString = "21736564_2535,08:51:00,08:51:00,9113,500,,0,2";
+        String[] validDropOffTypeDataTest = validDropOffTypeDataString.split(",");
+        assertTrue(gtfs.validateStopTimeData(validDropOffTypeDataTest));
+
+        String invalidDropOffTypeDataString = "21736564_2535,08:51:00,08:51:00,9113,500,,0,50";
+        String[] invalidDropOffTypeDataTest = invalidDropOffTypeDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(invalidDropOffTypeDataTest));
     }
 }
