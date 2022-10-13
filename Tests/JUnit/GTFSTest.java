@@ -99,5 +99,56 @@ class GTFSTest {
 
     @org.junit.jupiter.api.Test
     void validateStopTimeData() {
+        String trueDataString = "21736564_2535,08:51:00,08:51:00,9113,1,,0,0";
+        String[] trueStopTimeDataTest = trueDataString.split(",");
+        assertTrue(gtfs.validateStopTimeData(trueStopTimeDataTest));
+
+        String shortDataString = "21736564_2535,08:51:00";
+        String[] falseShortStopTimeDataTest = shortDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(falseShortStopTimeDataTest));
+
+        String longDataString = "21736564_2535,08:51:00,08:51:00,9113,1,,0,021736564_2535,08:51:00,08:51:00,9113,1,,0,0";
+        String[] falseLongStopTimeDataTest = longDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(falseLongStopTimeDataTest));
+
+        String missingStopIDDataString = "21736564_2535,08:51:00,08:51:00,,1,,0,0";
+        String[] missingStopIDDataTest = missingStopIDDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(missingStopIDDataTest));
+
+        String missingTripIDDataString = ",08:51:00,08:51:00,9113,1,,0,0";
+        String[] missingTripIDDataTest = missingTripIDDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(missingTripIDDataTest));
+
+        String trueArrivalTimeDataString = "21736564_2535,26:51:00,08:51:00,9113,1,,0,0";
+        String[] trueArrivalTimeDataTest = trueArrivalTimeDataString.split(",");
+        assertTrue(gtfs.validateStopTimeData(trueArrivalTimeDataTest));
+
+        String invalidArrivalTimeMinDataString = "21736564_2535,22:61:00,08:51:00,9113,1,,0,0";
+        String[] invalidArrivalTimeMinDataTest = invalidArrivalTimeMinDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(invalidArrivalTimeMinDataTest));
+
+        String invalidArrivalTimeSecDataString = "21736564_2535,08:51:60,08:51:00,9113,1,,0,0";
+        String[] invalidArrivalTimeSecDataTest = invalidArrivalTimeSecDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(invalidArrivalTimeSecDataTest));
+
+        String invalidArrivalTimeFormatDataString = "21736564_2535,6:51:30,08:51:00,9113,1,,0,0";
+        String[] invalidArrivalTimeFormatDataTest = invalidArrivalTimeFormatDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(invalidArrivalTimeFormatDataTest));
+
+        String trueDepartureTimeDataString = "21736564_2535,08:51:00,14:51:00,9113,1,,0,0";
+        String[] trueDepartureTimeDataTest = trueDepartureTimeDataString.split(",");
+        assertTrue(gtfs.validateStopTimeData(trueDepartureTimeDataTest));
+
+        String invalidDepartureTimeMinDataString = "21736564_2535,08:51:00,14:71:00,9113,1,,0,0";
+        String[] invalidDepartureTimeMinDataTest = invalidDepartureTimeMinDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(invalidDepartureTimeMinDataTest));
+
+        String invalidDepartureTimeSecDataString = "21736564_2535,08:51:00,08:51:60,9113,1,,0,0";
+        String[] invalidDepartureTimeSecDataTest = invalidDepartureTimeSecDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(invalidDepartureTimeSecDataTest));
+
+        String invalidDepartureTimeFormatDataString = "21736564_2535,08:51:00,6:51:30,9113,1,,0,0";
+        String[] invalidDepartureTimeFormatDataTest = invalidDepartureTimeFormatDataString.split(",");
+        assertFalse(gtfs.validateStopTimeData(invalidDepartureTimeFormatDataTest));
     }
 }
