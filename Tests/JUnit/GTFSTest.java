@@ -26,8 +26,29 @@ class GTFSTest {
     void verifyStopTimeHeader() {
     }
 
+    /**
+     * @author Achuth Nair
+     * This method tests the verifyStopHeader method in the GTFS class
+     */
     @org.junit.jupiter.api.Test
     void verifyStopHeader() {
+        String trueHeader = "stop_id,stop_name,stop_desc,stop_lat,stop_lon";
+        assertTrue(gtfs.verifyStopHeader(trueHeader));
+
+        String missingStopId = "stop_name,stop_desc,stop_lat,stop_lon";
+        assertFalse(gtfs.verifyTripHeader(missingStopId));
+
+        String missingStopName = "stop_id,,stop_desc,stop_lat,stop_lon";
+        assertFalse(gtfs.verifyTripHeader(missingStopName));
+
+        String missingStopDesc = "stop_id,stop_name,,stop_lat,stop_lon";
+        assertFalse(gtfs.verifyTripHeader(missingStopDesc));
+
+        String missingStopLat = "stop_id,stop_name,stop_desc,,stop_lon";
+        assertFalse(gtfs.verifyTripHeader(missingStopLat));
+
+        String missingStopLon = "stop_id,stop_name,stop_desc,stop_lat";
+        assertFalse(gtfs.verifyTripHeader(missingStopLon));
     }
 
     /**
