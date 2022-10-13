@@ -69,7 +69,7 @@ class GTFSTest {
 
         String invalidRouteURLDataString = "12,MCTS,12,Teutonia-Hampton,,3,fxqn:/us/va/reston/cnri/ietf/24/asdf%*.fred,008345,";
         String[]  invalidRouteURLDataTest = invalidRouteURLDataString.split(",");
-        assertTrue(gtfs.validateRouteData(invalidRouteURLDataTest));
+        assertFalse(gtfs.validateRouteData(invalidRouteURLDataTest));
     }
 
     @org.junit.jupiter.api.Test

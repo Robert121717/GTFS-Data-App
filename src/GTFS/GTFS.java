@@ -332,7 +332,7 @@ public class GTFS {
 			} else if(data.length == 9 && !data[8].matches("^[0-9A-Fa-f]+$")) {
 				isValid = false;
 			} else if(!data[6].equals("") && !data[6]
-					.matches("<\\\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]>\"")) {
+					.matches("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")) {
 				isValid = false;
 			}
 		}
