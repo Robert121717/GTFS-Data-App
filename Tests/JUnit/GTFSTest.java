@@ -23,16 +23,45 @@ class GTFSTest {
     }
 
     @org.junit.jupiter.api.Test
+    void verifyStopTimeHeader() {
+    }
+
+    @org.junit.jupiter.api.Test
     void verifyStopHeader() {
     }
 
+    /**
+     * @author Achuth Nair
+     * This method tests the verifyTripHeader method in the GTFS class
+     */
     @org.junit.jupiter.api.Test
     void verifyTripHeader() {
+        String trueHeader = "route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id";
+        assertTrue(gtfs.verifyTripHeader(trueHeader));
+
+        String missingRouteId = "service_id,trip_id,trip_headsign,direction_id,block_id,shape_id";
+        assertFalse(gtfs.verifyTripHeader(missingRouteId));
+
+        String missingServiceId = "route_id,,trip_id,trip_headsign,direction_id,block_id,shape_id";
+        assertFalse(gtfs.verifyTripHeader(missingServiceId));
+
+        String missingTripId = "route_id,service_id,,trip_headsign,direction_id,block_id,shape_id";
+        assertFalse(gtfs.verifyTripHeader(missingTripId));
+
+        String missingTripHeadsign = "route_id,service_id,trip_id,,direction_id,block_id,shape_id";
+        assertFalse(gtfs.verifyTripHeader(missingTripHeadsign));
+
+        String missingDirectionId = "route_id,service_id,trip_id,trip_headsign,,block_id,shape_id";
+        assertFalse(gtfs.verifyTripHeader(missingDirectionId));
+
+        String missingBlockId = "route_id,service_id,trip_id,trip_headsign,direction_id,,shape_id";
+        assertFalse(gtfs.verifyTripHeader(missingBlockId));
+
+        String missingShapeId = "route_id,service_id,trip_id,trip_headsign,direction_id,block_id,";
+        assertFalse(gtfs.verifyTripHeader(missingShapeId));
     }
 
-    @org.junit.jupiter.api.Test
-    void verifyStopTimeHeader() {
-    }
+
 
     /**
      * @author Achuth Nair
