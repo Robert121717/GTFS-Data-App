@@ -321,17 +321,22 @@ public class GTFS {
 		} else {
 			if(data[0].equals("")) {
 				isValid = false;
-			} else if(data[7].equals("")) {
+			}
+			if(data[7].equals("")) {
 				isValid = false;
-			} else if(!data[7].matches("^[0-9A-Fa-f]+$")) {
+			}
+			if(!data[7].matches("^[0-9A-Fa-f]+$")) {
 				isValid = false;
-			} else if(!data[5].equals("") && !(data[5].equals("1") || data[5].equals("2") ||data[5].equals("3")
+			}
+			if(!data[5].equals("") && !(data[5].equals("1") || data[5].equals("2") ||data[5].equals("3")
 					||data[5].equals("4") || data[5].equals("5") || data[5].equals("6") || data[5].equals("7")
 					|| data[5].equals("11") || data[5].equals("12"))) {
 				isValid = false;
-			} else if(data.length == 9 && !data[8].matches("^[0-9A-Fa-f]+$")) {
+			}
+			if(data.length == 9 && !data[8].matches("^[0-9A-Fa-f]+$")) {
 				isValid = false;
-			} else if(!data[6].equals("") && !data[6]
+			}
+			if(!data[6].equals("") && !data[6]
 					.matches("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")) {
 				isValid = false;
 			}
@@ -346,13 +351,17 @@ public class GTFS {
 		} else {
 			if(data[0].equals("")) {
 				isValid = false;
-			} else if(data[3].equals("")) {
+			}
+			if(data[3].equals("")) {
 				isValid = false;
-			} else if(data[4].equals("")) {
+			}
+			if(data[4].equals("")) {
 				isValid = false;
-			} else if(Double.parseDouble(data[3]) >= 90 || Double.parseDouble(data[3]) <= -90) {
+			}
+			if(Double.parseDouble(data[3]) >= 90 || Double.parseDouble(data[3]) <= -90) {
 				isValid = false;
-			}else if(Double.parseDouble(data[4]) >= 180 || Double.parseDouble(data[4]) <= -180) {
+			}
+			if(Double.parseDouble(data[4]) >= 180 || Double.parseDouble(data[4]) <= -180) {
 				isValid = false;
 			}
 		}
@@ -366,9 +375,11 @@ public class GTFS {
 		} else {
 			if(data[0].equals("")) {
 				isValid = false;
-			} else if(data[2].equals("")) {
+			}
+			if(data[2].equals("")) {
 				isValid = false;
-			} else if(!data[4].equals("") && !(data[4].equals("0") || data[4].equals("1"))) {
+			}
+			if(!data[4].equals("") && !(data[4].equals("0") || data[4].equals("1"))) {
 				isValid = false;
 			}
 		}
@@ -379,39 +390,47 @@ public class GTFS {
 		boolean isValid = true;
 		if(data.length < 7 || data.length > 8) {
 			isValid = false;
-		} else {
-			if(data[3].equals("")) {
+		}  else {
+			if (data[3].equals("")) {
 				isValid = false;
-			} else if(data[0].equals("")) {
+			}
+			if (data[0].equals("")) {
 				isValid = false;
-			} else if(!data[1].equals("")) {
-				if(!data[1].matches("(?:[012]\\d|2[0123]):[012345]\\d:[012345]\\d")){
-						isValid = false;
-				}  else if(Integer.parseInt(data[1].substring(3,5)) > 59) {
+			}
+			if (!data[1].equals("")) {
+				if (!data[1].matches("(?:[012]\\d|2[0123]):[012345]\\d:[012345]\\d")) {
 					isValid = false;
-				} else if(Integer.parseInt(data[1].substring(6)) > 59) {
+				} else if (Integer.parseInt(data[1].substring(3, 5)) > 59) {
 					isValid = false;
-				}
-			} else if(!data[2].equals("")) {
-				if(!data[2].matches("(?:[012]\\d|2[0123]):[012345]\\d:[012345]\\d")){
-						isValid = false;
-				}  else if(Integer.parseInt(data[2].substring(3,5)) > 59) {
-					isValid = false;
-				} else if(Integer.parseInt(data[2].substring(6)) > 59) {
+				} else if (Integer.parseInt(data[1].substring(6)) > 59) {
 					isValid = false;
 				}
-			} else if(data[4].equals("")) {
+			}
+			if (!data[2].matches("(?:[012]\\d|2[0123]):[012345]\\d:[012345]\\d")) {
+				if (!data[2].matches("")) {
+					isValid = false;
+				} else if (Integer.parseInt(data[2].substring(3, 5)) > 59) {
+					isValid = false;
+				} else if (Integer.parseInt(data[2].substring(6)) > 59) {
+					isValid = false;
+				}
+			}
+			if (data[4].equals("")) {
 				isValid = false;
-			} else if(!data[4].matches("[0-9]+")) {
+			}
+			if (!data[4].matches("[0-9]+")) {
 				isValid = false;
-			} else if(!data[6].equals("") && !(data[6].equals("0") || data[6].equals("1")
+			}
+			if (!data[6].equals("") && !(data[6].equals("0") || data[6].equals("1")
 					|| data[6].equals("2") || data[6].equals("3"))) {
 				isValid = false;
-			} else if(data.length == 8 && !data[7].equals("") && !(data[7].equals("0") || data[7].equals("1")
+			}
+			if (data.length == 8 && !data[7].equals("") && !(data[7].equals("0") || data[7].equals("1")
 					|| data[7].equals("2") || data[7].equals("3"))) {
 				isValid = false;
 			}
 		}
+
 		return isValid;
 	}
 
