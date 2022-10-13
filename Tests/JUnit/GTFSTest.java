@@ -34,6 +34,10 @@ class GTFSTest {
     void verifyStopTimeHeader() {
     }
 
+    /**
+     * @author Achuth Nair
+     * This method tests the validateRouteData method in the GTFS class
+     */
     @org.junit.jupiter.api.Test
     void validateRouteData() {
 
@@ -62,6 +66,19 @@ class GTFSTest {
         String invalidRouteColorDataString = "12,MCTS,12,Teutonia-Hampton,,3,,ZZZZZZ,";
         String[]  invalidRouteDataTest = invalidRouteColorDataString.split(",");
         assertFalse(gtfs.validateRouteData(invalidRouteDataTest));
+
+        String invalidRouteTypeDataString = "12,MCTS,12,Teutonia-Hampton,,23,,008345,";
+        String[] invalidRouteTypeDataTest = invalidRouteTypeDataString.split(",");
+        assertFalse(gtfs.validateRouteData(invalidRouteTypeDataTest));
+
+        String validRouteTextColor = "12,MCTS,12,Teutonia-Hampton,,3,,008345,FFFFFF";
+        String[] validRouteTextColorDataTest = validRouteTextColor.split(",");
+        assertTrue(gtfs.validateRouteData(validRouteTextColorDataTest));
+
+        String invalidRouteTextColor = "12,MCTS,12,Teutonia-Hampton,,3,,008345,ZZZZZZ";
+        String[] invalidRouteTextColorDataTest = invalidRouteTextColor.split(",");
+        assertFalse(gtfs.validateRouteData(invalidRouteTextColorDataTest));
+
 
         String validRouteURLDataString = "12,MCTS,12,Teutonia-Hampton,,3,http://www.w3.org/albert/bertram/marie-claude,008345,";
         String[]  validRouteURLDataTest = validRouteURLDataString.split(",");
