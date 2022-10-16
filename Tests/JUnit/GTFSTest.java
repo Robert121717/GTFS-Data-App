@@ -18,8 +18,41 @@ class GTFSTest {
     void tearDown() {
     }
 
+    /**
+     * @author Cody Morrow
+     * This method tests the verifyRouteHeader method in GTFS class
+     */
     @org.junit.jupiter.api.Test
     void verifyRouteHeader() {
+        String trueHeader = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color";
+        assertTrue(gtfs.verifyRouteHeader(trueHeader));
+
+        String missingRouteId = "agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color";
+        assertFalse(gtfs.verifyRouteHeader(missingRouteId));
+
+        String missingAgencyId = "route_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color";
+        assertFalse(gtfs.verifyRouteHeader(missingAgencyId));
+
+        String missingRouteShort = "route_id,agency_id,route_long_name,route_desc,route_type,route_url,route_color,route_text_color";
+        assertFalse(gtfs.verifyRouteHeader(missingRouteShort));
+
+        String missingRouteLong = "route_id,agency_id,route_short_name,route_desc,route_type,route_url,route_color,route_text_color";
+        assertFalse(gtfs.verifyRouteHeader(missingRouteLong));
+
+        String missingRouteDesc = "route_id,agency_id,route_short_name,route_long_name,route_type,route_url,route_color,route_text_color";
+        assertFalse(gtfs.verifyRouteHeader(missingRouteDesc));
+
+        String missingRouteType = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_url,route_color,route_text_color";
+        assertFalse(gtfs.verifyRouteHeader(missingRouteType));
+
+        String missingRouteURL = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_color,route_text_color";
+        assertFalse(gtfs.verifyRouteHeader(missingRouteURL));
+
+        String missingRouteColor = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_text_color";
+        assertFalse(gtfs.verifyRouteHeader(missingRouteColor));
+
+        String missingTextColor = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color";
+        assertFalse(gtfs.verifyRouteHeader(missingTextColor));
     }
 
     @org.junit.jupiter.api.Test
