@@ -453,8 +453,56 @@ public class GTFS {
 	 *
 	 * @param string- not implemented yet
 	 */
-	public boolean export(String string) {
-		return false;
+	public List<String> exportFiles(List<String> list) {
+		return list;
+	}
+
+	/**
+	 * method to have a string to export all stops with a string
+	 * @return string of all stops separated by a \n
+	 */
+	private String exportStop(){
+		String allStops = "";
+		for(Stop s : stops){
+			allStops += s.toString() + "\n";
+		}
+		return allStops;
+	}
+
+	/**
+	 * method to have a string to export all routes with a string
+	 * @return string of all routes separated by a \n
+	 */
+	private String exportRoute(){
+		String allRoutes = "";
+		for(Route r : routes){
+			allRoutes += r.toString() + "\n";
+		}
+		return allRoutes;
+	}
+
+	/**
+	 * method to have a string to export all stoptimes with a string
+	 * @return string of all stoptimes separated by a \n
+	 */
+	private String exportStopTime(){
+		String allStopTimes = "";
+		for(Stop st : stops){
+			allStopTimes += st.toString() + "\n";
+		}
+		return allStopTimes;
+	}
+
+	/**
+	 * method to have a string to export all Trips with a string
+	 * @return string of all Trips separated by a \n
+	 */
+	private String exportTrips(){
+		String allTrips = "";
+		for(Stop t : stops){
+			allTrips += t.toString() + "\n";
+		}
+		return allTrips;
 	}
 
 	protected String getNewestImport() {
