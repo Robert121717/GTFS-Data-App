@@ -2,6 +2,10 @@ package JUnit;
 
 import GTFS.GTFS;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -55,8 +59,47 @@ class GTFSTest {
         assertFalse(gtfs.verifyRouteHeader(missingTextColor));
     }
 
+    /**
+     * @author Robert Schmidt
+     * This method tests the verifyStopTimeHeader method in the GTFS class.
+     * The method tested should check the header format of any stop time files that are imported
+     *          to the GTFS database and return true if the header is formatted properly.
+     */
     @org.junit.jupiter.api.Test
     void verifyStopTimeHeader() {
+        String expectedHeader = "trip_id,arrival_time,departure_time,stop_id,stop_sequence," +
+                "stop_headsign,pickup_type,drop_off_type";
+        assertTrue(gtfs.verifyStopTimeHeader(expectedHeader));
+
+        // removes 3 chars from the expected header at a time and checks it doesn't pass
+        // as being properly formatted with the remaining header attributes.
+        for (int i = 1; i < expectedHeader.length() - 3; i += 3) {
+            String test = expectedHeader.substring(i);
+            assertFalse(gtfs.verifyStopTimeHeader(test));
+        }
+
+        // randomly shuffles the attributes in the string and checks the resulting string still doesn't pass
+        // as being properly formatted.
+        List<String> originalAttributes = new ArrayList<>(List.of(expectedHeader.split(",")));
+        List<String> attributes = new ArrayList<>(originalAttributes);
+
+        for (int i = 0; i < attributes.size(); ++i) {
+            Collections.shuffle(attributes);
+            // ensure the list wasn't shuffled back into its original order.
+            while (attributes.equals(originalAttributes)) {
+                Collections.shuffle(attributes);
+            }
+            assertFalse(gtfs.verifyStopTimeHeader(String.valueOf(attributes).repeat(attributes.size())));
+        }
+
+        // removes attributes from the header one at a time and checks that the resulting string does not pass
+        // as being properly formatted.
+        for (int i = 0; i < attributes.size(); ++i) {
+            List<String> testList = new ArrayList<>(originalAttributes);
+            testList.remove(i);
+
+            assertFalse(gtfs.verifyStopTimeHeader(String.valueOf(testList).repeat(testList.size())));
+        }
     }
 
     /**
