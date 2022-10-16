@@ -456,13 +456,30 @@ public class GTFS {
 	public String exportFile(String item) {
 		String content = "";
 		if(item.equalsIgnoreCase("Stops")){
-			content = exportStop();
+			if(!stops.isEmpty()) {
+				content = exportStop();
+			} else {
+				newAlert(AlertType.ERROR, "Error Dialog", "Empty Files", "File wanted for export is empty.");
+			}
 		} else if(item.equalsIgnoreCase("Routes")){
-			content = exportRoute();
+			if(!routes.isEmpty()) {
+				content = exportRoute();
+			}else {
+				newAlert(AlertType.ERROR, "Error Dialog", "Empty Files", "File wanted for export is empty.");
+			}
 		} else if(item.equalsIgnoreCase("Trips")){
-			content = exportTrips();
+			if(!trips.isEmpty()) {
+				content = exportTrips();
+			} else {
+				newAlert(AlertType.ERROR, "Error Dialog", "Empty Files", "File wanted for export is empty.");
+			}
 		} else if(item.equalsIgnoreCase("Stop Times")){
-			content = exportStopTime();
+			if(!stopTimes.isEmpty()) {
+				content = exportStopTime();
+			} else {
+				newAlert(AlertType.ERROR, "Error Dialog", "Empty Files", "File wanted for export is empty.");
+			}
+
 		}
 		return content;
 	}
