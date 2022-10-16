@@ -242,7 +242,8 @@ public class Controller implements Initializable {
 		send.setOnAction(e -> {
 			for (CheckBox option : options) {
 				if (option.isSelected()) {
-					displayFile(gtfs.exportFile(option.getText()));
+					String file = gtfs.exportFile(option.getText());
+					// TODO download file
 				}
 			}
 		});
@@ -297,10 +298,6 @@ public class Controller implements Initializable {
 	}
 
 	private void showLegend(){
-
-	}
-
-	private void exportFile() {
 
 	}
 
