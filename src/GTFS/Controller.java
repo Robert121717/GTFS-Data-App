@@ -109,6 +109,7 @@ public class Controller implements Initializable {
 	}
 
 	/**
+	 * @author Robert Schmidt
 	 * Creates and displays a popup allowing the user to manually update data in the GTFS files.
 	 */
 	@FXML
@@ -143,6 +144,7 @@ public class Controller implements Initializable {
 	}
 
 	/**
+	 * @author Robert Schmidt
 	 * Helper method to importPopup().
 	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
 	 * Including:
@@ -176,6 +178,10 @@ public class Controller implements Initializable {
 		stack.getChildren().addAll(header, inputPrompt, importEntry, send);
 	}
 
+	/**
+	 * @author Robert Schmidt
+	 * Creates and displays a popup allowing users to select files to export.
+	 */
 	@FXML
 	private void exportPopup() {
 		final int width = 230;
@@ -207,6 +213,16 @@ public class Controller implements Initializable {
 		exportPu.show(stage);
 	}
 
+	/**
+	 * @author Robert Schmidt
+	 * Helper method to exportPopup().
+	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
+	 * Including:
+	 * 		a close window button,
+	 * 		checkboxes to select which files to export,
+	 * 		an export button to begin the process of exporting the files.
+	 * @param stack Main component of the popup.
+	 */
 	private void addExportPuComponents(VBox stack) {
 		HBox header = new HBox();
 		header.setPrefWidth(230); header.setPrefHeight(30);
@@ -221,36 +237,32 @@ public class Controller implements Initializable {
 		instruct.setFont(new Font(16));
 		instruct.setTextAlignment(TextAlignment.CENTER);
 
-		List<CheckBox> options = new ArrayList<>();
-		options.add(new CheckBox("Stops"));
-		options.add(new CheckBox("Stop Times"));
-		options.add(new CheckBox("Routes"));
-		options.add(new CheckBox("Trips"));
+		List<CheckBox> options = getExportCheckBoxes();
 
 		VBox centerStack = new VBox(8);
-		centerStack.getChildren().addAll(options);
 		centerStack.setAlignment(Pos.CENTER_LEFT);
 		centerStack.setPadding(new Insets(15, 0, 15, 60));
-
-		for (CheckBox option : options) {
-			option.setPrefWidth(120);
-			option.setPrefHeight(25);
-			option.setStyle("-fx-font-size: 14;");
-		}
+		centerStack.getChildren().addAll(options);
 
 		Button send = new Button("Export");
-		send.setOnAction(e -> {
-			for (CheckBox option : options) {
-				if (option.isSelected()) {
-					String data = gtfs.exportFile(option.getText());
-					// TODO download file
-					if(!data.equals("")) {
-						export(data, option.getText());
-					}
+		send.setOnAction(e -> initializeFileExport(options));
+		stack.getChildren().addAll(header, instruct, centerStack, send);
+	}
+
+	/**
+	 * @author Robert Schmidt
+	 * Gets the requested files from the GTFS class and saves the data to a file.
+	 * @param options List of CheckBoxes, where each checkbox represents a file that can be exported.
+	 */
+	private void initializeFileExport(List<CheckBox> options) {
+		for (CheckBox option : options) {
+			if (option.isSelected()) {
+				String data = gtfs.exportFile(option.getText());
+				if(!data.equals("")) {
+					export(data, option.getText());
 				}
 			}
-		});
-		stack.getChildren().addAll(header, instruct, centerStack, send);
+		}
 	}
 
 	/**
@@ -266,6 +278,21 @@ public class Controller implements Initializable {
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
 					"A problem with the location of the export was found");
 		}
+	}
+
+	private List<CheckBox> getExportCheckBoxes() {
+		List<CheckBox> options = new ArrayList<>();
+		options.add(new CheckBox("Stops"));
+		options.add(new CheckBox("Stop Times"));
+		options.add(new CheckBox("Routes"));
+		options.add(new CheckBox("Trips"));
+
+		for (CheckBox option : options) {
+			option.setPrefWidth(120);
+			option.setPrefHeight(25);
+			option.setStyle("-fx-font-size: 14;");
+		}
+		return options;
 	}
 
 	private void displayFile(String text) {
