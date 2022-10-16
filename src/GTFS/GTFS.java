@@ -449,16 +449,27 @@ public class GTFS {
 	}
 
 	/**
-	 * NOT IMPLEMENTED YET
-	 *
-	 * @param string- not implemented yet
+	 * method to export a file from the GTFS to the main system
+	 * @author Cody Morrow
+	 * @param item - what is to be exported
 	 */
-	public List<String> exportFiles(List<String> list) {
-		return list;
+	public String exportFile(String item) {
+		String content = "";
+		if(item.equalsIgnoreCase("Stops")){
+			content = exportStop();
+		} else if(item.equalsIgnoreCase("Routes")){
+			content = exportRoute();
+		} else if(item.equalsIgnoreCase("Trips")){
+			content = exportTrips();
+		} else if(item.equalsIgnoreCase("Stop Times")){
+			content = exportStopTime();
+		}
+		return content;
 	}
 
 	/**
 	 * method to have a string to export all stops with a string
+	 * @author Cody Morrow
 	 * @return string of all stops separated by a \n
 	 */
 	private String exportStop(){
@@ -471,6 +482,7 @@ public class GTFS {
 
 	/**
 	 * method to have a string to export all routes with a string
+	 * @author Cody Morrow
 	 * @return string of all routes separated by a \n
 	 */
 	private String exportRoute(){
@@ -483,6 +495,7 @@ public class GTFS {
 
 	/**
 	 * method to have a string to export all stoptimes with a string
+	 * @author Cody Morrow
 	 * @return string of all stoptimes separated by a \n
 	 */
 	private String exportStopTime(){
@@ -495,6 +508,7 @@ public class GTFS {
 
 	/**
 	 * method to have a string to export all Trips with a string
+	 * @author Cody Morrow
 	 * @return string of all Trips separated by a \n
 	 */
 	private String exportTrips(){
