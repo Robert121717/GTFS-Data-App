@@ -1,6 +1,6 @@
 package GTFS;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -242,12 +242,30 @@ public class Controller implements Initializable {
 		send.setOnAction(e -> {
 			for (CheckBox option : options) {
 				if (option.isSelected()) {
-					String file = gtfs.exportFile(option.getText());
+					String data = gtfs.exportFile(option.getText());
 					// TODO download file
+					if(!data.equals("")) {
+						export(data, option.getText());
+					}
 				}
 			}
 		});
 		stack.getChildren().addAll(header, instruct, centerStack, send);
+	}
+
+	/**
+	 * helper method to export data to files for the user to see
+	 * @author Cody Morrow
+	 * @param data - what is to be stored for the user
+	 * @param type - name what is being exported to use as file name
+	 */
+	private void export(String data, String type) {
+		try(FileWriter out = new FileWriter(type + ".txt")) {
+			out.write(data);
+		} catch (IOException e){
+			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
+					"A problem with the location of the export was found");
+		}
 	}
 
 	private void displayFile(String text) {
