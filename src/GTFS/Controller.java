@@ -2,6 +2,7 @@ package GTFS;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -20,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -33,6 +35,7 @@ public class Controller implements Initializable {
 	private final GTFS gtfs;
 	private Stage stage;
 	private Popup importPu;
+	private Popup exportPu;
 	@FXML
 	private VBox dropImportVBox;
 	private TextArea importEntry;
@@ -47,11 +50,7 @@ public class Controller implements Initializable {
 	@FXML
 	private MenuItem stopMI;
 	@FXML
-	private MenuItem stopTimeMI;
-	@FXML
 	private MenuItem routeMI;
-	@FXML
-	private MenuItem tripMI;
 	@FXML
 	private MenuItem closeMI;
 	@FXML
@@ -101,6 +100,7 @@ public class Controller implements Initializable {
 	private void search() {
 		if(menu.getText().equals(routeMI.getText())) {
 			searchRouteId();
+
 		} else if(menu.getText().equals(stopMI.getText())) {
 			searchStopId();
 		}
@@ -113,20 +113,24 @@ public class Controller implements Initializable {
 	 */
 	@FXML
 	private void importPopup() {
+		final int height = 200;
+		final int width = 400;
+
 		if (importPu != null && importPu.isShowing()) importPu.hide();
+		else if (exportPu != null && exportPu.isShowing()) exportPu.hide();
 
 		importPu = new Popup();								//create popup prompt for user to type data into
-		importPu.setWidth(400); importPu.setHeight(200);
+		importPu.setWidth(width); importPu.setHeight(height);
 
 		Pane background = new Pane();
-		background.setPrefWidth(400); background.setPrefHeight(200);
+		background.setPrefWidth(width); background.setPrefHeight(height);
 
 		VBox stack = new VBox(18);
-		stack.setPrefWidth(400); stack.setPrefHeight(200);
+		stack.setPrefWidth(width); stack.setPrefHeight(height);
 		stack.setAlignment(Pos.CENTER);
-		stack.setPadding(new Insets(5, 5, 10, 5));
+		stack.setPadding(new Insets(8, 8, 10, 8));
 
-		addPopupVBoxComponents(stack);
+		addImportPuComponents(stack);
 		background.getChildren().add(stack);
 
 		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
@@ -147,7 +151,7 @@ public class Controller implements Initializable {
 	 * 		an update button, which well send the data to the GTFS files.
 	 * @param stack Main component of the popup.
 	 */
-	private void addPopupVBoxComponents(VBox stack) {
+	private void addImportPuComponents(VBox stack) {
 		HBox header = new HBox(5);
 		header.setPrefWidth(400); header.setPrefHeight(50);
 		header.setAlignment(Pos.TOP_RIGHT);
@@ -173,10 +177,81 @@ public class Controller implements Initializable {
 	}
 
 	@FXML
-	private void exportFiles() {
+	private void exportPopup() {
+		final int width = 230;
+		final int height = 310;
 
+		if (exportPu != null && exportPu.isShowing()) exportPu.hide();
+		else if (importPu != null && importPu.isShowing()) importPu.hide();
+
+		exportPu = new Popup();
+		exportPu.setHeight(height); exportPu.setWidth(width);
+
+		Pane background = new Pane();
+		background.setPrefHeight(height); background.setPrefWidth(width);
+
+		VBox stack = new VBox(5);
+		stack.setPrefHeight(height); stack.setPrefWidth(width);
+		stack.setAlignment(Pos.TOP_CENTER);
+		stack.setPadding(new Insets(8, 8, 8, 8));
+
+		addExportPuComponents(stack);
+		background.getChildren().add(stack);
+
+		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
+				"radial-gradient(focus-distance 0% , center 50% 50% , radius 40% , #E5E6E4, #F9F9F8);");
+		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
+		background.setEffect(shadow);
+
+		exportPu.getContent().add(background);
+		exportPu.show(stage);
 	}
 
+	private void addExportPuComponents(VBox stack) {
+		HBox header = new HBox();
+		header.setPrefWidth(230); header.setPrefHeight(30);
+		header.setAlignment(Pos.TOP_RIGHT);
+
+		Button closeButton = new Button("Cancel");
+		closeButton.setOnAction(e -> exportPu.hide()); 	//close popup
+		header.getChildren().add(closeButton);
+
+		Label instruct = new Label("Please Select the Files to Export");
+		instruct.setWrapText(true); instruct.setPrefWidth(150);
+		instruct.setFont(new Font(16));
+		instruct.setTextAlignment(TextAlignment.CENTER);
+
+		List<CheckBox> options = new ArrayList<>();
+		options.add(new CheckBox("Stops"));
+		options.add(new CheckBox("Stop Times"));
+		options.add(new CheckBox("Routes"));
+		options.add(new CheckBox("Trips"));
+
+		VBox centerStack = new VBox(8);
+		centerStack.getChildren().addAll(options);
+		centerStack.setAlignment(Pos.CENTER_LEFT);
+		centerStack.setPadding(new Insets(15, 0, 15, 60));
+
+		for (CheckBox option : options) {
+			option.setPrefWidth(120);
+			option.setPrefHeight(25);
+			option.setStyle("-fx-font-size: 14;");
+		}
+
+		Button send = new Button("Export");
+		send.setOnAction(e -> {
+			for (CheckBox option : options) {
+				if (option.isSelected()) {
+					displayFile(gtfs.exportFile(option.getText()));
+				}
+			}
+		});
+		stack.getChildren().addAll(header, instruct, centerStack, send);
+	}
+
+	private void displayFile(String text) {
+
+	}
 	private void searchStopId() {
 	//TODO check for incorrect inputs.
 		// in other stop files. Stop_ID's can be any length and have numbers/letters.
