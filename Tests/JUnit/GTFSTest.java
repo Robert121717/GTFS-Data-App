@@ -89,7 +89,11 @@ class GTFSTest {
             while (attributes.equals(originalAttributes)) {
                 Collections.shuffle(attributes);
             }
-            assertFalse(gtfs.verifyStopTimeHeader(String.valueOf(attributes).repeat(attributes.size())));
+            StringBuilder sb = new StringBuilder();
+            for (String attribute : attributes) {
+                sb.append(attribute).append(",");
+            }
+            assertFalse(gtfs.verifyStopTimeHeader(sb.toString()));
         }
 
         // removes attributes from the header one at a time and checks that the resulting string does not pass
@@ -98,7 +102,11 @@ class GTFSTest {
             List<String> testList = new ArrayList<>(originalAttributes);
             testList.remove(i);
 
-            assertFalse(gtfs.verifyStopTimeHeader(String.valueOf(testList).repeat(testList.size())));
+            StringBuilder sb = new StringBuilder();
+            for (String attribute : testList) {
+                sb.append(attribute).append(",");
+            }
+            assertFalse(gtfs.verifyStopTimeHeader(sb.toString()));
         }
     }
 
