@@ -304,8 +304,10 @@ public class Controller implements Initializable {
 		//Would be very difficult to check if the ID is valid or not.
 		//In future this method could reveal lots of info. For now it gives info for #4
 		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
-		String searchRouteInfo ="Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n" +
-				"Number of Trips with stop: " + numTripsWithStop  + "\n";
+		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
+		String searchRouteInfo ="Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+				"Number of Trips with stop: " + numTripsWithStop  + "\n\n" + "Routes with Stop:" + "\n" +
+				routeIdWithStop;
 		recentUploadDisplay.setText(searchRouteInfo);
 
 	}

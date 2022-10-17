@@ -449,6 +449,37 @@ public class GTFS {
 	}
 
 	/**
+	 * search a stop and returns the routeID's of the routes with teh stop.
+	 *
+	 * @param stopId - searched stop
+	 * @return returns route ID's that contain the stop.
+	 */
+		public String routesWithStop(String stopId) {
+			String tripId = "";
+			StringBuilder sb = new StringBuilder();
+			ArrayList<String> currentRoutes = new ArrayList<>();
+
+			for (StopTime stopTime : stopTimes) {
+				if (stopTime.hasStop(stopId)) {
+					tripId = stopTime.getTripId();
+					for (Trip trip : trips) {
+						if(trip.getTripId().equals(tripId)) {
+							if(!currentRoutes.contains(trip.getRouteId())) {
+								currentRoutes.add(trip.getRouteId());
+							}
+						}
+					}
+				}
+			}
+			for(String routeId: currentRoutes) {
+				sb.append("RouteID: ");
+				sb.append(routeId);
+				sb.append("\n");
+			}
+			return sb.toString();
+		}
+
+	/**
 	 * method to export a file from the GTFS to the main system
 	 * @author Cody Morrow
 	 * @param item - what is to be exported
