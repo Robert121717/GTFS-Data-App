@@ -404,8 +404,8 @@ public class GTFS {
 					isValid = false;
 				}
 			}
-			if (!data[2].matches("(?:[012]\\d|2[0123]):[012345]\\d:[012345]\\d")) {
-				if (!data[2].matches("")) {
+			if (!data[2].matches("")) {
+				if (!data[2].matches("(?:[012]\\d|2[0123]):[012345]\\d:[012345]\\d")) {
 					isValid = false;
 				} else if (Integer.parseInt(data[2].substring(3, 5)) > 59) {
 					isValid = false;

@@ -1,8 +1,6 @@
 package GTFS;
 
 
-
-
 /**
  * @author nairac, atkinsonr, morrowc, schmidtrj
  * @version 1.0
