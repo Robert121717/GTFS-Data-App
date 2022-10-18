@@ -36,7 +36,8 @@ public class Controller implements Initializable {
 	private Stage stage;
 	private Popup importPu;
 	private Popup exportPu;
-
+	private boolean hasTrip;
+	private boolean hasStopTime;
 	@FXML
 	private VBox dropImportVBox;
 	private TextArea importEntry;
