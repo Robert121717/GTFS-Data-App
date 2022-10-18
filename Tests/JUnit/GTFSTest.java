@@ -397,4 +397,5 @@ class GTFSTest {
         String[] invalidStopTimeDropOffType = invalidDropOffType.split(",");
         assertFalse(gtfs.validateStopTimeData(invalidStopTimeDropOffType));
     }
+
 }

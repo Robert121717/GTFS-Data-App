@@ -36,6 +36,8 @@ public class Controller implements Initializable {
 	private Stage stage;
 	private Popup importPu;
 	private Popup exportPu;
+	private boolean hasTrip;
+	private boolean hasStopTime;
 	@FXML
 	private VBox dropImportVBox;
 	private TextArea importEntry;
@@ -305,6 +307,7 @@ public class Controller implements Initializable {
 		//In future this method could reveal lots of info. For now it gives info for #4
 		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
+
 		String searchRouteInfo ="Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
 				"Number of Trips with stop: " + numTripsWithStop  + "\n\n" + "Routes with Stop:" + "\n" +
 				routeIdWithStop;
