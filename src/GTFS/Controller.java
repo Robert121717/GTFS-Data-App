@@ -36,8 +36,6 @@ public class Controller implements Initializable {
 	private Stage stage;
 	private Popup importPu;
 	private Popup exportPu;
-	private boolean hasTrip;
-	private boolean hasStopTime;
 	@FXML
 	private VBox dropImportVBox;
 	private TextArea importEntry;
@@ -301,17 +299,24 @@ public class Controller implements Initializable {
 
 	}
 	private void searchStopId() {
-	//TODO check for incorrect inputs.
-		// in other stop files. Stop_ID's can be any length and have numbers/letters.
-		//Would be very difficult to check if the ID is valid or not.
-		//In future this method could reveal lots of info. For now it gives info for #4
+
 		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
+		if(gtfs.hasStopTime() && gtfs.hasTrip()) {
+			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+					"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
+					routeIdWithStop;
+			recentUploadDisplay.setText(searchRouteInfo);
+		} else if(gtfs.hasStopTime() && !gtfs.hasTrip()) {
+			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+					"Number of Trips with stop: " + numTripsWithStop + "\n\n" +
+					"NOTICE: Must import a trip file to see more data.";
+			recentUploadDisplay.setText(searchRouteInfo);
 
-		String searchRouteInfo ="Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
-				"Number of Trips with stop: " + numTripsWithStop  + "\n\n" + "Routes with Stop:" + "\n" +
-				routeIdWithStop;
-		recentUploadDisplay.setText(searchRouteInfo);
+		} else if(!gtfs.hasStopTime() && !gtfs.hasTrip()) {
+			String searchRouteInfo = "NOTICE: Must import StopTime and Trip files to see data.";
+			recentUploadDisplay.setText(searchRouteInfo);
+		}
 
 	}
 
