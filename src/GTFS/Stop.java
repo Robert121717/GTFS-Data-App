@@ -1,5 +1,7 @@
 package GTFS;
 
+import java.math.BigInteger;
+
 /**
  * @author nairac, atkinsonr, morrowc, schmidtrj
  * @version 1.0
@@ -13,6 +15,8 @@ public class Stop {
 	private double stopLon;
 	private String stopDesc;
 
+	private final BigInteger stopIDHash;
+
 	/**
 	 * constructor for Stop
 	 * @param stopID the string of the stopID
@@ -23,6 +27,7 @@ public class Stop {
 		this.stopLat = 0;
 		this.stopLon = 0;
 		this.stopDesc = "";
+		this.stopIDHash = GTFS.toDecimal(stopID);
 	}
 
 	/**
