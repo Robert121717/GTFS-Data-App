@@ -107,6 +107,10 @@ public class Route {
 		return 0;
 	} //TODO
 
+	protected BigInteger getRouteIDHash(){
+		return routeIDHash;
+	}
+
 	public String toString(){
 		return "" + routeID + "," + agencyID + "," + shortName + "," + longName +
 				"," +routeType + "," + routeDesc + "," + routeURL  + "," + routeColor + "," + routeTextColor;

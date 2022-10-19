@@ -85,6 +85,10 @@ public class Trip {
 		return shapeId;
 	}
 
+	protected BigInteger getHashId(){
+		return hashId;
+	}
+
 	public String toString(){
 		return "" + routeId + "," + serviceId + "," + tripId + "," + headSign +
 				"," + directionId + "," + blockId + "," + shapeId;

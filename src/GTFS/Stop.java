@@ -91,6 +91,10 @@ public class Stop {
 		return stopDesc;
 	}
 
+	protected BigInteger getStopIDHash(){
+		return stopIDHash;
+	}
+
 	public String toString(){
 		return "" + stopID + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
 	}

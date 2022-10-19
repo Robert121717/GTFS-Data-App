@@ -94,6 +94,10 @@ public class StopTime {
 		return tripId;
 	}
 
+	protected BigInteger getHashId(){
+		return hashId;
+	}
+
 
 	public String toString(){
 		return "" + tripId + "," + arrivalTime + "," + departureTime + "," + stopId +
