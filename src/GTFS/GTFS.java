@@ -115,7 +115,10 @@ public class GTFS {
 				} else {
 					route.setRouteTextColor("");
 				}
-				routes.add(route);
+
+				if(!routes.contains(route)){
+					routes.add(route);
+				}
 			} else {
 				System.out.println(line);
 

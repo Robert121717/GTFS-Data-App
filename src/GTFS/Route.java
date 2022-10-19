@@ -104,4 +104,13 @@ public class Route {
 		return "" + routeID + "," + agencyID + "," + shortName + "," + longName +
 				"," +routeType + "," + routeDesc + "," + routeURL  + "," + routeColor + "," + routeTextColor;
 	}
+
+	public boolean equals(Object other){
+		Route temp = (Route) other;
+		return this.routeID.equals(temp.routeID) && this.agencyID.equals(temp.agencyID) && this.shortName.equals(temp.shortName)
+				&& this.longName.equals(temp.longName) && this.routeType.equals(temp.routeType) && this.routeDesc.equals(temp.routeDesc)
+				&& this.routeURL.equals(temp.routeURL) && this.routeColor.equals(temp.routeColor)
+				&& this.routeTextColor.equals(temp.routeTextColor);
+	}
+
 }
