@@ -1,6 +1,5 @@
 package GTFS;
 
-import java.math.BigInteger;
 
 /**
  * @author nairac, atkinsonr, morrowc, schmidtrj

@@ -1,11 +1,8 @@
 package GTFS;
 
 import javafx.scene.control.Alert.AlertType;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static GTFS.Controller.newAlert;
