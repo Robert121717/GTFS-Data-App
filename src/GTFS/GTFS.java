@@ -452,30 +452,30 @@ public class GTFS {
 	 * @param stopId - searched stop
 	 * @return returns route ID's that contain the stop.
 	 */
-		public String routesWithStop(String stopId) {
-			String tripId = "";
-			StringBuilder sb = new StringBuilder();
-			ArrayList<String> currentRoutes = new ArrayList<>();
+	public String routesWithStop(String stopId) {
+		String tripId = "";
+		StringBuilder sb = new StringBuilder();
+		ArrayList<String> currentRoutes = new ArrayList<>();
 
-			for (StopTime stopTime : stopTimes) {
-				if (stopTime.hasStop(stopId)) {
-					tripId = stopTime.getTripId();
-					for (Trip trip : trips) {
-						if(trip.getTripId().equals(tripId)) {
-							if(!currentRoutes.contains(trip.getRouteId())) {
-								currentRoutes.add(trip.getRouteId());
-							}
+		for (StopTime stopTime : stopTimes) {
+			if (stopTime.hasStop(stopId)) {
+				tripId = stopTime.getTripId();
+				for (Trip trip : trips) {
+					if(trip.getTripId().equals(tripId)) {
+						if(!currentRoutes.contains(trip.getRouteId())) {
+							currentRoutes.add(trip.getRouteId());
 						}
 					}
 				}
 			}
-			for(String routeId: currentRoutes) {
-				sb.append("RouteID: ");
-				sb.append(routeId);
-				sb.append("\n");
-			}
-			return sb.toString();
 		}
+		for(String routeId: currentRoutes) {
+			sb.append("RouteID: ");
+			sb.append(routeId);
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
 
 	/**
 	 * method to export a file from the GTFS to the main system
@@ -484,31 +484,25 @@ public class GTFS {
 	 */
 	public String exportFile(String item) {
 		String content = "";
-		if(item.equalsIgnoreCase("Stops")){
+		if(item.equalsIgnoreCase("Stops")) {
 			if(!stops.isEmpty()) {
 				content = exportStop();
-			} else {
-				newAlert(AlertType.ERROR, "Error Dialog", "Empty Files", "File wanted for export is empty.");
-			}
-		} else if(item.equalsIgnoreCase("Routes")){
-			if(!routes.isEmpty()) {
-				content = exportRoute();
-			}else {
-				newAlert(AlertType.ERROR, "Error Dialog", "Empty Files", "File wanted for export is empty.");
-			}
-		} else if(item.equalsIgnoreCase("Trips")){
-			if(!trips.isEmpty()) {
-				content = exportTrips();
-			} else {
-				newAlert(AlertType.ERROR, "Error Dialog", "Empty Files", "File wanted for export is empty.");
-			}
-		} else if(item.equalsIgnoreCase("Stop Times")){
-			if(!stopTimes.isEmpty()) {
-				content = exportStopTime();
-			} else {
-				newAlert(AlertType.ERROR, "Error Dialog", "Empty Files", "File wanted for export is empty.");
 			}
 
+		} else if(item.equalsIgnoreCase("Routes")) {
+			if(!routes.isEmpty()) {
+				content = exportRoute();
+			}
+
+		} else if(item.equalsIgnoreCase("Trips")) {
+			if(!trips.isEmpty()) {
+				content = exportTrips();
+			}
+
+		} else if(item.equalsIgnoreCase("Stop Times")) {
+			if(!stopTimes.isEmpty()) {
+				content = exportStopTime();
+			}
 		}
 		return content;
 	}
@@ -519,7 +513,7 @@ public class GTFS {
 	 * @return string of all stops separated by a \n
 	 */
 	private String exportStop(){
-		String allStops = "";
+		String allStops = "stop_id,stop_name,stop_desc,stop_lat,stop_lon\n";
 		for(Stop s : stops){
 			allStops += s.toString() + "\n";
 		}
@@ -532,7 +526,8 @@ public class GTFS {
 	 * @return string of all routes separated by a \n
 	 */
 	private String exportRoute(){
-		String allRoutes = "";
+		String allRoutes = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type," +
+				"route_url,route_color,route_text_color\n";
 		for(Route r : routes){
 			allRoutes += r.toString() + "\n";
 		}
@@ -545,11 +540,13 @@ public class GTFS {
 	 * @return string of all stoptimes separated by a \n
 	 */
 	private String exportStopTime(){
-		String allStopTimes = "";
-		for(Stop st : stops){
-			allStopTimes += st.toString() + "\n";
+		StringBuilder sb = new StringBuilder();
+		sb.append("trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,pickup_type,drop_off_type\n");
+		for(StopTime st : stopTimes){
+			sb.append(st.toString());
+			sb.append("\n");
 		}
-		return allStopTimes;
+		return sb.toString();
 	}
 
 	/**
@@ -558,8 +555,8 @@ public class GTFS {
 	 * @return string of all Trips separated by a \n
 	 */
 	private String exportTrips(){
-		String allTrips = "";
-		for(Stop t : stops){
+		String allTrips = "route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id\n";
+		for(Trip t : trips){
 			allTrips += t.toString() + "\n";
 		}
 		return allTrips;

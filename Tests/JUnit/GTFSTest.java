@@ -17,7 +17,7 @@ class GTFSTest {
     void setUp() {
         gtfs = new GTFS();
     }
-    
+
 
     /**
      * @author Cody Morrow

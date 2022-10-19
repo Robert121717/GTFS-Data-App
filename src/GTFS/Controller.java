@@ -58,7 +58,7 @@ public class Controller implements Initializable {
 	@FXML
 	private BorderPane dropBorderPane;
 
-	public Controller(){
+	public Controller() {
 		gtfs = new GTFS();
 	}
 
@@ -98,10 +98,10 @@ public class Controller implements Initializable {
 
 	@FXML
 	private void search() {
-		if(menu.getText().equals(routeMI.getText())) {
+		if (menu.getText().equals(routeMI.getText())) {
 			searchRouteId();
 
-		} else if(menu.getText().equals(stopMI.getText())) {
+		} else if (menu.getText().equals(stopMI.getText())) {
 			searchStopId();
 		}
 		recentUploadLabel.setVisible(false);
@@ -120,14 +120,17 @@ public class Controller implements Initializable {
 		if (importPu != null && importPu.isShowing()) importPu.hide();
 		else if (exportPu != null && exportPu.isShowing()) exportPu.hide();
 
-		importPu = new Popup();								//create popup prompt for user to type data into
-		importPu.setWidth(width); importPu.setHeight(height);
+		importPu = new Popup();                                //create popup prompt for user to type data into
+		importPu.setWidth(width);
+		importPu.setHeight(height);
 
 		Pane background = new Pane();
-		background.setPrefWidth(width); background.setPrefHeight(height);
+		background.setPrefWidth(width);
+		background.setPrefHeight(height);
 
 		VBox stack = new VBox(18);
-		stack.setPrefWidth(width); stack.setPrefHeight(height);
+		stack.setPrefWidth(width);
+		stack.setPrefHeight(height);
 		stack.setAlignment(Pos.CENTER);
 		stack.setPadding(new Insets(8, 8, 10, 8));
 
@@ -144,22 +147,23 @@ public class Controller implements Initializable {
 	}
 
 	/**
+	 * @param stack Main component of the popup.
 	 * @author Robert Schmidt
 	 * Helper method to importPopup().
 	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
 	 * Including:
-	 * 		a close window button,
-	 * 		a text area for user input
-	 * 		an update button, which well send the data to the GTFS files.
-	 * @param stack Main component of the popup.
+	 * a close window button,
+	 * a text area for user input
+	 * an update button, which well send the data to the GTFS files.
 	 */
 	private void addImportPuComponents(VBox stack) {
 		HBox header = new HBox(5);
-		header.setPrefWidth(400); header.setPrefHeight(50);
+		header.setPrefWidth(400);
+		header.setPrefHeight(50);
 		header.setAlignment(Pos.TOP_RIGHT);
 
 		Button closeButton = new Button("Cancel");
-		closeButton.setOnAction(e -> importPu.hide()); 	//close popup
+		closeButton.setOnAction(e -> importPu.hide());    //close popup
 		header.getChildren().addAll(closeButton);
 
 		Label inputPrompt = new Label("Please Enter the Relevant Data Below");
@@ -171,9 +175,10 @@ public class Controller implements Initializable {
 
 		Button send = new Button("Update");
 		send.setOnAction(e -> {
-			gtfs.updateText(importEntry.getText());					//update the user input into the gtfs data structures
-			recentUploadDisplay.setText(gtfs.getNewestImport()); 	//display the imported data to user to show it was successful
-			recentUploadLabel.setVisible(true); importPu.hide();
+			gtfs.updateText(importEntry.getText());                    //update the user input into the gtfs data structures
+			recentUploadDisplay.setText(gtfs.getNewestImport());    //display the imported data to user to show it was successful
+			recentUploadLabel.setVisible(true);
+			importPu.hide();
 		});
 		stack.getChildren().addAll(header, inputPrompt, importEntry, send);
 	}
@@ -191,13 +196,16 @@ public class Controller implements Initializable {
 		else if (importPu != null && importPu.isShowing()) importPu.hide();
 
 		exportPu = new Popup();
-		exportPu.setHeight(height); exportPu.setWidth(width);
+		exportPu.setHeight(height);
+		exportPu.setWidth(width);
 
 		Pane background = new Pane();
-		background.setPrefHeight(height); background.setPrefWidth(width);
+		background.setPrefHeight(height);
+		background.setPrefWidth(width);
 
 		VBox stack = new VBox(5);
-		stack.setPrefHeight(height); stack.setPrefWidth(width);
+		stack.setPrefHeight(height);
+		stack.setPrefWidth(width);
 		stack.setAlignment(Pos.TOP_CENTER);
 		stack.setPadding(new Insets(8, 8, 8, 8));
 
@@ -214,26 +222,28 @@ public class Controller implements Initializable {
 	}
 
 	/**
+	 * @param stack Main component of the popup.
 	 * @author Robert Schmidt
 	 * Helper method to exportPopup().
 	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
 	 * Including:
-	 * 		a close window button,
-	 * 		checkboxes to select which files to export,
-	 * 		an export button to begin the process of exporting the files.
-	 * @param stack Main component of the popup.
+	 * a close window button,
+	 * checkboxes to select which files to export,
+	 * an export button to begin the process of exporting the files.
 	 */
 	private void addExportPuComponents(VBox stack) {
 		HBox header = new HBox();
-		header.setPrefWidth(230); header.setPrefHeight(30);
+		header.setPrefWidth(230);
+		header.setPrefHeight(30);
 		header.setAlignment(Pos.TOP_RIGHT);
 
 		Button closeButton = new Button("Cancel");
-		closeButton.setOnAction(e -> exportPu.hide()); 	//close popup
+		closeButton.setOnAction(e -> exportPu.hide());    //close popup
 		header.getChildren().add(closeButton);
 
 		Label instruct = new Label("Please Select the Files to Export");
-		instruct.setWrapText(true); instruct.setPrefWidth(150);
+		instruct.setWrapText(true);
+		instruct.setPrefWidth(150);
 		instruct.setFont(new Font(16));
 		instruct.setTextAlignment(TextAlignment.CENTER);
 
@@ -245,20 +255,30 @@ public class Controller implements Initializable {
 		centerStack.getChildren().addAll(options);
 
 		Button send = new Button("Export");
-		send.setOnAction(e -> initializeFileExport(options));
+		send.setOnAction(e -> {
+			exportPu.hide();
+			initializeFileExport(options);
+		});
+
 		stack.getChildren().addAll(header, instruct, centerStack, send);
 	}
 
 	/**
+	 * @param options List of CheckBoxes, where each checkbox represents a file that can be exported.
 	 * @author Robert Schmidt
 	 * Gets the requested files from the GTFS class and saves the data to a file.
-	 * @param options List of CheckBoxes, where each checkbox represents a file that can be exported.
 	 */
 	private void initializeFileExport(List<CheckBox> options) {
 		for (CheckBox option : options) {
 			if (option.isSelected()) {
 				String data = gtfs.exportFile(option.getText());
-				if(!data.equals("")) {
+
+				if (data.equals("")) {
+					newAlert(Alert.AlertType.ERROR,
+							"Error Dialog",
+							"The requested data could not be found.",
+							"Please import the data first.");
+				} else {
 					export(data, option.getText());
 				}
 			}
@@ -267,14 +287,15 @@ public class Controller implements Initializable {
 
 	/**
 	 * helper method to export data to files for the user to see
+	 *
+	 * @param data     - what is to be stored for the user
+	 * @param fileName - name what is being exported to use as file name
 	 * @author Cody Morrow
-	 * @param data - what is to be stored for the user
-	 * @param type - name what is being exported to use as file name
 	 */
-	private void export(String data, String type) {
-		try(FileWriter out = new FileWriter(type + ".txt")) {
+	private void export(String data, String fileName) {
+		try (FileWriter out = new FileWriter(fileName + ".txt")) {
 			out.write(data);
-		} catch (IOException e){
+		} catch (IOException e) {
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
 					"A problem with the location of the export was found");
 		}
@@ -298,22 +319,23 @@ public class Controller implements Initializable {
 	private void displayFile(String text) {
 
 	}
+
 	private void searchStopId() {
 
 		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
-		if(gtfs.hasStopTime() && gtfs.hasTrip()) {
+		if (gtfs.hasStopTime() && gtfs.hasTrip()) {
 			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
 					"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
 					routeIdWithStop;
 			recentUploadDisplay.setText(searchRouteInfo);
-		} else if(gtfs.hasStopTime() && !gtfs.hasTrip()) {
+		} else if (gtfs.hasStopTime() && !gtfs.hasTrip()) {
 			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
 					"Number of Trips with stop: " + numTripsWithStop + "\n\n" +
 					"NOTICE: Must import a trip file to see more data.";
 			recentUploadDisplay.setText(searchRouteInfo);
 
-		} else if(!gtfs.hasStopTime() && !gtfs.hasTrip()) {
+		} else if (!gtfs.hasStopTime() && !gtfs.hasTrip()) {
 			String searchRouteInfo = "NOTICE: Must import StopTime and Trip files to see data.";
 			recentUploadDisplay.setText(searchRouteInfo);
 		}
@@ -321,8 +343,28 @@ public class Controller implements Initializable {
 	}
 
 	private void searchRouteId() {
+		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
+		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
+		if (gtfs.hasStopTime() && gtfs.hasTrip()) {
+			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+					"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
+					routeIdWithStop;
+			recentUploadDisplay.setText(searchRouteInfo);
+		} else if (gtfs.hasStopTime() && !gtfs.hasTrip()) {
+			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+					"Number of Trips with stop: " + numTripsWithStop + "\n\n" +
+					"NOTICE: Must import a trip file to see more data.";
+			recentUploadDisplay.setText(searchRouteInfo);
+
+		} else if (!gtfs.hasStopTime() && !gtfs.hasTrip()) {
+			String searchRouteInfo = "NOTICE: Must import StopTime and Trip files to see data.";
+			recentUploadDisplay.setText(searchRouteInfo);
+		}
 
 	}
+
+
+
 
 	private boolean displayDistance() {
 		return false;
