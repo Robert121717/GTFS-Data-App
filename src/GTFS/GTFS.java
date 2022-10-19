@@ -4,6 +4,8 @@ import javafx.scene.control.Alert.AlertType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static GTFS.Controller.newAlert;
@@ -513,11 +515,13 @@ public class GTFS {
 	 * @return string of all stops separated by a \n
 	 */
 	private String exportStop(){
-		String allStops = "stop_id,stop_name,stop_desc,stop_lat,stop_lon\n";
-		for(Stop s : stops){
-			allStops += s.toString() + "\n";
+		String header = "stop_id,stop_name,stop_desc,stop_lat,stop_lon\n";
+		StringBuilder sb = new StringBuilder(header);
+
+		for(Stop stop : stops){
+			sb.append(stop).append("\n");
 		}
-		return allStops;
+		return sb.toString();
 	}
 
 	/**
@@ -526,12 +530,14 @@ public class GTFS {
 	 * @return string of all routes separated by a \n
 	 */
 	private String exportRoute(){
-		String allRoutes = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type," +
+		String header = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type," +
 				"route_url,route_color,route_text_color\n";
-		for(Route r : routes){
-			allRoutes += r.toString() + "\n";
+		StringBuilder sb = new StringBuilder(header);
+
+		for(Route route : routes){
+			sb.append(route).append("\n");
 		}
-		return allRoutes;
+		return sb.toString();
 	}
 
 	/**
@@ -540,11 +546,12 @@ public class GTFS {
 	 * @return string of all stoptimes separated by a \n
 	 */
 	private String exportStopTime(){
-		StringBuilder sb = new StringBuilder();
-		sb.append("trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,pickup_type,drop_off_type\n");
+		String header = "trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign," +
+				"pickup_type,drop_off_type\n";
+		StringBuilder sb = new StringBuilder(header);
+
 		for(StopTime st : stopTimes){
-			sb.append(st.toString());
-			sb.append("\n");
+			sb.append(st.toString()).append("\n");
 		}
 		return sb.toString();
 	}
@@ -555,20 +562,16 @@ public class GTFS {
 	 * @return string of all Trips separated by a \n
 	 */
 	private String exportTrips(){
-		String allTrips = "route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id\n";
-		for(Trip t : trips){
-			allTrips += t.toString() + "\n";
+		String header = "route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id\n";
+		StringBuilder sb = new StringBuilder(header);
+
+		for(Trip trip : trips){
+			sb.append(trip.toString()).append("\n");
 		}
-		return allTrips;
+		return sb.toString();
 	}
 
 	protected String getNewestImport() {
 		return lastAdded;
-	}
-	public boolean hasTrip(){
-		return !trips.isEmpty();
-	}
-	public boolean hasStopTime(){
-		return !stopTimes.isEmpty();
 	}
 }
