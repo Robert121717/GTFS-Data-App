@@ -3,6 +3,7 @@ package GTFS;
 import javafx.scene.control.Alert.AlertType;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigInteger;
 import java.util.*;
 
 import static GTFS.Controller.newAlert;
@@ -20,6 +21,13 @@ public class GTFS {
 	private final ArrayList<Stop> stops;
 	private final ArrayList<StopTime> stopTimes;
 	private final ArrayList<Trip> trips;
+
+	private final HashMap<BigInteger, Route> routesSet;
+	private final HashMap<BigInteger, Stop> stopsSet;
+	private final HashMap<BigInteger, StopTime> stopTimesSet;
+	private final HashMap<BigInteger, Trip> tripsSet;
+
+
 	private String lastAdded;
 	private final StringBuilder stringBuilder = new StringBuilder();
 
@@ -31,6 +39,11 @@ public class GTFS {
 		stops = new ArrayList<>();
 		stopTimes = new ArrayList<>();
 		trips = new ArrayList<>();
+
+		routesSet = new HashMap<>();
+		stopsSet = new HashMap<>();
+		stopTimesSet = new HashMap<>();
+		tripsSet = new HashMap<>();
 	}
 
 	protected void updateText(String text) {
@@ -116,9 +129,8 @@ public class GTFS {
 					route.setRouteTextColor("");
 				}
 
-				if(!routes.contains(route)){
-					routes.add(route);
-				}
+				routes.add(route);
+
 			} else {
 				System.out.println(line);
 
@@ -175,9 +187,9 @@ public class GTFS {
 				stop.setStopLat(Double.parseDouble(parts[3]));
 				stop.setStopLon(Double.parseDouble(parts[4]));
 
-				if(!stops.contains(stop)){
-					stops.add(stop);
-				}
+
+				stops.add(stop);
+
 			} else {
 				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
 			}
@@ -287,9 +299,9 @@ public class GTFS {
 					trip.setShapeId(parts[6]);
 				}
 
-				if(!trips.contains(trip)){
-					trips.add(trip);
-				}
+
+				trips.add(trip);
+
 			} else {
 				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
 			}
