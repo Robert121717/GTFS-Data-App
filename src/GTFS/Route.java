@@ -1,5 +1,7 @@
 package GTFS;
 
+import java.math.BigInteger;
+
 /**
  * @author nairac, atkinsonr, morrowc, schmidtrj
  * @version 1.0
@@ -17,8 +19,13 @@ public class Route {
 	private String routeColor = "";
 	private String routeTextColor = "";
 
+	private final BigInteger routeIDHash;
+
+
+
 	protected Route(String routeID) {
 		this.routeID = routeID;
+		this.routeIDHash = GTFS.toDecimal(routeID);
 	}
 
 	/**
