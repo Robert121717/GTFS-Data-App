@@ -284,7 +284,9 @@ public class GTFS {
 					trip.setShapeId(parts[6]);
 				}
 
-				trips.add(trip);
+				if(!trips.contains(trip)){
+					trips.add(trip);
+				}
 			} else {
 				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
 			}

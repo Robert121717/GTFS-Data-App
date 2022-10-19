@@ -81,4 +81,12 @@ public class Trip {
 		return "" + routeId + "," + serviceId + "," + tripId + "," + headSign +
 				"," + directionId + "," + blockId + "," + shapeId;
 	}
+
+	@Override
+	public boolean equals(Object other){
+		Trip temp = (Trip) other;
+		return this.routeId.equals(temp.routeId) && this.serviceId.equals(temp.serviceId) && this.tripId.equals(temp.tripId)
+				&& this.headSign.equals(temp.headSign) && this.directionId.equals(temp.directionId) && this.blockId.equals(temp.blockId)
+				&& this.shapeId.equals(temp.shapeId);
+	}
 }
