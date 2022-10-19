@@ -574,4 +574,10 @@ public class GTFS {
 	protected String getNewestImport() {
 		return lastAdded;
 	}
+	public boolean hasTrip() {
+		return !trips.isEmpty();
+	}
+	public boolean hasStopTime() {
+		return !stopTimes.isEmpty();
+	}
 }
