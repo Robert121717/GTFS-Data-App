@@ -1,11 +1,8 @@
 package GTFS;
 
 import javafx.scene.control.Alert.AlertType;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static GTFS.Controller.newAlert;
@@ -573,5 +570,11 @@ public class GTFS {
 
 	protected String getNewestImport() {
 		return lastAdded;
+	}
+	public boolean hasTrip() {
+		return !trips.isEmpty();
+	}
+	public boolean hasStopTime() {
+		return !stopTimes.isEmpty();
 	}
 }

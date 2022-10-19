@@ -36,8 +36,7 @@ public class Controller implements Initializable {
 	private Stage stage;
 	private Popup importPu;
 	private Popup exportPu;
-	private boolean hasTrip;
-	private boolean hasStopTime;
+
 	@FXML
 	private VBox dropImportVBox;
 	private TextArea importEntry;
@@ -73,7 +72,7 @@ public class Controller implements Initializable {
 		initializeDropBox();
 		initializeMenuItems();
 		mainVBox.setStyle("-fx-background-color: " +
-				"radial-gradient(focus-distance 0% , center 50% 50% , radius 40% , #E5E6E4, #F9F9F8);");
+				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
 		dropBorderPane.setStyle("-fx-border-width: 3; -fx-border-color: #9e9e9e; -fx-border-style: segments(10, 10, 10, 10);");
 	}
 
@@ -107,7 +106,6 @@ public class Controller implements Initializable {
 			searchStopId();
 		}
 		recentUploadLabel.setVisible(false);
-
 	}
 
 	/**
@@ -115,7 +113,7 @@ public class Controller implements Initializable {
 	 * Creates and displays a popup allowing the user to manually update data in the GTFS files.
 	 */
 	@FXML
-	private void importPopup() {
+	private void updatePopup() {
 		final int height = 200;
 		final int width = 400;
 
@@ -133,11 +131,11 @@ public class Controller implements Initializable {
 		stack.setAlignment(Pos.CENTER);
 		stack.setPadding(new Insets(8, 8, 10, 8));
 
-		addImportPuComponents(stack);
+		addUpdatePuComponents(stack);
 		background.getChildren().add(stack);
 
 		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
-				"radial-gradient(focus-distance 0% , center 50% 50% , radius 40% , #E5E6E4, #F9F9F8);");
+				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
 		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
 		background.setEffect(shadow);
 
@@ -155,7 +153,7 @@ public class Controller implements Initializable {
 	 * 		an update button, which well send the data to the GTFS files.
 	 * @param stack Main component of the popup.
 	 */
-	private void addImportPuComponents(VBox stack) {
+	private void addUpdatePuComponents(VBox stack) {
 		HBox header = new HBox(5);
 		header.setPrefWidth(400); header.setPrefHeight(50);
 		header.setAlignment(Pos.TOP_RIGHT);
@@ -207,7 +205,7 @@ public class Controller implements Initializable {
 		background.getChildren().add(stack);
 
 		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
-				"radial-gradient(focus-distance 0% , center 50% 50% , radius 40% , #E5E6E4, #F9F9F8);");
+				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
 		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
 		background.setEffect(shadow);
 
@@ -309,25 +307,29 @@ public class Controller implements Initializable {
 	}
 
 	private void displayFile(String text) {
-
 	}
+
 	private void searchStopId() {
-	//TODO check for incorrect inputs.
-		// in other stop files. Stop_ID's can be any length and have numbers/letters.
-		//Would be very difficult to check if the ID is valid or not.
-		//In future this method could reveal lots of info. For now it gives info for #4
 		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
+		if(gtfs.hasStopTime() && gtfs.hasTrip()) {
+			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+					"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
+					routeIdWithStop;
+			recentUploadDisplay.setText(searchRouteInfo);
+		} else if(gtfs.hasStopTime() && !gtfs.hasTrip()) {
+			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+					"Number of Trips with stop: " + numTripsWithStop + "\n\n" +
+					"NOTICE: Must import a trip file to see more data.";
+			recentUploadDisplay.setText(searchRouteInfo);
 
-		String searchRouteInfo ="Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
-				"Number of Trips with stop: " + numTripsWithStop  + "\n\n" + "Routes with Stop:" + "\n" +
-				routeIdWithStop;
-		recentUploadDisplay.setText(searchRouteInfo);
-
+		} else if(!gtfs.hasStopTime() && !gtfs.hasTrip()) {
+			String searchRouteInfo = "NOTICE: Must import StopTime and Trip files to see data.";
+			recentUploadDisplay.setText(searchRouteInfo);
+		}
 	}
 
 	private void searchRouteId() {
-
 	}
 
 	private boolean displayDistance() {

@@ -18,9 +18,6 @@ class GTFSTest {
         gtfs = new GTFS();
     }
 
-    @org.junit.jupiter.api.AfterEach
-    void tearDown() {
-    }
 
     /**
      * @author Cody Morrow
