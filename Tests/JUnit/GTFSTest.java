@@ -18,9 +18,6 @@ class GTFSTest {
         gtfs = new GTFS();
     }
 
-    @org.junit.jupiter.api.AfterEach
-    void tearDown() {
-    }
 
     /**
      * @author Cody Morrow
@@ -397,4 +394,5 @@ class GTFSTest {
         String[] invalidStopTimeDropOffType = invalidDropOffType.split(",");
         assertFalse(gtfs.validateStopTimeData(invalidStopTimeDropOffType));
     }
+
 }

@@ -36,6 +36,7 @@ public class Controller implements Initializable {
 	private Stage stage;
 	private Popup importPu;
 	private Popup exportPu;
+
 	@FXML
 	private VBox dropImportVBox;
 	private TextArea importEntry;
@@ -245,7 +246,11 @@ public class Controller implements Initializable {
 		centerStack.getChildren().addAll(options);
 
 		Button send = new Button("Export");
-		send.setOnAction(e -> initializeFileExport(options));
+		send.setOnAction(e -> {
+			exportPu.hide();
+			initializeFileExport(options);
+		});
+
 		stack.getChildren().addAll(header, instruct, centerStack, send);
 	}
 
@@ -258,7 +263,13 @@ public class Controller implements Initializable {
 		for (CheckBox option : options) {
 			if (option.isSelected()) {
 				String data = gtfs.exportFile(option.getText());
-				if(!data.equals("")) {
+
+				if (data.equals("")) {
+					newAlert(Alert.AlertType.ERROR,
+							"Error Dialog",
+							"The requested data could not be found.",
+							"Please import the data first.");
+				} else {
 					export(data, option.getText());
 				}
 			}
@@ -269,11 +280,12 @@ public class Controller implements Initializable {
 	 * helper method to export data to files for the user to see
 	 * @author Cody Morrow
 	 * @param data - what is to be stored for the user
-	 * @param type - name what is being exported to use as file name
+	 * @param fileName - name what is being exported to use as file name
 	 */
-	private void export(String data, String type) {
-		try(FileWriter out = new FileWriter(type + ".txt")) {
+	private void export(String data, String fileName) {
+		try(FileWriter out = new FileWriter(fileName + ".txt")) {
 			out.write(data);
+
 		} catch (IOException e){
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
 					"A problem with the location of the export was found");
@@ -299,14 +311,24 @@ public class Controller implements Initializable {
 
 	}
 	private void searchStopId() {
-	//TODO check for incorrect inputs.
-		// in other stop files. Stop_ID's can be any length and have numbers/letters.
-		//Would be very difficult to check if the ID is valid or not.
-		//In future this method could reveal lots of info. For now it gives info for #4
 		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
-		String searchRouteInfo ="Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n" +
-				"Number of Trips with stop: " + numTripsWithStop  + "\n";
-		recentUploadDisplay.setText(searchRouteInfo);
+		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
+		if(gtfs.hasStopTime() && gtfs.hasTrip()) {
+			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+					"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
+					routeIdWithStop;
+			recentUploadDisplay.setText(searchRouteInfo);
+		} else if(gtfs.hasStopTime() && !gtfs.hasTrip()) {
+			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+					"Number of Trips with stop: " + numTripsWithStop + "\n\n" +
+					"NOTICE: Must import a trip file to see more data.";
+			recentUploadDisplay.setText(searchRouteInfo);
+
+		} else if(!gtfs.hasStopTime() && !gtfs.hasTrip()) {
+			String searchRouteInfo = "NOTICE: Must import StopTime and Trip files to see data.";
+			recentUploadDisplay.setText(searchRouteInfo);
+		}
+
 
 	}
 
