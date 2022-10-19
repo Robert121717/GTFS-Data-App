@@ -286,6 +286,7 @@ public class Controller implements Initializable {
 	private void export(String data, String fileName) {
 		try(FileWriter out = new FileWriter(fileName + ".txt")) {
 			out.write(data);
+
 		} catch (IOException e){
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
 					"A problem with the location of the export was found");
