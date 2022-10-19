@@ -172,7 +172,9 @@ public class GTFS {
 				stop.setStopLat(Double.parseDouble(parts[3]));
 				stop.setStopLon(Double.parseDouble(parts[4]));
 
-				stops.add(stop);
+				if(!stops.contains(stop)){
+					stops.add(stop);
+				}
 			} else {
 				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
 			}

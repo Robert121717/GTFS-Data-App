@@ -89,4 +89,12 @@ public class Stop {
 	public String toString(){
 		return "" + stopID + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
 	}
+
+	@Override
+	public boolean equals(Object other){
+		Stop temp = (Stop) other;
+		return this.stopID.equals(temp.stopID) && this.stopName.equals(temp.stopName) && this.stopLat == temp.stopLat
+				&& this.stopLon == temp.stopLon && this.stopDesc.equals(temp.stopDesc);
+	}
+
 }
