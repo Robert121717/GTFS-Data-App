@@ -4,6 +4,7 @@ import javafx.scene.control.Alert.AlertType;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static GTFS.Controller.newAlert;
@@ -599,4 +600,36 @@ public class GTFS {
 	public boolean hasStopTime() {
 		return !stopTimes.isEmpty();
 	}
+
+	/**
+	 * Converts each ASCII character in the ID to its decimal representation and appends it to an integer.
+	 * @param id The object's ID as a String.
+	 * @return The ID as an appended integer. This ID will represent an attribute of the relative class,
+	 * but may not be the ID be used when storing this object in a hash table.
+	 */
+	protected static BigInteger toDecimal(String id) {
+		byte[] idBytes = id.getBytes(StandardCharsets.US_ASCII);
+
+		StringBuilder idByteString = new StringBuilder();
+		for (byte idByte : idBytes) {
+			idByteString.append(idByte);
+		}
+
+		return new BigInteger(idByteString.toString());
+	}
+
+	/**
+	 * Appends one ID onto another. This method should only be used when both IDs correspond to a single object.
+	 * @param v1i Integer representation of the first ID.
+	 * @param v2i Integer representation of the second ID.
+	 * @return A single ID to be used when storing this object in a hash table,
+	 * where the first IDs value comes before the second IDs value (such that hashId: [v1i][v2i]).
+	 */
+	protected static BigInteger mergeIDs(BigInteger v1i, BigInteger v2i) {
+		String v1 = String.valueOf(v1i), v2 = String.valueOf(v2i);
+
+		return new BigInteger(v1 + v2);
+	}
+
+
 }
