@@ -473,6 +473,9 @@ public class GTFS {
 			sb.append(routeId);
 			sb.append("\n");
 		}
+		if(currentRoutes.isEmpty()) {
+			sb.append("No Routes with StopID");
+		}
 		return sb.toString();
 	}
 

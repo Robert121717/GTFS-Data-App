@@ -313,10 +313,17 @@ public class Controller implements Initializable {
 		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		if(gtfs.hasStopTime() && gtfs.hasTrip()) {
-			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
-					"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
-					routeIdWithStop;
-			recentUploadDisplay.setText(searchRouteInfo);
+			if(routeIdWithStop.equals("No Routes with StopID")) {
+				String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + routeIdWithStop;
+				recentUploadDisplay.setText(searchRouteInfo);
+			} else {
+				String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
+						routeIdWithStop;
+				recentUploadDisplay.setText(searchRouteInfo);
+			}
+
 		} else if(gtfs.hasStopTime() && !gtfs.hasTrip()) {
 			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
 					"Number of Trips with stop: " + numTripsWithStop + "\n\n" +
