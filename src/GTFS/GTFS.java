@@ -324,12 +324,14 @@ public class GTFS {
 				incorrectTripData.add(line);
 			}
 			if (!in.hasNextLine()) {
-				stringBuilder.append("\n\n");
-				stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
-				stringBuilder.append("\n");
-				for(String badData: incorrectTripData){
-					stringBuilder.append(badData);
+				if(!incorrectTripData.isEmpty()) {
+					stringBuilder.append("\n\n");
+					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
 					stringBuilder.append("\n");
+					for (String badData : incorrectTripData) {
+						stringBuilder.append(badData);
+						stringBuilder.append("\n");
+					}
 				}
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
