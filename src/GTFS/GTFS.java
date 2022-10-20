@@ -130,7 +130,11 @@ public class GTFS {
 					route.setRouteTextColor("");
 				}
 
-				routes.add(route);
+				if(!routesSet.containsKey(route.getRouteIDHash())){
+					routes.add(route);
+					routesSet.put(route.getRouteIDHash(), route);
+				}
+
 
 			} else {
 				System.out.println(line);
@@ -188,8 +192,11 @@ public class GTFS {
 				stop.setStopLat(Double.parseDouble(parts[3]));
 				stop.setStopLon(Double.parseDouble(parts[4]));
 
+				if(!stopsSet.containsKey(stop.getStopIDHash())){
+					stops.add(stop);
+					stopsSet.put(stop.getStopIDHash(), stop);
+				}
 
-				stops.add(stop);
 
 			} else {
 				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
@@ -245,7 +252,12 @@ public class GTFS {
 					st.setDropOffType(parts[7]);
 				}
 
-				stopTimes.add(st);
+				if(!stopTimesSet.containsKey(st.getHashId())){
+					stopTimes.add(st);
+					stopTimesSet.put(st.getHashId(), st);
+				}
+
+
 			} else {
 
 				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
@@ -300,8 +312,12 @@ public class GTFS {
 					trip.setShapeId(parts[6]);
 				}
 
+				if(!tripsSet.containsKey(trip.getHashId())){
+					trips.add(trip);
+					tripsSet.put(trip.getHashId(), trip);
+				}
 
-				trips.add(trip);
+
 
 			} else {
 				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
