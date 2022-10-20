@@ -214,7 +214,7 @@ public class GTFS {
 	 *
 	 * @param file represents the StopTime file being added to ArrayList
 	 */
-	protected void importStopTime(File file)throws IllegalArgumentException {
+	protected void importStopTime(File file){
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importStopTime(in.hasNextLine(), in);
@@ -227,7 +227,8 @@ public class GTFS {
 		}
 	}
 
-	private void importStopTime(boolean hasLine, Scanner in) throws IllegalArgumentException{
+	private void importStopTime(boolean hasLine, Scanner in){
+		ArrayList<String> incorrectStopTimeData = new ArrayList<>();
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
@@ -259,10 +260,18 @@ public class GTFS {
 
 
 			} else {
-
-				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+				incorrectStopTimeData.add(line);
 			}
 			if (!in.hasNextLine()) {
+				if(!incorrectStopTimeData.isEmpty()) {
+					stringBuilder.append("\n\n");
+					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
+					stringBuilder.append("\n");
+					for (String badData : incorrectStopTimeData) {
+						stringBuilder.append(badData);
+						stringBuilder.append("\n");
+					}
+				}
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
 				hasLine = false;
