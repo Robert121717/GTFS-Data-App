@@ -90,7 +90,7 @@ public class GTFS {
 	 *
 	 * @param file is the route file being added to arraylist
 	 */
-	protected void importRoute(File file) throws IllegalArgumentException{
+	protected void importRoute(File file){
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importRoute(in.hasNextLine(), in);
@@ -103,7 +103,8 @@ public class GTFS {
 		}
 	}
 
-	private void importRoute(boolean hasLine, Scanner in) throws IllegalArgumentException{
+	private void importRoute(boolean hasLine, Scanner in){
+		ArrayList<String> incorrectRouteData = new ArrayList<>();
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
@@ -142,11 +143,20 @@ public class GTFS {
 				for(int i = 0; i < parts.length; i++) {
 					System.out.println(parts[i]);
 				}
-				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+				incorrectRouteData.add(line);
 
 			}
 
 			if (!in.hasNextLine()) {
+				if(!incorrectRouteData.isEmpty()) {
+					stringBuilder.append("\n\n");
+					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
+					stringBuilder.append("\n");
+					for (String badData : incorrectRouteData) {
+						stringBuilder.append(badData);
+						stringBuilder.append("\n");
+					}
+				}
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
 				hasLine = false;
@@ -172,7 +182,8 @@ public class GTFS {
 		}
 	}
 
-	private void importStop(boolean hasLine, Scanner in) throws IllegalArgumentException {
+	private void importStop(boolean hasLine, Scanner in){
+		ArrayList<String> incorrectStopData = new ArrayList<>();
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
@@ -199,9 +210,18 @@ public class GTFS {
 
 
 			} else {
-				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+				incorrectStopData.add(line);
 			}
 			if (!in.hasNextLine()) {
+				if(!incorrectStopData.isEmpty()) {
+					stringBuilder.append("\n\n");
+					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
+					stringBuilder.append("\n");
+					for (String badData : incorrectStopData) {
+						stringBuilder.append(badData);
+						stringBuilder.append("\n");
+					}
+				}
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
 				hasLine = false;
