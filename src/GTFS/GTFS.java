@@ -275,7 +275,7 @@ public class GTFS {
 	 *
 	 * @param file represents the trip file being added to ArrayList
 	 */
-	protected void importTrip(File file) throws IllegalArgumentException {
+	protected void importTrip(File file){
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importTrip(in.hasNextLine(), in);
@@ -288,7 +288,8 @@ public class GTFS {
 		}
 	}
 
-	private void importTrip(boolean hasLine, Scanner in) throws IllegalArgumentException{
+	private void importTrip(boolean hasLine, Scanner in){
+		ArrayList<String> incorrectTripData = new ArrayList<>();
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
@@ -320,9 +321,16 @@ public class GTFS {
 
 
 			} else {
-				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+				incorrectTripData.add(line);
 			}
 			if (!in.hasNextLine()) {
+				stringBuilder.append("\n\n");
+				stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
+				stringBuilder.append("\n");
+				for(String badData: incorrectTripData){
+					stringBuilder.append(badData);
+					stringBuilder.append("\n");
+				}
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
 				hasLine = false;
