@@ -283,10 +283,12 @@ public class Controller implements Initializable {
 	private void export(String data) {
 		try {
 			FileChooser out = new FileChooser();
+			out.getExtensionFilters().add(new FileChooser.ExtensionFilter("*.csv", "*.txt"));
 			out.setTitle("File Chooser");
-			File file = out.showOpenDialog(null);
+			File file = out.showSaveDialog(null);
 			FileWriter writer = new FileWriter(file);
 			writer.write(data);
+			writer.close();
 
 		} catch (NullPointerException e) {
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
