@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static GTFS.Controller.newAlert;
@@ -552,6 +553,125 @@ public class GTFS {
 			sb.append("No Routes with StopID");
 		}
 		return sb.toString();
+	}
+
+	protected ArrayList<StopTime> getNextTrips(String stopId) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		String time = dateFormat.format(Calendar.getInstance().getTime());
+
+		String[] currentTimeStamp = time.split(" ")[1].split(":");
+		int hour = Integer.parseInt(currentTimeStamp[0]);
+		int minute = Integer.parseInt(currentTimeStamp[1]);
+		int seconds = Integer.parseInt(currentTimeStamp[2]);
+
+		int currentTime = (hour * 3600) + (minute * 60) + seconds;
+		ArrayList<Object[]> trips = new ArrayList<>();
+
+		for (StopTime stop : stopTimes) {
+			if (stop.getStopId().equals(stopId)) {
+				sortNewStop(trips, stop, currentTime);
+			}
+		}
+		return sortNextTrips(trips, currentTime);
+	}
+
+	private void sortNewStop(ArrayList<Object[]> trips, StopTime newStop, int currentTime) {
+		String newArrivalTime = newStop.getArrivalTime();
+		String[] newTimeStamp = newArrivalTime.split(":");
+		int newStopTime = toSeconds(newTimeStamp);
+
+		int timeDifference = newStopTime - currentTime;
+		if (trips.size() < 3) {
+			trips.add(new Object[]{newStop, timeDifference});
+		} else {
+			if (newStopTime > currentTime) {
+				boolean sorted = false;
+
+				for (int i = 0; i < trips.size() && !sorted; ++i) {
+					Object[] array = trips.get(i);
+					int oldTimeDifference = (int) array[1];
+
+					if (oldTimeDifference > timeDifference) {
+						trips.set(i, new Object[]{newStop, timeDifference});
+						sorted = true;
+					}
+				}
+			}
+		}
+	}
+
+	private ArrayList<StopTime> sortNextTrips(ArrayList<Object[]> trips, int currentTime) {
+
+//		ArrayList<StopTime> sorted = new ArrayList<>();
+//		for (int i = 0; i < trips.size(); ++i) {
+//			Object[] array = trips.get(i);
+//			StopTime stop = (StopTime) array[0];
+//			int timeDifference = (int) array[1];
+//
+//			if (timeDifference < 0) {
+//				timeDifference += 86400;
+//			}
+//			for (int j = 0; j < trips.size(); ++j) {
+//				Object[] temp = trips.get(j);
+//				StopTime tempStop = (StopTime) temp[0];
+//				int tempTimeDifference = (int) temp[1];
+//				if (tempTimeDifference < 0) {
+//					tempTimeDifference += 86400;
+//				}
+//
+//				if (timeDifference < tempTimeDifference) {
+//					if (sorted.contains(tempStop)) {
+//						sorted.remove(tempStop);
+//						sorted.add(i, tempStop);
+//					} else {
+//						sorted.add(tempStop);
+//					}
+//				}
+//			}
+//		}
+
+		ArrayList<StopTime> sorted = new ArrayList<>();
+		for (Object[] array : trips) {
+			sorted.add((StopTime) array[0]);
+		}
+
+		for (int i = 0; i < sorted.size(); ++i) {
+			StopTime stop = sorted.get(i);
+			String[] timeStamp = stop.getArrivalTime().split(":");
+			int numSeconds = toSeconds(timeStamp);
+
+			for (int j = 0; j < sorted.size(); ++j) {
+				StopTime tempStop = sorted.get(i);
+				String[] tempTimeStamp = tempStop.getArrivalTime().split(":");
+				int tempNumSeconds = toSeconds(tempTimeStamp);
+
+				if (numSeconds < currentTime) {
+					if (numSeconds < tempNumSeconds) {
+						sorted.add(tempStop);
+						sorted.remove(j);
+					}
+				} else {
+					if (numSeconds > tempNumSeconds) {
+						sorted.add(i, tempStop);
+						sorted.remove(j);
+					}
+				}
+			}
+		}
+		return sorted;
+	}
+
+	private int toSeconds(String[] timeStamp) {
+		int hours = Integer.parseInt(timeStamp[0]);
+		int minutes = Integer.parseInt(timeStamp[1]);
+		int seconds = Integer.parseInt(timeStamp[2]);
+
+		if (hours == 24) {
+			hours = 0;
+		} else if (hours == 25) {
+			hours = 1;
+		}
+		return (hours * 3600) + (minutes * 60) + seconds;
 	}
 
 	/**
