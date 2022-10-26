@@ -1,6 +1,8 @@
 package GTFS;
 
 
+import java.math.BigInteger;
+
 /**
  * @author nairac, atkinsonr, morrowc, schmidtrj
  * @version 1.0
@@ -15,10 +17,16 @@ public class Trip {
 	private String directionId = "";
 	private String blockId = "";
 	private String shapeId = "";
+	private final BigInteger hashId;
+
+
 
 	protected Trip(String tripId, String routeId) {
 		this.tripId = tripId;
 		this.routeId = routeId;
+		this.hashId = GTFS.mergeIDs(GTFS.toDecimal(tripId), GTFS.toDecimal(routeId));
+
+
 	}
 
 	/**
@@ -77,8 +85,20 @@ public class Trip {
 		return shapeId;
 	}
 
+	protected BigInteger getHashId(){
+		return hashId;
+	}
+
 	public String toString(){
 		return "" + routeId + "," + serviceId + "," + tripId + "," + headSign +
 				"," + directionId + "," + blockId + "," + shapeId;
+	}
+
+	@Override
+	public boolean equals(Object other){
+		Trip temp = (Trip) other;
+		return this.routeId.equals(temp.routeId) && this.serviceId.equals(temp.serviceId) && this.tripId.equals(temp.tripId)
+				&& this.headSign.equals(temp.headSign) && this.directionId.equals(temp.directionId) && this.blockId.equals(temp.blockId)
+				&& this.shapeId.equals(temp.shapeId);
 	}
 }

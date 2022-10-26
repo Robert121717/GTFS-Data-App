@@ -1,6 +1,8 @@
 package GTFS;
 
 
+import java.math.BigInteger;
+
 /**
  * @author nairac, atkinsonr, morrowc, schmidtrj
  * @version 1.0
@@ -16,10 +18,12 @@ public class StopTime {
 	private String pickUpType = "";
 	private String dropOffType = "";
 	private String stopSequence = "";
+	private final BigInteger hashId;
 
 	protected StopTime(String stopId, String tripId) {
 		this.stopId = stopId;
 		this.tripId = tripId;
+		this.hashId = GTFS.mergeIDs(GTFS.toDecimal(stopId), GTFS.toDecimal(tripId));
 	}
 
 	/**
@@ -88,6 +92,10 @@ public class StopTime {
 
 	protected String getTripId() {
 		return tripId;
+	}
+
+	protected BigInteger getHashId(){
+		return hashId;
 	}
 
 

@@ -1,5 +1,7 @@
 package GTFS;
 
+import java.math.BigInteger;
+
 /**
  * @author nairac, atkinsonr, morrowc, schmidtrj
  * @version 1.0
@@ -17,8 +19,13 @@ public class Route {
 	private String routeColor = "";
 	private String routeTextColor = "";
 
+	private final BigInteger routeIDHash;
+
+
+
 	protected Route(String routeID) {
 		this.routeID = routeID;
+		this.routeIDHash = GTFS.toDecimal(routeID);
 	}
 
 	/**
@@ -100,8 +107,21 @@ public class Route {
 		return 0;
 	} //TODO
 
+	protected BigInteger getRouteIDHash(){
+		return routeIDHash;
+	}
+
 	public String toString(){
 		return "" + routeID + "," + agencyID + "," + shortName + "," + longName +
 				"," +routeType + "," + routeDesc + "," + routeURL  + "," + routeColor + "," + routeTextColor;
 	}
+
+	public boolean equals(Object other){
+		Route temp = (Route) other;
+		return this.routeID.equals(temp.routeID) && this.agencyID.equals(temp.agencyID) && this.shortName.equals(temp.shortName)
+				&& this.longName.equals(temp.longName) && this.routeType.equals(temp.routeType) && this.routeDesc.equals(temp.routeDesc)
+				&& this.routeURL.equals(temp.routeURL) && this.routeColor.equals(temp.routeColor)
+				&& this.routeTextColor.equals(temp.routeTextColor);
+	}
+
 }

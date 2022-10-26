@@ -269,7 +269,7 @@ public class Controller implements Initializable {
 							"The requested data could not be found.",
 							"Please import the data first.");
 				} else {
-					export(data, option.getText());
+					export(data);
 				}
 			}
 		}
@@ -279,15 +279,22 @@ public class Controller implements Initializable {
 	 * helper method to export data to files for the user to see
 	 * @author Cody Morrow
 	 * @param data - what is to be stored for the user
-	 * @param fileName - name what is being exported to use as file name
 	 */
-	private void export(String data, String fileName) {
-		try(FileWriter out = new FileWriter(fileName + ".txt")) {
-			out.write(data);
+	private void export(String data) {
+		try {
+			FileChooser out = new FileChooser();
+			out.getExtensionFilters().add(new FileChooser.ExtensionFilter("*.csv", "*.txt"));
+			out.setTitle("File Chooser");
+			File file = out.showSaveDialog(null);
+			if (file != null) {
+				FileWriter writer = new FileWriter(file);
+				writer.write(data);
+				writer.close();
+			}
 
 		} catch (IOException e){
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
-					"A problem with the location of the export was found");
+					"A problem with the location of the export was found.");
 		}
 	}
 
@@ -310,13 +317,22 @@ public class Controller implements Initializable {
 	}
 
 	private void searchStopId() {
+		String stopId = searchTF.getText();
+
 		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		if(gtfs.hasStopTime() && gtfs.hasTrip()) {
-			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
-					"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
-					routeIdWithStop;
-			recentUploadDisplay.setText(searchRouteInfo);
+			if(routeIdWithStop.equals("No Routes with StopID")) {
+				String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + routeIdWithStop;
+				recentUploadDisplay.setText(searchRouteInfo);
+			} else {
+				String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
+						routeIdWithStop;
+				recentUploadDisplay.setText(searchRouteInfo);
+			}
+
 		} else if(gtfs.hasStopTime() && !gtfs.hasTrip()) {
 			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
 					"Number of Trips with stop: " + numTripsWithStop + "\n\n" +
@@ -327,6 +343,63 @@ public class Controller implements Initializable {
 			String searchRouteInfo = "NOTICE: Must import StopTime and Trip files to see data.";
 			recentUploadDisplay.setText(searchRouteInfo);
 		}
+
+		recentUploadDisplay.appendText(searchNextTrips(stopId));
+	}
+
+	private String searchNextTrips(String stopId) {
+		ArrayList<Object[]> trips = gtfs.getNextTrips(stopId);
+
+		String content;
+		if (!trips.isEmpty()) {
+			String header;
+			if (trips.size() > 1) {
+				header = "\n\nNext trips to arrive at this stop:";
+			} else {
+				header = "\n\nNext trip to arrive at this stop:";
+			}
+			StringBuilder text = new StringBuilder(header);
+
+			for (Object[] array : trips) {
+				StopTime stop = (StopTime) array[0];
+				String tripId = stop.getTripId();
+				String arrivalTime = formatTimeStamp(stop.getArrivalTime());
+
+				text.append("\n  -ID: ").append(tripId)
+						.append("\n  -Arrival time: ").append(arrivalTime)
+						.append("\n");
+			}
+			content = text.toString();
+		} else {
+			content = "\n\nNo subsequent trips to the given stop ID were found for today.";
+		}
+		return content;
+	}
+
+	public String formatTimeStamp(String timeStamp) {
+		String[] split = timeStamp.split(":");
+
+		int hour = Integer.parseInt(split[0]);
+		String minute = split[1];
+		String second = split[2];
+
+		boolean am;
+		if (hour == 24) {
+			hour = 12;
+			am = true;
+		} else if (hour == 25) {
+			hour = 1;
+			am = true;
+		} else if (hour > 12) {
+			hour -= 12;
+			am = false;
+		} else if (hour == 0) {
+			hour = 12;
+			am = true;
+		} else {
+			am = true;
+		}
+		return hour + ":" + minute + ":" + second + " " + (am ? "am" : "pm");
 	}
 
 	private void searchRouteId() {

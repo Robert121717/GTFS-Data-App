@@ -3,6 +3,9 @@ package GTFS;
 import javafx.scene.control.Alert.AlertType;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static GTFS.Controller.newAlert;
@@ -20,6 +23,13 @@ public class GTFS {
 	private final ArrayList<Stop> stops;
 	private final ArrayList<StopTime> stopTimes;
 	private final ArrayList<Trip> trips;
+
+	private final HashMap<BigInteger, Route> routesSet;
+	private final HashMap<BigInteger, Stop> stopsSet;
+	private final HashMap<BigInteger, StopTime> stopTimesSet;
+	private final HashMap<BigInteger, Trip> tripsSet;
+
+
 	private String lastAdded;
 	private final StringBuilder stringBuilder = new StringBuilder();
 
@@ -31,6 +41,11 @@ public class GTFS {
 		stops = new ArrayList<>();
 		stopTimes = new ArrayList<>();
 		trips = new ArrayList<>();
+
+		routesSet = new HashMap<>();
+		stopsSet = new HashMap<>();
+		stopTimesSet = new HashMap<>();
+		tripsSet = new HashMap<>();
 	}
 
 	protected void updateText(String text) {
@@ -76,7 +91,7 @@ public class GTFS {
 	 *
 	 * @param file is the route file being added to arraylist
 	 */
-	protected void importRoute(File file) throws IllegalArgumentException{
+	protected void importRoute(File file){
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importRoute(in.hasNextLine(), in);
@@ -89,7 +104,8 @@ public class GTFS {
 		}
 	}
 
-	private void importRoute(boolean hasLine, Scanner in) throws IllegalArgumentException{
+	private void importRoute(boolean hasLine, Scanner in){
+		ArrayList<String> incorrectRouteData = new ArrayList<>();
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
@@ -98,7 +114,8 @@ public class GTFS {
 				stringBuilder.append(line);
 			}
 			lineCount++;
-			String[] parts = line.split(",");
+			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
 			if(validateRouteData(parts)) {
 
 				Route route = new Route(parts[0]);
@@ -115,18 +132,26 @@ public class GTFS {
 				} else {
 					route.setRouteTextColor("");
 				}
-				routes.add(route);
-			} else {
-				System.out.println(line);
 
-				for(int i = 0; i < parts.length; i++) {
-					System.out.println(parts[i]);
+				if(!routesSet.containsKey(route.getRouteIDHash())){
+					routes.add(route);
+					routesSet.put(route.getRouteIDHash(), route);
 				}
-				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+			} else {
+				incorrectRouteData.add(line);
 
 			}
 
 			if (!in.hasNextLine()) {
+				if(!incorrectRouteData.isEmpty()) {
+					stringBuilder.append("\n\n");
+					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
+					stringBuilder.append("\n");
+					for (String badData : incorrectRouteData) {
+						stringBuilder.append(badData);
+						stringBuilder.append("\n");
+					}
+				}
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
 				hasLine = false;
@@ -152,7 +177,8 @@ public class GTFS {
 		}
 	}
 
-	private void importStop(boolean hasLine, Scanner in) throws IllegalArgumentException {
+	private void importStop(boolean hasLine, Scanner in){
+		ArrayList<String> incorrectStopData = new ArrayList<>();
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
@@ -162,7 +188,7 @@ public class GTFS {
 				stringBuilder.append(line);
 			}
 			lineCount++;
-			String[] parts = line.split(",");
+			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			if(validateStopData(parts)) {
 
 				Stop stop = new Stop(parts[0]);
@@ -172,11 +198,25 @@ public class GTFS {
 				stop.setStopLat(Double.parseDouble(parts[3]));
 				stop.setStopLon(Double.parseDouble(parts[4]));
 
-				stops.add(stop);
+				if(!stopsSet.containsKey(stop.getStopIDHash())){
+					stops.add(stop);
+					stopsSet.put(stop.getStopIDHash(), stop);
+				}
+
+
 			} else {
-				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+				incorrectStopData.add(line);
 			}
 			if (!in.hasNextLine()) {
+				if(!incorrectStopData.isEmpty()) {
+					stringBuilder.append("\n\n");
+					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
+					stringBuilder.append("\n");
+					for (String badData : incorrectStopData) {
+						stringBuilder.append(badData);
+						stringBuilder.append("\n");
+					}
+				}
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
 				hasLine = false;
@@ -189,7 +229,7 @@ public class GTFS {
 	 *
 	 * @param file represents the StopTime file being added to ArrayList
 	 */
-	protected void importStopTime(File file)throws IllegalArgumentException {
+	protected void importStopTime(File file){
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importStopTime(in.hasNextLine(), in);
@@ -202,7 +242,8 @@ public class GTFS {
 		}
 	}
 
-	private void importStopTime(boolean hasLine, Scanner in) throws IllegalArgumentException{
+	private void importStopTime(boolean hasLine, Scanner in){
+		ArrayList<String> incorrectStopTimeData = new ArrayList<>();
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
@@ -212,7 +253,7 @@ public class GTFS {
 				stringBuilder.append(line);
 			}
 			lineCount++;
-			String[] parts = line.split(",");
+			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			if(validateStopTimeData(parts)) {
 				StopTime st = new StopTime(parts[3], parts[0]);
 
@@ -227,12 +268,25 @@ public class GTFS {
 					st.setDropOffType(parts[7]);
 				}
 
-				stopTimes.add(st);
-			} else {
+				if(!stopTimesSet.containsKey(st.getHashId())){
+					stopTimes.add(st);
+					stopTimesSet.put(st.getHashId(), st);
+				}
 
-				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+
+			} else {
+				incorrectStopTimeData.add(line);
 			}
 			if (!in.hasNextLine()) {
+				if(!incorrectStopTimeData.isEmpty()) {
+					stringBuilder.append("\n\n");
+					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
+					stringBuilder.append("\n");
+					for (String badData : incorrectStopTimeData) {
+						stringBuilder.append(badData);
+						stringBuilder.append("\n");
+					}
+				}
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
 				hasLine = false;
@@ -245,7 +299,7 @@ public class GTFS {
 	 *
 	 * @param file represents the trip file being added to ArrayList
 	 */
-	protected void importTrip(File file) throws IllegalArgumentException {
+	protected void importTrip(File file){
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
 			importTrip(in.hasNextLine(), in);
@@ -258,7 +312,8 @@ public class GTFS {
 		}
 	}
 
-	private void importTrip(boolean hasLine, Scanner in) throws IllegalArgumentException{
+	private void importTrip(boolean hasLine, Scanner in){
+		ArrayList<String> incorrectTripData = new ArrayList<>();
 		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
@@ -268,7 +323,7 @@ public class GTFS {
 			}
 			lineCount++;
 
-			String[] parts = line.split(",");
+			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			if(validateTripData(parts)) {
 				Trip trip = new Trip(parts[2], parts[0]);
 
@@ -282,11 +337,26 @@ public class GTFS {
 					trip.setShapeId(parts[6]);
 				}
 
-				trips.add(trip);
+				if(!tripsSet.containsKey(trip.getHashId())){
+					trips.add(trip);
+					tripsSet.put(trip.getHashId(), trip);
+				}
+
+
+
 			} else {
-				throw new IllegalArgumentException("Incorrect File data: Line " + lineCount+1);
+				incorrectTripData.add(line);
 			}
 			if (!in.hasNextLine()) {
+				if(!incorrectTripData.isEmpty()) {
+					stringBuilder.append("\n\n");
+					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
+					stringBuilder.append("\n");
+					for (String badData : incorrectTripData) {
+						stringBuilder.append(badData);
+						stringBuilder.append("\n");
+					}
+				}
 				lastAdded = stringBuilder.toString();
 				stringBuilder.setLength(0);
 				hasLine = false;
@@ -297,6 +367,7 @@ public class GTFS {
 	public boolean verifyRouteHeader(String header) {
 		return header.equals("route_id,agency_id,route_short_name,route_long_name," +
 				"route_desc,route_type,route_url,route_color,route_text_color");
+
 	}
 
 	public boolean verifyStopHeader(String header) {
@@ -330,7 +401,7 @@ public class GTFS {
 					|| data[5].equals("11") || data[5].equals("12"))) {
 				isValid = false;
 			}
-			if(data.length == 9 && !data[8].matches("^[0-9A-Fa-f]+$")) {
+			if(!data[8].equals("") && !data[8].matches("^[0-9A-Fa-f]+$")) {
 				isValid = false;
 			}
 			if(!data[6].equals("") && !data[6]
@@ -420,7 +491,7 @@ public class GTFS {
 					|| data[6].equals("2") || data[6].equals("3"))) {
 				isValid = false;
 			}
-			if (data.length == 8 && !data[7].equals("") && !(data[7].equals("0") || data[7].equals("1")
+			if (!data[7].equals("") && !(data[7].equals("0") || data[7].equals("1")
 					|| data[7].equals("2") || data[7].equals("3"))) {
 				isValid = false;
 			}
@@ -473,7 +544,67 @@ public class GTFS {
 			sb.append(routeId);
 			sb.append("\n");
 		}
+		if(currentRoutes.isEmpty()) {
+			sb.append("No Routes with StopID");
+		}
 		return sb.toString();
+	}
+
+	protected ArrayList<Object[]> getNextTrips(String stopId) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		String time = dateFormat.format(Calendar.getInstance().getTime());
+
+		String[] currentTimeStamp = time.split(" ")[1].split(":");
+		int hour = Integer.parseInt(currentTimeStamp[0]);
+		int minute = Integer.parseInt(currentTimeStamp[1]);
+		int seconds = Integer.parseInt(currentTimeStamp[2]);
+
+		int currentTime = (hour * 3600) + (minute * 60) + seconds;
+		ArrayList<Object[]> trips = new ArrayList<>();
+
+		for (StopTime stop : stopTimes) {
+			if (stop.getStopId().equals(stopId)) {
+				String[] timeStamp = stop.getArrivalTime().split(":");
+				int numSeconds = toSeconds(timeStamp);
+
+				int timeDifference = numSeconds - currentTime;
+				if (timeDifference > 0) {
+					sortNewStop(trips, stop, timeDifference);
+				}
+			}
+		}
+		return trips;
+	}
+
+	private void sortNewStop(ArrayList<Object[]> trips, StopTime stop, int timeDifference) {
+		if (trips.size() < 3) {
+			trips.add(new Object[]{stop, timeDifference});
+		} else {
+			boolean sorted = false;
+
+			for (int i = 0; i < trips.size() && !sorted; ++i) {
+				Object[] array = trips.get(i);
+				int oldTimeDifference = (int) array[1];
+
+				if (timeDifference < oldTimeDifference) {
+					trips.set(i, new Object[]{stop, timeDifference});
+					sorted = true;
+				}
+			}
+		}
+	}
+
+	private int toSeconds(String[] timeStamp) {
+		int hours = Integer.parseInt(timeStamp[0]);
+		int minutes = Integer.parseInt(timeStamp[1]);
+		int seconds = Integer.parseInt(timeStamp[2]);
+
+		if (hours == 24) {
+			hours = 0;
+		} else if (hours == 25) {
+			hours = 1;
+		}
+		return (hours * 3600) + (minutes * 60) + seconds;
 	}
 
 	/**
@@ -577,4 +708,36 @@ public class GTFS {
 	public boolean hasStopTime() {
 		return !stopTimes.isEmpty();
 	}
+
+	/**
+	 * Converts each ASCII character in the ID to its decimal representation and appends it to an integer.
+	 * @param id The object's ID as a String.
+	 * @return The ID as an appended integer. This ID will represent an attribute of the relative class,
+	 * but may not be the ID be used when storing this object in a hash table.
+	 */
+	protected static BigInteger toDecimal(String id) {
+		byte[] idBytes = id.getBytes(StandardCharsets.US_ASCII);
+
+		StringBuilder idByteString = new StringBuilder();
+		for (byte idByte : idBytes) {
+			idByteString.append(idByte);
+		}
+
+		return new BigInteger(idByteString.toString());
+	}
+
+	/**
+	 * Appends one ID onto another. This method should only be used when both IDs correspond to a single object.
+	 * @param v1i Integer representation of the first ID.
+	 * @param v2i Integer representation of the second ID.
+	 * @return A single ID to be used when storing this object in a hash table,
+	 * where the first IDs value comes before the second IDs value (such that hashId: [v1i][v2i]).
+	 */
+	protected static BigInteger mergeIDs(BigInteger v1i, BigInteger v2i) {
+		String v1 = String.valueOf(v1i), v2 = String.valueOf(v2i);
+
+		return new BigInteger(v1 + v2);
+	}
+
+
 }
