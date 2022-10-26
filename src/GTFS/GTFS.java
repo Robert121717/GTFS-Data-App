@@ -136,14 +136,7 @@ public class GTFS {
 					routes.add(route);
 					routesSet.put(route.getRouteIDHash(), route);
 				}
-
-
 			} else {
-				System.out.println(line);
-
-				for(int i = 0; i < parts.length; i++) {
-					System.out.println(parts[i]);
-				}
 				incorrectRouteData.add(line);
 
 			}

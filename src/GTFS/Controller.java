@@ -286,13 +286,12 @@ public class Controller implements Initializable {
 			out.getExtensionFilters().add(new FileChooser.ExtensionFilter("*.csv", "*.txt"));
 			out.setTitle("File Chooser");
 			File file = out.showSaveDialog(null);
-			FileWriter writer = new FileWriter(file);
-			writer.write(data);
-			writer.close();
+			if (file != null) {
+				FileWriter writer = new FileWriter(file);
+				writer.write(data);
+				writer.close();
+			}
 
-		} catch (NullPointerException e) {
-			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
-					"No file was chosen.");
 		} catch (IOException e){
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
 					"A problem with the location of the export was found.");
