@@ -77,7 +77,7 @@ class GTFSTest {
 
         // randomly shuffles the attributes in the string and checks the resulting string still doesn't pass
         // as being properly formatted.
-        List<String> originalAttributes = new ArrayList<>(List.of(expectedHeader.split(",")));
+        List<String> originalAttributes = new ArrayList<>(List.of(expectedHeader.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1)));
         List<String> attributes = new ArrayList<>(originalAttributes);
 
         for (int i = 0; i < attributes.size(); ++i) {
@@ -173,50 +173,50 @@ class GTFSTest {
     void validateRouteData() {
 
         String trueDataString = "12,MCTS,12,Teutonia-Hampton,,3,,008345,";
-        String[] trueRouteDataTest = trueDataString.split(",");
+        String[] trueRouteDataTest = trueDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateRouteData(trueRouteDataTest));
 
 
         String shortDataString = "12,MCTS,12,";
-        String[]  falseShortRouteDataTest = shortDataString.split(",");
+        String[]  falseShortRouteDataTest = shortDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateRouteData(falseShortRouteDataTest));
 
         String longDataString = "12,MCTS,12,Teutonia-Hampton,,3,,008345,12,MCTS,12,Teutonia-Hampton,,3,,008345,";
-        String[]  falseLongRouteDataTest = longDataString.split(",");
+        String[]  falseLongRouteDataTest = longDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateRouteData(falseLongRouteDataTest));
 
         String missingRouteTypeDataString = ",MCTS,12,Teutonia-Hampton,,3,,008345,";
-        String[]  missingRouteTypeDataTest = missingRouteTypeDataString.split(",");
+        String[]  missingRouteTypeDataTest = missingRouteTypeDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateRouteData(missingRouteTypeDataTest));
 
 
         String missingRouteColorDataString = "12,MCTS,12,Teutonia-Hampton,,3,,,";
-        String[]  missingRouteColorDataTest = missingRouteColorDataString.split(",");
+        String[]  missingRouteColorDataTest = missingRouteColorDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateRouteData(missingRouteColorDataTest));
 
         String invalidRouteColorDataString = "12,MCTS,12,Teutonia-Hampton,,3,,ZZZZZZ,";
-        String[]  invalidRouteDataTest = invalidRouteColorDataString.split(",");
+        String[]  invalidRouteDataTest = invalidRouteColorDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateRouteData(invalidRouteDataTest));
 
         String invalidRouteTypeDataString = "12,MCTS,12,Teutonia-Hampton,,23,,008345,";
-        String[] invalidRouteTypeDataTest = invalidRouteTypeDataString.split(",");
+        String[] invalidRouteTypeDataTest = invalidRouteTypeDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateRouteData(invalidRouteTypeDataTest));
 
         String validRouteTextColor = "12,MCTS,12,Teutonia-Hampton,,3,,008345,FFFFFF";
-        String[] validRouteTextColorDataTest = validRouteTextColor.split(",");
+        String[] validRouteTextColorDataTest = validRouteTextColor.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateRouteData(validRouteTextColorDataTest));
 
         String invalidRouteTextColor = "12,MCTS,12,Teutonia-Hampton,,3,,008345,ZZZZZZ";
-        String[] invalidRouteTextColorDataTest = invalidRouteTextColor.split(",");
+        String[] invalidRouteTextColorDataTest = invalidRouteTextColor.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateRouteData(invalidRouteTextColorDataTest));
 
 
         String validRouteURLDataString = "12,MCTS,12,Teutonia-Hampton,,3,http://www.w3.org/albert/bertram/marie-claude,008345,";
-        String[]  validRouteURLDataTest = validRouteURLDataString.split(",");
+        String[]  validRouteURLDataTest = validRouteURLDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateRouteData(validRouteURLDataTest));
 
         String invalidRouteURLDataString = "12,MCTS,12,Teutonia-Hampton,,3,fxqn:/us/va/reston/cnri/ietf/24/asdf%*.fred,008345,";
-        String[]  invalidRouteURLDataTest = invalidRouteURLDataString.split(",");
+        String[]  invalidRouteURLDataTest = invalidRouteURLDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateRouteData(invalidRouteURLDataTest));
     }
     /**
@@ -226,43 +226,43 @@ class GTFSTest {
     @org.junit.jupiter.api.Test
     void validateStopData() {
         String trueDataString = "6712,STATE & 5101 #6712,,43.0444475,-87.9779369";
-        String[] trueStopDataTest = trueDataString.split(",");
+        String[] trueStopDataTest = trueDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateStopData(trueStopDataTest));
 
         String shortDataString = "6712,STATE & 5101 #6712";
-        String[] falseShortStopDataTest = shortDataString.split(",");
+        String[] falseShortStopDataTest = shortDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopData(falseShortStopDataTest));
 
         String longDataString = "6712,STATE & 5101 #6712,,43.0444475,-87.9779369,33,44,55";
-        String[] falseLongStopDataTest = longDataString.split(",");
+        String[] falseLongStopDataTest = longDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopData(falseLongStopDataTest));
 
         String missingStopID = ",STATE & 5101 #6712,,43.0444475,-87.9779369";
-        String[] missingStopIDTest = missingStopID.split(",");
+        String[] missingStopIDTest = missingStopID.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopData(missingStopIDTest));
 
         String missingLat = ",STATE & 5101 #6712,,,-87.9779369";
-        String[] missingStopLat = missingLat.split(",");
+        String[] missingStopLat = missingLat.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopData(missingStopLat));
 
         String missingLon = ",STATE & 5101 #6712,,43.0444475,,";
-        String[] missingStopLon = missingLon.split(",");
+        String[] missingStopLon = missingLon.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopData(missingStopLon));
 
         String invalidLargeLat = ",STATE & 5101 #6712,,90.111,-87.9779369";
-        String[] invalidStopLargeLat = invalidLargeLat.split(",");
+        String[] invalidStopLargeLat = invalidLargeLat.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopData(invalidStopLargeLat));
 
         String invalidSmallLat = ",STATE & 5101 #6712,,-90.111,-87.9779369";
-        String[] invalidStopSmallLat = invalidSmallLat.split(",");
+        String[] invalidStopSmallLat = invalidSmallLat.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopData(invalidStopSmallLat));
 
         String invalidLargeLon = ",STATE & 5101 #6712,,43.0444475,181.2737";
-        String[] invalidStopLargeLon = invalidLargeLon.split(",");
+        String[] invalidStopLargeLon = invalidLargeLon.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopData(invalidStopLargeLon));
 
         String invalidSmallLon = ",STATE & 5101 #6712,,43.0444475,-181.2737";
-        String[] invalidStopSmallLon = invalidSmallLon.split(",");
+        String[] invalidStopSmallLon = invalidSmallLon.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopData(invalidStopSmallLon));
 
 
@@ -275,36 +275,36 @@ class GTFSTest {
     @org.junit.jupiter.api.Test
     void validateTripData() {
         String trueDataString = "64,17-SEP_SUN,21736564_2535,60TH-VLIET,0,64102,17-SEP_64_0_23";
-        String[] trueTripData = trueDataString.split(",");
+        String[] trueTripData = trueDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateTripData(trueTripData));
 
         String shortDataString = "64,17-SEP_SUN";
-        String[] shortTripData = shortDataString.split(",");
+        String[] shortTripData = shortDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateTripData(shortTripData));
 
         String longDataString = "64,17-SEP_SUN,21736564_2535,60TH-VLIET,0,64102," +
                 "17-SEP_64_0_23 64,17-SEP_SUN,21736564_2535,60TH-VLIET,0,64102,17-SEP_64_0_23";
-        String[] longTripData = longDataString.split(",");
+        String[] longTripData = longDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateTripData(longTripData));
 
         String missingRouteId = ",17-SEP_SUN,21736564_2535,60TH-VLIET,0,64102,17-SEP_64_0_23";
-        String[] missingRouteIdData = missingRouteId.split(",");
+        String[] missingRouteIdData = missingRouteId.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateTripData(missingRouteIdData));
 
         String missingTripId = "64,17-SEP_SUN,,60TH-VLIET,0,64102,17-SEP_64_0_23";
-        String[] missingTripIdData = missingTripId.split(",");
+        String[] missingTripIdData = missingTripId.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateTripData(missingTripIdData));
 
         String trueDirectionId = "64,17-SEP_SUN,21736564_2535,60TH-VLIET,1,64102,17-SEP_64_0_23";
-        String[] trueDirectionIdData = trueDirectionId.split(",");
+        String[] trueDirectionIdData = trueDirectionId.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateTripData(trueDirectionIdData));
 
         String trueMissingDirectionId = "64,17-SEP_SUN,21736564_2535,60TH-VLIET,,64102,17-SEP_64_0_23";
-        String[] trueMissingDirectionIdData = trueMissingDirectionId.split(",");
+        String[] trueMissingDirectionIdData = trueMissingDirectionId.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateTripData(trueMissingDirectionIdData));
 
         String invalidDirectionId = "64,17-SEP_SUN,21736564_2535,60TH-VLIET,5,64102,17-SEP_64_0_23";
-        String[] invalidDirectionIdData = invalidDirectionId.split(",");
+        String[] invalidDirectionIdData = invalidDirectionId.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateTripData(invalidDirectionIdData));
     }
 
@@ -315,83 +315,83 @@ class GTFSTest {
     @org.junit.jupiter.api.Test
     void validateStopTimeData() {
         String trueDataString = "21736564_2535,08:51:00,08:51:00,9113,1,,0,0";
-        String[] trueStopTimeDataTest = trueDataString.split(",");
+        String[] trueStopTimeDataTest = trueDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateStopTimeData(trueStopTimeDataTest));
 
         String shortDataString = "21736564_2535,08:51:00";
-        String[] falseShortStopTimeDataTest = shortDataString.split(",");
+        String[] falseShortStopTimeDataTest = shortDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(falseShortStopTimeDataTest));
 
         String longDataString = "21736564_2535,08:51:00,08:51:00,9113,1,,0,021736564_2535,08:51:00,08:51:00,9113,1,,0,0";
-        String[] falseLongStopTimeDataTest = longDataString.split(",");
+        String[] falseLongStopTimeDataTest = longDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(falseLongStopTimeDataTest));
 
         String missingStopIDDataString = "21736564_2535,08:51:00,08:51:00,,1,,0,0";
-        String[] missingStopIDDataTest = missingStopIDDataString.split(",");
+        String[] missingStopIDDataTest = missingStopIDDataString.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(missingStopIDDataTest));
 
         String missingID = ",08:51:00,08:51:00,9113,1,,0,0";
-        String[] missingTripID = missingID.split(",");
+        String[] missingTripID = missingID.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(missingTripID));
 
         String trueArrivalTime = "21736564_2535,26:51:00,08:51:00,9113,1,,0,0";
-        String[] trueStopTimeArrivalTime = trueArrivalTime.split(",");
+        String[] trueStopTimeArrivalTime = trueArrivalTime.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateStopTimeData(trueStopTimeArrivalTime));
 
         String invalidArrivalTimeMin = "21736564_2535,22:61:00,08:51:00,9113,1,,0,0";
-        String[] invalidStopTimeArrivalTimeMin = invalidArrivalTimeMin.split(",");
+        String[] invalidStopTimeArrivalTimeMin = invalidArrivalTimeMin.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(invalidStopTimeArrivalTimeMin));
 
         String invalidArrivalTimeSec = "21736564_2535,08:51:60,08:51:00,9113,1,,0,0";
-        String[] invalidStopTimeArrivalTimeSec = invalidArrivalTimeSec.split(",");
+        String[] invalidStopTimeArrivalTimeSec = invalidArrivalTimeSec.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(invalidStopTimeArrivalTimeSec));
 
         String invalidArrivalTimeFormat = "21736564_2535,6:51:30,08:51:00,9113,1,,0,0";
-        String[] invalidStopTimeArrivalTimeFormat = invalidArrivalTimeFormat.split(",");
+        String[] invalidStopTimeArrivalTimeFormat = invalidArrivalTimeFormat.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(invalidStopTimeArrivalTimeFormat));
 
         String trueDepartureTime = "21736564_2535,08:51:00,14:51:00,9113,1,,0,0";
-        String[] trueStopTimeDepartureTime = trueDepartureTime.split(",");
+        String[] trueStopTimeDepartureTime = trueDepartureTime.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateStopTimeData(trueStopTimeDepartureTime));
 
         String invalidDepartureTimeMin = "21736564_2535,08:51:00,14:71:00,9113,1,,0,0";
-        String[] invalidStopTimeDepartureTimeMin = invalidDepartureTimeMin.split(",");
+        String[] invalidStopTimeDepartureTimeMin = invalidDepartureTimeMin.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(invalidStopTimeDepartureTimeMin));
 
         String invalidDepartureTimeSec = "21736564_2535,08:51:00,08:51:60,9113,1,,0,0";
-        String[] invalidStopTimeDepartureTimeSec= invalidDepartureTimeSec.split(",");
+        String[] invalidStopTimeDepartureTimeSec= invalidDepartureTimeSec.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(invalidStopTimeDepartureTimeSec));
 
         String invalidDepartureTimeFormat = "21736564_2535,08:51:00,6:51:30,9113,1,,0,0";
-        String[] invalidStopTimeDepartureTimeFormat = invalidDepartureTimeFormat.split(",");
+        String[] invalidStopTimeDepartureTimeFormat = invalidDepartureTimeFormat.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(invalidStopTimeDepartureTimeFormat));
 
         String missingStopSequence = "21736564_2535,08:51:00,08:51:00,9113,,,0,0";
-        String[] missingStopTimeSequence = missingStopSequence.split(",");
+        String[] missingStopTimeSequence = missingStopSequence.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(missingStopTimeSequence));
 
         String invalidStopSequence = "21736564_2535,08:51:00,08:51:00,9113,-50,,0,0";
-        String[] invalidStopTimeSequence = invalidStopSequence.split(",");
+        String[] invalidStopTimeSequence = invalidStopSequence.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(invalidStopTimeSequence));
 
         String validStopSequence = "21736564_2535,08:51:00,08:51:00,9113,500,,0,0";
-        String[] validStopTimeSequence = validStopSequence.split(",");
+        String[] validStopTimeSequence = validStopSequence.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateStopTimeData(validStopTimeSequence));
 
         String validPickUpType = "21736564_2535,08:51:00,08:51:00,9113,500,,3,0";
-        String[] validStopTimePickUpType = validPickUpType.split(",");
+        String[] validStopTimePickUpType = validPickUpType.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateStopTimeData(validStopTimePickUpType));
 
         String invalidPickUpType = "21736564_2535,08:51:00,08:51:00,9113,500,,20,0";
-        String[] invalidStopTimePickUpType = invalidPickUpType.split(",");
+        String[] invalidStopTimePickUpType = invalidPickUpType.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(invalidStopTimePickUpType));
 
         String validDropOffType = "21736564_2535,08:51:00,08:51:00,9113,500,,0,2";
-        String[] validStopTimeDropOffType = validDropOffType.split(",");
+        String[] validStopTimeDropOffType = validDropOffType.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertTrue(gtfs.validateStopTimeData(validStopTimeDropOffType));
 
         String invalidDropOffType = "21736564_2535,08:51:00,08:51:00,9113,500,,0,50";
-        String[] invalidStopTimeDropOffType = invalidDropOffType.split(",");
+        String[] invalidStopTimeDropOffType = invalidDropOffType.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         assertFalse(gtfs.validateStopTimeData(invalidStopTimeDropOffType));
     }
 

@@ -114,7 +114,8 @@ public class GTFS {
 				stringBuilder.append(line);
 			}
 			lineCount++;
-			String[] parts = line.split(",");
+			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
 			if(validateRouteData(parts)) {
 
 				Route route = new Route(parts[0]);
@@ -187,7 +188,7 @@ public class GTFS {
 				stringBuilder.append(line);
 			}
 			lineCount++;
-			String[] parts = line.split(",");
+			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			if(validateStopData(parts)) {
 
 				Stop stop = new Stop(parts[0]);
@@ -252,7 +253,7 @@ public class GTFS {
 				stringBuilder.append(line);
 			}
 			lineCount++;
-			String[] parts = line.split(",");
+			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			if(validateStopTimeData(parts)) {
 				StopTime st = new StopTime(parts[3], parts[0]);
 
@@ -322,7 +323,7 @@ public class GTFS {
 			}
 			lineCount++;
 
-			String[] parts = line.split(",");
+			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			if(validateTripData(parts)) {
 				Trip trip = new Trip(parts[2], parts[0]);
 
@@ -366,6 +367,7 @@ public class GTFS {
 	public boolean verifyRouteHeader(String header) {
 		return header.equals("route_id,agency_id,route_short_name,route_long_name," +
 				"route_desc,route_type,route_url,route_color,route_text_color");
+
 	}
 
 	public boolean verifyStopHeader(String header) {
@@ -399,7 +401,7 @@ public class GTFS {
 					|| data[5].equals("11") || data[5].equals("12"))) {
 				isValid = false;
 			}
-			if(data.length == 9 && !data[8].matches("^[0-9A-Fa-f]+$")) {
+			if(!data[8].equals("") && !data[8].matches("^[0-9A-Fa-f]+$")) {
 				isValid = false;
 			}
 			if(!data[6].equals("") && !data[6]
@@ -489,7 +491,7 @@ public class GTFS {
 					|| data[6].equals("2") || data[6].equals("3"))) {
 				isValid = false;
 			}
-			if (data.length == 8 && !data[7].equals("") && !(data[7].equals("0") || data[7].equals("1")
+			if (!data[7].equals("") && !(data[7].equals("0") || data[7].equals("1")
 					|| data[7].equals("2") || data[7].equals("3"))) {
 				isValid = false;
 			}
