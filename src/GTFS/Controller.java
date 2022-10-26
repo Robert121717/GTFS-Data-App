@@ -318,8 +318,6 @@ public class Controller implements Initializable {
 	}
 
 	private void searchStopId() {
-		String stopId = searchTF.getText();
-
 		int numTripsWithStop = gtfs.numTripsWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		if(gtfs.hasStopTime() && gtfs.hasTrip()) {
@@ -344,62 +342,6 @@ public class Controller implements Initializable {
 			String searchRouteInfo = "NOTICE: Must import StopTime and Trip files to see data.";
 			recentUploadDisplay.setText(searchRouteInfo);
 		}
-
-		recentUploadDisplay.appendText(searchNextTrips(stopId));
-	}
-
-	private String searchNextTrips(String stopId) {
-		ArrayList<StopTime> trips = gtfs.getNextTrips(stopId);
-
-		String content;
-		if (!trips.isEmpty()) {
-			String header;
-			if (trips.size() > 1) {
-				header = "\nNext trips to arrive at this stop:";
-			} else {
-				header = "\nNext trip to arrive at this stop:";
-			}
-			StringBuilder text = new StringBuilder(header);
-
-			for (StopTime stop : trips) {
-				String tripId = stop.getTripId();
-				String arrivalTime = formatTimeStamp(stop.getArrivalTime());
-
-				text.append("\n  -ID: ").append(tripId)
-						.append("\n  -Arrival time: ").append(arrivalTime)
-						.append("\n");
-			}
-			content = text.toString();
-		} else {
-			content = "\n\nNo trips subsequent to the given stop ID were found.";
-		}
-		return content;
-	}
-
-	public String formatTimeStamp(String timeStamp) {
-		String[] split = timeStamp.split(":");
-
-		int hour = Integer.parseInt(split[0]);
-		String minute = split[1];
-		String second = split[0];
-
-		boolean am;
-		if (hour == 24) {
-			hour = 12;
-			am = true;
-		} else if (hour == 25) {
-			hour = 1;
-			am = true;
-		} else if (hour > 12) {
-			hour -= 12;
-			am = false;
-		} else if (hour == 0) {
-			hour = 12;
-			am = true;
-		} else {
-			am = true;
-		}
-		return hour + ":" + minute + ":" + second + " " + (am ? "am" : "pm");
 	}
 
 	private void searchRouteId() {
