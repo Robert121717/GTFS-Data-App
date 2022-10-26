@@ -348,19 +348,20 @@ public class Controller implements Initializable {
 	}
 
 	private String searchNextTrips(String stopId) {
-		ArrayList<StopTime> trips = gtfs.getNextTrips(stopId);
+		ArrayList<Object[]> trips = gtfs.getNextTrips(stopId);
 
 		String content;
 		if (!trips.isEmpty()) {
 			String header;
 			if (trips.size() > 1) {
-				header = "\nNext trips to arrive at this stop:";
+				header = "\n\nNext trips to arrive at this stop:";
 			} else {
-				header = "\nNext trip to arrive at this stop:";
+				header = "\n\nNext trip to arrive at this stop:";
 			}
 			StringBuilder text = new StringBuilder(header);
 
-			for (StopTime stop : trips) {
+			for (Object[] array : trips) {
+				StopTime stop = (StopTime) array[0];
 				String tripId = stop.getTripId();
 				String arrivalTime = formatTimeStamp(stop.getArrivalTime());
 
@@ -370,7 +371,7 @@ public class Controller implements Initializable {
 			}
 			content = text.toString();
 		} else {
-			content = "\n\nNo trips subsequent to the given stop ID were found.";
+			content = "\n\nNo subsequent trips to the given stop ID were found for today.";
 		}
 		return content;
 	}
@@ -380,7 +381,7 @@ public class Controller implements Initializable {
 
 		int hour = Integer.parseInt(split[0]);
 		String minute = split[1];
-		String second = split[0];
+		String second = split[2];
 
 		boolean am;
 		if (hour == 24) {

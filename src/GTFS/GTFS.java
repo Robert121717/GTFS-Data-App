@@ -550,7 +550,7 @@ public class GTFS {
 		return sb.toString();
 	}
 
-	protected ArrayList<StopTime> getNextTrips(String stopId) {
+	protected ArrayList<Object[]> getNextTrips(String stopId) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		String time = dateFormat.format(Calendar.getInstance().getTime());
 
@@ -564,96 +564,34 @@ public class GTFS {
 
 		for (StopTime stop : stopTimes) {
 			if (stop.getStopId().equals(stopId)) {
-				sortNewStop(trips, stop, currentTime);
+				String[] timeStamp = stop.getArrivalTime().split(":");
+				int numSeconds = toSeconds(timeStamp);
+
+				int timeDifference = numSeconds - currentTime;
+				if (timeDifference > 0) {
+					sortNewStop(trips, stop, timeDifference);
+				}
 			}
 		}
-		return sortNextTrips(trips, currentTime);
+		return trips;
 	}
 
-	private void sortNewStop(ArrayList<Object[]> trips, StopTime newStop, int currentTime) {
-		String newArrivalTime = newStop.getArrivalTime();
-		String[] newTimeStamp = newArrivalTime.split(":");
-		int newStopTime = toSeconds(newTimeStamp);
-
-		int timeDifference = newStopTime - currentTime;
+	private void sortNewStop(ArrayList<Object[]> trips, StopTime stop, int timeDifference) {
 		if (trips.size() < 3) {
-			trips.add(new Object[]{newStop, timeDifference});
+			trips.add(new Object[]{stop, timeDifference});
 		} else {
-			if (newStopTime > currentTime) {
-				boolean sorted = false;
+			boolean sorted = false;
 
-				for (int i = 0; i < trips.size() && !sorted; ++i) {
-					Object[] array = trips.get(i);
-					int oldTimeDifference = (int) array[1];
+			for (int i = 0; i < trips.size() && !sorted; ++i) {
+				Object[] array = trips.get(i);
+				int oldTimeDifference = (int) array[1];
 
-					if (oldTimeDifference > timeDifference) {
-						trips.set(i, new Object[]{newStop, timeDifference});
-						sorted = true;
-					}
+				if (timeDifference < oldTimeDifference) {
+					trips.set(i, new Object[]{stop, timeDifference});
+					sorted = true;
 				}
 			}
 		}
-	}
-
-	private ArrayList<StopTime> sortNextTrips(ArrayList<Object[]> trips, int currentTime) {
-
-//		ArrayList<StopTime> sorted = new ArrayList<>();
-//		for (int i = 0; i < trips.size(); ++i) {
-//			Object[] array = trips.get(i);
-//			StopTime stop = (StopTime) array[0];
-//			int timeDifference = (int) array[1];
-//
-//			if (timeDifference < 0) {
-//				timeDifference += 86400;
-//			}
-//			for (int j = 0; j < trips.size(); ++j) {
-//				Object[] temp = trips.get(j);
-//				StopTime tempStop = (StopTime) temp[0];
-//				int tempTimeDifference = (int) temp[1];
-//				if (tempTimeDifference < 0) {
-//					tempTimeDifference += 86400;
-//				}
-//
-//				if (timeDifference < tempTimeDifference) {
-//					if (sorted.contains(tempStop)) {
-//						sorted.remove(tempStop);
-//						sorted.add(i, tempStop);
-//					} else {
-//						sorted.add(tempStop);
-//					}
-//				}
-//			}
-//		}
-
-		ArrayList<StopTime> sorted = new ArrayList<>();
-		for (Object[] array : trips) {
-			sorted.add((StopTime) array[0]);
-		}
-
-		for (int i = 0; i < sorted.size(); ++i) {
-			StopTime stop = sorted.get(i);
-			String[] timeStamp = stop.getArrivalTime().split(":");
-			int numSeconds = toSeconds(timeStamp);
-
-			for (int j = 0; j < sorted.size(); ++j) {
-				StopTime tempStop = sorted.get(i);
-				String[] tempTimeStamp = tempStop.getArrivalTime().split(":");
-				int tempNumSeconds = toSeconds(tempTimeStamp);
-
-				if (numSeconds < currentTime) {
-					if (numSeconds < tempNumSeconds) {
-						sorted.add(tempStop);
-						sorted.remove(j);
-					}
-				} else {
-					if (numSeconds > tempNumSeconds) {
-						sorted.add(i, tempStop);
-						sorted.remove(j);
-					}
-				}
-			}
-		}
-		return sorted;
 	}
 
 	private int toSeconds(String[] timeStamp) {
