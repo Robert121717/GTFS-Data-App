@@ -269,7 +269,7 @@ public class Controller implements Initializable {
 							"The requested data could not be found.",
 							"Please import the data first.");
 				} else {
-					export(data, option.getText());
+					export(data);
 				}
 			}
 		}
@@ -279,15 +279,21 @@ public class Controller implements Initializable {
 	 * helper method to export data to files for the user to see
 	 * @author Cody Morrow
 	 * @param data - what is to be stored for the user
-	 * @param fileName - name what is being exported to use as file name
 	 */
-	private void export(String data, String fileName) {
-		try(FileWriter out = new FileWriter(fileName + ".txt")) {
-			out.write(data);
+	private void export(String data) {
+		try {
+			FileChooser out = new FileChooser();
+			out.setTitle("File Chooser");
+			File file = out.showOpenDialog(null);
+			FileWriter writer = new FileWriter(file);
+			writer.write(data);
 
+		} catch (NullPointerException e) {
+			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
+					"No file was chosen.");
 		} catch (IOException e){
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
-					"A problem with the location of the export was found");
+					"A problem with the location of the export was found.");
 		}
 	}
 
