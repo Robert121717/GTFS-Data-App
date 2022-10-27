@@ -46,6 +46,7 @@ public class GTFS {
 		stopsSet = new HashMap<>();
 		stopTimesSet = new HashMap<>();
 		tripsSet = new HashMap<>();
+		lastAdded = "";
 	}
 
 	protected void updateText(String text) {
@@ -94,7 +95,8 @@ public class GTFS {
 	protected void importRoute(File file){
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
-			importRoute(in.hasNextLine(), in);
+			importRoute(in.hasNextLine(), in, file.getName());
+
 
 		} catch (NumberFormatException e) {
 			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
@@ -104,16 +106,12 @@ public class GTFS {
 		}
 	}
 
-	private void importRoute(boolean hasLine, Scanner in){
+	private void importRoute(boolean hasLine, Scanner in, String filename){
+		int priorListSize = routes.size();
 		ArrayList<String> incorrectRouteData = new ArrayList<>();
-		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
-			if (lineCount < 3) {
 
-				stringBuilder.append(line);
-			}
-			lineCount++;
 			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
 			if(validateRouteData(parts)) {
@@ -134,6 +132,7 @@ public class GTFS {
 				}
 
 				if(!routesSet.containsKey(route.getRouteIDHash())){
+
 					routes.add(route);
 					routesSet.put(route.getRouteIDHash(), route);
 				}
@@ -152,11 +151,16 @@ public class GTFS {
 						stringBuilder.append("\n");
 					}
 				}
-				lastAdded = stringBuilder.toString();
-				stringBuilder.setLength(0);
+
 				hasLine = false;
 			}
 		}
+		if(routes.size() != priorListSize){
+			lastAdded += filename + "\n";
+			lastAdded += stringBuilder.toString();
+		}
+
+		stringBuilder.setLength(0);
 	}
 
 	/**
@@ -167,7 +171,7 @@ public class GTFS {
 	protected void importStop(File file) throws IllegalArgumentException{
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
-			importStop(in.hasNextLine(), in);
+			importStop(in.hasNextLine(), in, file.getName());
 
 		} catch (NumberFormatException e) {
 			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
@@ -177,17 +181,12 @@ public class GTFS {
 		}
 	}
 
-	private void importStop(boolean hasLine, Scanner in){
+	private void importStop(boolean hasLine, Scanner in, String filename){
+		int priorListSize = stops.size();
 		ArrayList<String> incorrectStopData = new ArrayList<>();
-		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
 
-			if (lineCount < 3) {
-
-				stringBuilder.append(line);
-			}
-			lineCount++;
 			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			if(validateStopData(parts)) {
 
@@ -217,11 +216,16 @@ public class GTFS {
 						stringBuilder.append("\n");
 					}
 				}
-				lastAdded = stringBuilder.toString();
-				stringBuilder.setLength(0);
+
 				hasLine = false;
 			}
 		}
+		if(stops.size() != priorListSize){
+			lastAdded += filename + "\n";
+			lastAdded += stringBuilder.toString();
+		}
+
+		stringBuilder.setLength(0);
 	}
 
 	/**
@@ -232,7 +236,7 @@ public class GTFS {
 	protected void importStopTime(File file){
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
-			importStopTime(in.hasNextLine(), in);
+			importStopTime(in.hasNextLine(), in, file.getName());
 
 		} catch (NumberFormatException e) {
 			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
@@ -242,17 +246,13 @@ public class GTFS {
 		}
 	}
 
-	private void importStopTime(boolean hasLine, Scanner in){
+	private void importStopTime(boolean hasLine, Scanner in, String filename){
+		int priorListSize = stopTimes.size();
 		ArrayList<String> incorrectStopTimeData = new ArrayList<>();
-		int lineCount = 0;
+
 		while (hasLine) {
 			String line = in.nextLine();
 
-			if (lineCount < 3) {
-
-				stringBuilder.append(line);
-			}
-			lineCount++;
 			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			if(validateStopTimeData(parts)) {
 				StopTime st = new StopTime(parts[3], parts[0]);
@@ -287,11 +287,15 @@ public class GTFS {
 						stringBuilder.append("\n");
 					}
 				}
-				lastAdded = stringBuilder.toString();
-				stringBuilder.setLength(0);
+
 				hasLine = false;
 			}
 		}
+		if(stopTimes.size() != priorListSize){
+			lastAdded += filename + "\n";
+			lastAdded += stringBuilder.toString();
+		}
+		stringBuilder.setLength(0);
 	}
 
 	/**
@@ -302,7 +306,7 @@ public class GTFS {
 	protected void importTrip(File file){
 		try (Scanner in = new Scanner(file)) {
 			in.nextLine();
-			importTrip(in.hasNextLine(), in);
+			importTrip(in.hasNextLine(), in, file.getName());
 
 		} catch (NumberFormatException e) {
 			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
@@ -312,17 +316,11 @@ public class GTFS {
 		}
 	}
 
-	private void importTrip(boolean hasLine, Scanner in){
+	private void importTrip(boolean hasLine, Scanner in, String filename){
+		int priorListSize = trips.size();
 		ArrayList<String> incorrectTripData = new ArrayList<>();
-		int lineCount = 0;
 		while (hasLine) {
 			String line = in.nextLine();
-
-			if (lineCount < 3) {
-				stringBuilder.append(line);
-			}
-			lineCount++;
-
 			String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			if(validateTripData(parts)) {
 				Trip trip = new Trip(parts[2], parts[0]);
@@ -357,11 +355,15 @@ public class GTFS {
 						stringBuilder.append("\n");
 					}
 				}
-				lastAdded = stringBuilder.toString();
-				stringBuilder.setLength(0);
+
 				hasLine = false;
 			}
 		}
+		if(trips.size() != priorListSize){
+			lastAdded += filename + "\n";
+			lastAdded += stringBuilder.toString();
+		}
+		stringBuilder.setLength(0);
 	}
 
 	public boolean verifyRouteHeader(String header) {
