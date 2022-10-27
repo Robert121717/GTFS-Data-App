@@ -328,18 +328,18 @@ public class Controller implements Initializable {
 		if(gtfs.hasStopTime() && gtfs.hasTrip()) {
 			if(routeIdWithStop.equals("No Routes with StopID")) {
 				String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
-						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + routeIdWithStop;
+						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + routeIdWithStop  + searchNextTrips(stopId);
 				recentUploadDisplay.setText(searchRouteInfo);
 			} else {
 				String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
 						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
-						routeIdWithStop;
+						routeIdWithStop + searchNextTrips(stopId);
 				recentUploadDisplay.setText(searchRouteInfo);
 			}
 
 		} else if(gtfs.hasStopTime() && !gtfs.hasTrip()) {
 			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
-					"Number of Trips with stop: " + numTripsWithStop + "\n\n" +
+					"Number of Trips with stop: " + numTripsWithStop + searchNextTrips(stopId) + "\n\n" +
 					"NOTICE: Must import a trip file to see more data.";
 			recentUploadDisplay.setText(searchRouteInfo);
 
@@ -348,7 +348,7 @@ public class Controller implements Initializable {
 			recentUploadDisplay.setText(searchRouteInfo);
 		}
 
-		recentUploadDisplay.appendText(searchNextTrips(stopId));
+		;
 	}
 
 	private String searchNextTrips(String stopId) {
