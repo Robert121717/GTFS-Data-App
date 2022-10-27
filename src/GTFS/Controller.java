@@ -100,10 +100,14 @@ public class Controller implements Initializable {
 	@FXML
 	private void search() {
 		if(menu.getText().equals(routeMI.getText())) {
-			searchRouteId();
+			if(!searchTF.getText().trim().equals("")) {
+				searchRouteId();
+			}
 
 		} else if(menu.getText().equals(stopMI.getText())) {
-			searchStopId();
+			if(!searchTF.getText().trim().equals("")) {
+				searchStopId();
+			}
 		}
 		recentUploadLabel.setVisible(false);
 	}
