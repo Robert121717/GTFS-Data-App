@@ -29,9 +29,9 @@ public class Driver extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root);
 
+        scene.getStylesheets().add("Styles.css"); // TODO catch warning shown when not found
         try {
             stage.getIcons().add(new Image("stage icon.png"));
-            scene.getStylesheets().add("Styles.css"); // TODO catch warning shown when not found
 
         } catch (IllegalArgumentException e) {
             System.out.println("Please download the stage icon image for it to be displayed.");

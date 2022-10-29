@@ -28,8 +28,6 @@ public class GTFS {
 	private final HashMap<BigInteger, Stop> stopsSet;
 	private final HashMap<BigInteger, StopTime> stopTimesSet;
 	private final HashMap<BigInteger, Trip> tripsSet;
-
-
 	private String lastAdded;
 	private final StringBuilder stringBuilder = new StringBuilder();
 
@@ -46,7 +44,6 @@ public class GTFS {
 		stopsSet = new HashMap<>();
 		stopTimesSet = new HashMap<>();
 		tripsSet = new HashMap<>();
-		lastAdded = "";
 	}
 
 	protected void updateText(String text) {
@@ -60,6 +57,7 @@ public class GTFS {
 	 * @param file is the file that is to be imported
 	 */
 	protected void importFile(File file) {
+		lastAdded = "";
 		try (Scanner in = new Scanner(file)) {
 
 			String header = in.nextLine();
@@ -138,7 +136,6 @@ public class GTFS {
 				}
 			} else {
 				incorrectRouteData.add(line);
-
 			}
 
 			if (!in.hasNextLine()) {
@@ -701,7 +698,7 @@ public class GTFS {
 		return sb.toString();
 	}
 
-	protected String getNewestImport() {
+	protected String getNewestImports() {
 		return lastAdded;
 	}
 	public boolean hasTrip() {

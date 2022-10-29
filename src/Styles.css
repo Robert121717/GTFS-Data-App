@@ -25,7 +25,7 @@
 
 #import:hover, #export:hover, #update:hover {
     -fx-background-color: rgba(175, 175, 175, 0.9);
-    -fx-font-size: 17;
+    -fx-font-size: 19;
 }
 
 #search-hbox, #main-hbox {
@@ -60,4 +60,14 @@
 
 .scroll-pane .decrement-button .decrement-arrow, .scroll-pane . increment-button .increment-arrow {
     -fx-background-color: transparent;
+}
+
+
+#left-recent:hover {
+    -fx-font-size: 27;
+}
+
+
+#right-recent:hover {
+    -fx-font-size: 27;
 }

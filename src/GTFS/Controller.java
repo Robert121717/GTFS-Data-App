@@ -20,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
@@ -37,22 +36,21 @@ public class Controller implements Initializable {
 	private Stage stage;
 	private Popup importPu;
 	private Popup exportPu;
+	private List<String> recentUploadList = new ArrayList<>();
 
 	@FXML
 	private VBox dropImportVBox;
 	private TextArea importEntry;
 	@FXML
-	private TextArea textDisplay; //TODO
+	private TextArea textDisplay;
 	@FXML
-	private Label recentUploadLabel; //TODO
+	private TextField searchTF;
 	@FXML
-	private Button leftRecent; //TODO
+	private Label recentUploadLabel;
 	@FXML
-	private Button rightRecent; //TODO
+	private Label leftRecent;
 	@FXML
-	private TextField searchTF; //TODO
-	@FXML
-	private VBox mainVBox;
+	private Label rightRecent;
 	@FXML
 	private BorderPane dropBorderPane;
 
@@ -64,8 +62,13 @@ public class Controller implements Initializable {
 	 * Initializes the components in the UI when an object of this class is created.
 	 */
 	public void initialize(URL url, ResourceBundle rb) {
+		leftRecent.setVisible(false);
+		rightRecent.setVisible(false);
+
 		recentUploadLabel.setVisible(false);
+
 		searchTF.setDisable(true);
+
 		initializeDropBox();
 		dropBorderPane.setStyle("-fx-border-width: 3; -fx-border-color: #9e9e9e; -fx-border-style: segments(10, 10, 10, 10);");
 	}
@@ -85,10 +88,42 @@ public class Controller implements Initializable {
 		if (files != null) {
 			for (File file : files) {
 				gtfs.importFile(file);
+				recentUploadList.addAll(List.of(gtfs.getNewestImports().split("\\n")));
 			}
 			searchTF.setDisable(false);
-			textDisplay.setText(gtfs.getNewestImport());
-			recentUploadLabel.setVisible(true);
+			showRecentUploadList();
+		}
+	}
+
+	private void showRecentUploadList() {
+		leftRecent.setVisible(true);
+		rightRecent.setVisible(true);
+		recentUploadLabel.setVisible(true);
+	}
+
+	@FXML
+	private void prevRecentUpload() {
+		int listSize = recentUploadList.size();
+		if (listSize > 1) {
+			int currentIndex = recentUploadList.indexOf(recentUploadLabel.getText());
+
+			int newIndex = currentIndex - 1 < 0 ? listSize - 1 : currentIndex - 1;
+			String prevUpload = recentUploadList.get(newIndex);
+
+			recentUploadLabel.setText(prevUpload);
+		}
+	}
+
+	@FXML
+	private void nextRecentUpload() {
+		int listSize = recentUploadList.size();
+		if (listSize > 1) {
+			int currentIndex = recentUploadList.indexOf(recentUploadLabel.getText());
+
+			int newIndex = currentIndex + 1 > listSize - 1 ? 0 : currentIndex + 1;
+			String nextUpload = recentUploadList.get(newIndex);
+
+			recentUploadLabel.setText(nextUpload);
 		}
 	}
 
@@ -100,11 +135,9 @@ public class Controller implements Initializable {
 			searchStopId();
 		}
 		searchTF.setText("");
-		recentUploadLabel.setVisible(false);
 	}
 
 	/**
-	 * @author Robert Schmidt
 	 * Creates and displays a popup allowing the user to manually update data in the GTFS files.
 	 */
 	@FXML
@@ -139,7 +172,6 @@ public class Controller implements Initializable {
 	}
 
 	/**
-	 * @author Robert Schmidt
 	 * Helper method to importPopup().
 	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
 	 * Including:
@@ -167,14 +199,13 @@ public class Controller implements Initializable {
 		Button send = new Button("Update");
 		send.setOnAction(e -> {
 			gtfs.updateText(importEntry.getText());					//update the user input into the gtfs data structures
-			textDisplay.setText(gtfs.getNewestImport()); 	//display the imported data to user to show it was successful
+			textDisplay.setText(gtfs.getNewestImports()); 	//display the imported data to user to show it was successful
 			recentUploadLabel.setVisible(true); importPu.hide();
 		});
 		stack.getChildren().addAll(header, inputPrompt, importEntry, send);
 	}
 
-	/**
-	 * @author Robert Schmidt
+	/*
 	 * Creates and displays a popup allowing users to select files to export.
 	 */
 	@FXML
@@ -209,7 +240,6 @@ public class Controller implements Initializable {
 	}
 
 	/**
-	 * @author Robert Schmidt
 	 * Helper method to exportPopup().
 	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
 	 * Including:
@@ -249,7 +279,6 @@ public class Controller implements Initializable {
 	}
 
 	/**
-	 * @author Robert Schmidt
 	 * Gets the requested files from the GTFS class and saves the data to a file.
 	 * @param options List of CheckBoxes, where each checkbox represents a file that can be exported.
 	 */
@@ -308,9 +337,6 @@ public class Controller implements Initializable {
 		return options;
 	}
 
-	private void displayFile(String text) {
-	}
-
 	private void searchStopId() {
 		String stopId = searchTF.getText();
 
@@ -338,8 +364,6 @@ public class Controller implements Initializable {
 			String searchRouteInfo = "NOTICE: Must import StopTime and Trip files to see data.";
 			textDisplay.setText(searchRouteInfo);
 		}
-
-		;
 	}
 
 	private String searchNextTrips(String stopId) {
@@ -458,13 +482,14 @@ public class Controller implements Initializable {
 				for (File file : dropBox.getFiles()) {
 					if (file.getName().endsWith(".txt")) {
 						gtfs.importFile(file);
+						recentUploadList.addAll(List.of(gtfs.getNewestImports().split("\\n")));
 						imported = true;
 					}
 				}
 				if (imported) {
 					searchTF.setDisable(false);
-					textDisplay.setText(gtfs.getNewestImport());
 					recentUploadLabel.setVisible(true);
+					showRecentUploadList();
 				}
 			}
 			e.consume();
