@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
@@ -41,21 +42,17 @@ public class Controller implements Initializable {
 	private VBox dropImportVBox;
 	private TextArea importEntry;
 	@FXML
-	private TextArea recentUploadDisplay;
+	private TextArea textDisplay; //TODO
 	@FXML
-	private Label recentUploadLabel;
+	private Label recentUploadLabel; //TODO
 	@FXML
-	private TextField searchTF;
+	private Button leftRecent; //TODO
+	@FXML
+	private Button rightRecent; //TODO
+	@FXML
+	private TextField searchTF; //TODO
 	@FXML
 	private VBox mainVBox;
-	@FXML
-	private MenuItem stopMI;
-	@FXML
-	private MenuItem routeMI;
-	@FXML
-	private MenuItem closeMI;
-	@FXML
-	private Menu menu;
 	@FXML
 	private BorderPane dropBorderPane;
 
@@ -67,12 +64,9 @@ public class Controller implements Initializable {
 	 * Initializes the components in the UI when an object of this class is created.
 	 */
 	public void initialize(URL url, ResourceBundle rb) {
-		searchTF.setDisable(true);
 		recentUploadLabel.setVisible(false);
+		searchTF.setDisable(true);
 		initializeDropBox();
-		initializeMenuItems();
-		mainVBox.setStyle("-fx-background-color: " +
-				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
 		dropBorderPane.setStyle("-fx-border-width: 3; -fx-border-color: #9e9e9e; -fx-border-style: segments(10, 10, 10, 10);");
 	}
 
@@ -92,23 +86,20 @@ public class Controller implements Initializable {
 			for (File file : files) {
 				gtfs.importFile(file);
 			}
-			recentUploadDisplay.setText(gtfs.getNewestImport());
+			searchTF.setDisable(false);
+			textDisplay.setText(gtfs.getNewestImport());
 			recentUploadLabel.setVisible(true);
 		}
 	}
 
 	@FXML
 	private void search() {
-		if(menu.getText().equals(routeMI.getText())) {
-			if(!searchTF.getText().trim().equals("")) {
-				searchRouteId();
-			}
-
-		} else if(menu.getText().equals(stopMI.getText())) {
-			if(!searchTF.getText().trim().equals("")) {
-				searchStopId();
-			}
+		if(searchTF.getText().trim().equals("")) {
+			textDisplay.setText("");
+		} else {
+			searchStopId();
 		}
+		searchTF.setText("");
 		recentUploadLabel.setVisible(false);
 	}
 
@@ -176,7 +167,7 @@ public class Controller implements Initializable {
 		Button send = new Button("Update");
 		send.setOnAction(e -> {
 			gtfs.updateText(importEntry.getText());					//update the user input into the gtfs data structures
-			recentUploadDisplay.setText(gtfs.getNewestImport()); 	//display the imported data to user to show it was successful
+			textDisplay.setText(gtfs.getNewestImport()); 	//display the imported data to user to show it was successful
 			recentUploadLabel.setVisible(true); importPu.hide();
 		});
 		stack.getChildren().addAll(header, inputPrompt, importEntry, send);
@@ -329,23 +320,23 @@ public class Controller implements Initializable {
 			if(routeIdWithStop.equals("No Routes with StopID")) {
 				String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
 						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + routeIdWithStop  + searchNextTrips(stopId);
-				recentUploadDisplay.setText(searchRouteInfo);
+				textDisplay.setText(searchRouteInfo);
 			} else {
 				String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
 						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
 						routeIdWithStop + searchNextTrips(stopId);
-				recentUploadDisplay.setText(searchRouteInfo);
+				textDisplay.setText(searchRouteInfo);
 			}
 
 		} else if(gtfs.hasStopTime() && !gtfs.hasTrip()) {
 			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
 					"Number of Trips with stop: " + numTripsWithStop + searchNextTrips(stopId) + "\n\n" +
 					"NOTICE: Must import a trip file to see more data.";
-			recentUploadDisplay.setText(searchRouteInfo);
+			textDisplay.setText(searchRouteInfo);
 
 		} else if(!gtfs.hasStopTime() && !gtfs.hasTrip()) {
 			String searchRouteInfo = "NOTICE: Must import StopTime and Trip files to see data.";
-			recentUploadDisplay.setText(searchRouteInfo);
+			textDisplay.setText(searchRouteInfo);
 		}
 
 		;
@@ -358,9 +349,9 @@ public class Controller implements Initializable {
 		if (!trips.isEmpty()) {
 			String header;
 			if (trips.size() > 1) {
-				header = "\n\nNext trips to arrive at this stop:";
+				header = "\nNext trips to arrive at this stop:";
 			} else {
-				header = "\n\nNext trip to arrive at this stop:";
+				header = "\nNext trip to arrive at this stop:";
 			}
 			StringBuilder text = new StringBuilder(header);
 
@@ -471,32 +462,12 @@ public class Controller implements Initializable {
 					}
 				}
 				if (imported) {
-					recentUploadDisplay.setText(gtfs.getNewestImport());
+					searchTF.setDisable(false);
+					textDisplay.setText(gtfs.getNewestImport());
 					recentUploadLabel.setVisible(true);
 				}
 			}
 			e.consume();
-		});
-	}
-
-	/**
-	 * Adds event handlers to the menu items shown in the UI
-	 */
-	private void initializeMenuItems() {
-		stopMI.setOnAction(e -> {
-			menu.setText("Stop");
-			searchTF.setDisable(false);
-		});
-
-		routeMI.setOnAction(e -> {
-			menu.setText("Route");
-			searchTF.setDisable(false);
-		});
-
-		closeMI.setOnAction(e -> {
-			menu.setText("Select");
-			searchTF.setDisable(true);
-			searchTF.setText("");
 		});
 	}
 

@@ -1,0 +1,63 @@
+#header-hbox {
+    -fx-background-color: #cdcdcd;
+    /* -fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 30% , #c4c2c2, #cdcdcd); */
+}
+
+.separator {
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-border-width: 1px;
+    -fx-border-color: rgba(0, 0, 0, 0.6);
+}
+
+.line {
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+}
+
+#header-line {
+    -fx-border-color: rgba(130, 130, 130, 0.6);
+}
+
+#import, #export, #update {
+    -fx-background-color: transparent;
+}
+
+#import:hover, #export:hover, #update:hover {
+    -fx-background-color: rgba(175, 175, 175, 0.9);
+    -fx-font-size: 17;
+}
+
+#search-hbox, #main-hbox {
+    -fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #f2f2f2, #F4F4F4);
+}
+
+#text-display {
+    -fx-background-color: transparent;
+}
+
+#text-display .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+#text-display .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+
+#text-display .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+#text-display .scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10px;
+}
+
+.scroll-pane .decrement-button .decrement-arrow, .scroll-pane . increment-button .increment-arrow {
+    -fx-background-color: transparent;
+}

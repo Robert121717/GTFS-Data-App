@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.io.FileNotFoundException;
 import java.util.Objects;
 
 /**
@@ -23,20 +25,24 @@ public class Driver extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(
                 getClass().getResource("GTFSController.fxml")));
-        Parent root = loader.load();
 
+        Parent root = loader.load();
         Scene scene = new Scene(root);
-        stage.setTitle("GTFS Application");
-        stage.setScene(scene);
+
         try {
             stage.getIcons().add(new Image("stage icon.png"));
+            scene.getStylesheets().add("Styles.css"); // TODO catch warning shown when not found
 
         } catch (IllegalArgumentException e) {
             System.out.println("Please download the stage icon image for it to be displayed.");
         }
+        stage.setScene(scene);
+
         Controller controller = loader.getController();
         controller.setStage(stage);
-        stage.show();
 
+        stage.setTitle("GTFS Application");
+        stage.setResizable(false);
+        stage.show();
     }
 }
