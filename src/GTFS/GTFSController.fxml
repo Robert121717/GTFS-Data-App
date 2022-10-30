@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="509.0" prefWidth="871.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GTFS.Controller">
+<VBox fx:id="rootVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="509.0" prefWidth="871.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GTFS.Controller">
    <children>
       <HBox id="header-hbox" alignment="CENTER" maxHeight="-Infinity" prefHeight="60.0" prefWidth="871.0">
          <children>
@@ -30,13 +30,13 @@
                </font>
             </Button>
             <Line endX="-100.0" endY="67.29290008674492" startX="-100.0" startY="28.100461959838864" />
-            <Button id="export" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exportPopup" prefHeight="40.0" prefWidth="125.0" text="Export File">
+            <Button id="export" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="Export File">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
             <Line endX="-100.0" endY="67.29290008674492" layoutX="722.0" layoutY="-4.0" startX="-100.0" startY="28.100461959838864" />
-            <Button id="update" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#updatePopup" prefHeight="40.0" prefWidth="125.0" text="Update File">
+            <Button id="update" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showUpdatePopup" prefHeight="40.0" prefWidth="125.0" text="Update File">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -81,7 +81,7 @@
             </HBox>
          </children>
       </HBox>
-      <HBox id="main-hbox" prefHeight="392.0" prefWidth="871.0">
+      <HBox id="main-hbox" fx:id="mainHBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="392.0" prefWidth="871.0">
          <children>
             <VBox prefHeight="450.0" prefWidth="290.0">
                <children>
@@ -102,7 +102,7 @@
                <children>
                   <HBox alignment="CENTER">
                      <children>
-                        <BorderPane fx:id="dropBorderPane" prefHeight="240.0" prefWidth="240.0">
+                        <BorderPane id="drop-border-pane" fx:id="dropBorderPane" prefHeight="240.0" prefWidth="240.0">
                            <center>
                               <Label alignment="TOP_CENTER" prefHeight="89.0" prefWidth="123.0" text="Drag and Drop File" textAlignment="CENTER" wrapText="true">
                                  <font>

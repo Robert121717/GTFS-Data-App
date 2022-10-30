@@ -2,10 +2,10 @@ package GTFS;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
+
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -17,14 +17,12 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * @author nairac, atkinsonr, morrowc, schmidtrj
@@ -34,13 +32,19 @@ import javafx.stage.Stage;
 public class Controller implements Initializable {
 	private final GTFS gtfs;
 	private Stage stage;
-	private Popup importPu;
-	private Popup exportPu;
 	private List<String> recentUploadList = new ArrayList<>();
 
 	@FXML
+	private VBox rootVBox;
+	@FXML
+	private HBox mainHBox;
+	private VBox updateMenu = new VBox(10);
+	private TranslateTransition updateTranslate;
+
+	private VBox exportMenu = new VBox();
+	@FXML
 	private VBox dropImportVBox;
-	private TextArea importEntry;
+	private TextArea input;
 	@FXML
 	private TextArea textDisplay;
 	@FXML
@@ -66,11 +70,10 @@ public class Controller implements Initializable {
 		rightRecent.setVisible(false);
 
 		recentUploadLabel.setVisible(false);
-
 		searchTF.setDisable(true);
 
+		initializeUpdateMenu();
 		initializeDropBox();
-		dropBorderPane.setStyle("-fx-border-width: 3; -fx-border-color: #9e9e9e; -fx-border-style: segments(10, 10, 10, 10);");
 	}
 
 	/**
@@ -137,146 +140,146 @@ public class Controller implements Initializable {
 		searchTF.setText("");
 	}
 
-	/**
-	 * Creates and displays a popup allowing the user to manually update data in the GTFS files.
-	 */
 	@FXML
-	private void updatePopup() {
-		final int height = 200;
-		final int width = 400;
+	private void showUpdatePopup() {
 
-		if (importPu != null && importPu.isShowing()) importPu.hide();
-		else if (exportPu != null && exportPu.isShowing()) exportPu.hide();
+		if (mainHBox.getChildren().contains(updateMenu)) {
+			closePopup(updateTranslate, updateMenu);
 
-		importPu = new Popup();								//create popup prompt for user to type data into
-		importPu.setWidth(width); importPu.setHeight(height);
-
-		Pane background = new Pane();
-		background.setPrefWidth(width); background.setPrefHeight(height);
-
-		VBox stack = new VBox(18);
-		stack.setPrefWidth(width); stack.setPrefHeight(height);
-		stack.setAlignment(Pos.CENTER);
-		stack.setPadding(new Insets(8, 8, 10, 8));
-
-		addUpdatePuComponents(stack);
-		background.getChildren().add(stack);
-
-		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
-				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
-		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
-		background.setEffect(shadow);
-
-		importPu.getContent().add(background);
-		importPu.show(stage);
+		} else {
+			mainHBox.getChildren().add(updateMenu);
+			updateTranslate.setRate(1);
+			updateTranslate.play();
+		}
 	}
 
-	/**
-	 * Helper method to importPopup().
-	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
-	 * Including:
-	 * 		a close window button,
-	 * 		a text area for user input
-	 * 		an update button, which well send the data to the GTFS files.
-	 * @param stack Main component of the popup.
-	 */
-	private void addUpdatePuComponents(VBox stack) {
+	private void initializeUpdateMenu() {
+		final int height = 200;
+		final int width = 285;
+
+		updateMenu.setId("update-vbox");
+		updateMenu.setMinWidth(width); updateMenu.setMinHeight(height);
+		updateMenu.setPrefWidth(width); updateMenu.setPrefHeight(height);
+		updateMenu.setMaxWidth(width); updateMenu.setMaxHeight(height);
+
+		updateMenu.setAlignment(Pos.TOP_CENTER);
+		updateMenu.setPadding(new Insets(8, 25, 10, 8));
+		addUpdateMenuComponents();
+
+		double translateX = rootVBox.getPrefWidth();
+		updateMenu.setTranslateX(translateX);
+
+		updateTranslate = new TranslateTransition(Duration.millis(550), updateMenu);
+
+		updateTranslate.setFromX(translateX);
+		updateTranslate.setToX(25);
+	}
+
+	private void addUpdateMenuComponents() {
 		HBox header = new HBox(5);
-		header.setPrefWidth(400); header.setPrefHeight(50);
+		header.setPrefWidth(260); header.setPrefHeight(50);
 		header.setAlignment(Pos.TOP_RIGHT);
+		header.setPadding(new Insets(0, 10, 0, 0));
+
+		Label inputPrompt = new Label("Enter New Data");
+		inputPrompt.setFont(new Font(14));
+		inputPrompt.setPadding(new Insets(10, 70, 0, 10));
 
 		Button closeButton = new Button("Cancel");
-		closeButton.setOnAction(e -> importPu.hide()); 	//close popup
-		header.getChildren().addAll(closeButton);
+		closeButton.setId("update-cancel-button");
+		closeButton.setOnAction(e -> {
+			closePopup(updateTranslate, updateMenu);
+		});
+		header.getChildren().addAll(inputPrompt, closeButton);
 
-		Label inputPrompt = new Label("Please Enter the Relevant Data Below");
-		inputPrompt.setFont(new Font(15));
-
-		importEntry = new TextArea();
-		importEntry.setPromptText("Format: {Stop / Stop Time / Route / Trip}, data");
-		importEntry.setPadding(new Insets(0, 10, 0, 10));
+		input = new TextArea();
+		input.setPromptText("Enter new data");
+		input.setPadding(new Insets(0, 10, 0, 10));
 
 		Button send = new Button("Update");
+		send.setId("update-send-button");
 		send.setOnAction(e -> {
-			gtfs.updateText(importEntry.getText());					//update the user input into the gtfs data structures
-			textDisplay.setText(gtfs.getNewestImports()); 	//display the imported data to user to show it was successful
-			recentUploadLabel.setVisible(true); importPu.hide();
+			gtfs.updateText(input.getText());	// TODO update files
+			closePopup(updateTranslate, updateMenu);
+			input.clear();
 		});
-		stack.getChildren().addAll(header, inputPrompt, importEntry, send);
+		updateMenu.getChildren().addAll(header, input, send);
 	}
 
-	/*
-	 * Creates and displays a popup allowing users to select files to export.
-	 */
-	@FXML
-	private void exportPopup() {
-		final int width = 230;
-		final int height = 310;
-
-		if (exportPu != null && exportPu.isShowing()) exportPu.hide();
-		else if (importPu != null && importPu.isShowing()) importPu.hide();
-
-		exportPu = new Popup();
-		exportPu.setHeight(height); exportPu.setWidth(width);
-
-		Pane background = new Pane();
-		background.setPrefHeight(height); background.setPrefWidth(width);
-
-		VBox stack = new VBox(5);
-		stack.setPrefHeight(height); stack.setPrefWidth(width);
-		stack.setAlignment(Pos.TOP_CENTER);
-		stack.setPadding(new Insets(8, 8, 8, 8));
-
-		addExportPuComponents(stack);
-		background.getChildren().add(stack);
-
-		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
-				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
-		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
-		background.setEffect(shadow);
-
-		exportPu.getContent().add(background);
-		exportPu.show(stage);
+	private void closePopup(TranslateTransition translate, VBox node) {
+		translate.setRate(-1);
+		translate.play();
+		Timer myTimer = new Timer();
+		myTimer.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				Platform.runLater(() -> {
+					mainHBox.getChildren().remove(node);
+				});
+			}
+		}, 550);
 	}
 
-	/**
-	 * Helper method to exportPopup().
-	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
-	 * Including:
-	 * 		a close window button,
-	 * 		checkboxes to select which files to export,
-	 * 		an export button to begin the process of exporting the files.
-	 * @param stack Main component of the popup.
-	 */
-	private void addExportPuComponents(VBox stack) {
-		HBox header = new HBox();
-		header.setPrefWidth(230); header.setPrefHeight(30);
-		header.setAlignment(Pos.TOP_RIGHT);
-
-		Button closeButton = new Button("Cancel");
-		closeButton.setOnAction(e -> exportPu.hide()); 	//close popup
-		header.getChildren().add(closeButton);
-
-		Label instruct = new Label("Please Select the Files to Export");
-		instruct.setWrapText(true); instruct.setPrefWidth(150);
-		instruct.setFont(new Font(16));
-		instruct.setTextAlignment(TextAlignment.CENTER);
-
-		List<CheckBox> options = getExportCheckBoxes();
-
-		VBox centerStack = new VBox(8);
-		centerStack.setAlignment(Pos.CENTER_LEFT);
-		centerStack.setPadding(new Insets(15, 0, 15, 60));
-		centerStack.getChildren().addAll(options);
-
-		Button send = new Button("Export");
-		send.setOnAction(e -> {
-			exportPu.hide();
-			initializeFileExport(options);
-		});
-
-		stack.getChildren().addAll(header, instruct, centerStack, send);
-	}
+//	@FXML
+//	private void exportPopup() {
+//		final int width = 230;
+//		final int height = 310;
+//
+//		if (exportPu != null && exportPu.isShowing()) exportPu.hide();
+//		else if (importPu != null && importPu.isShowing()) importPu.hide();
+//
+//		exportPu = new Popup();
+//		exportPu.setHeight(height); exportPu.setWidth(width);
+//
+//		Pane background = new Pane();
+//		background.setPrefHeight(height); background.setPrefWidth(width);
+//
+//		VBox stack = new VBox(5);
+//		stack.setPrefHeight(height); stack.setPrefWidth(width);
+//		stack.setAlignment(Pos.TOP_CENTER);
+//		stack.setPadding(new Insets(8, 8, 8, 8));
+//
+//		addExportPuComponents(stack);
+//		background.getChildren().add(stack);
+//
+//		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
+//				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
+//		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
+//		background.setEffect(shadow);
+//
+//		exportPu.getContent().add(background);
+//		exportPu.show(stage);
+//	}
+//
+//	private void addExportPuComponents(VBox stack) {
+//		HBox header = new HBox();
+//		header.setPrefWidth(230); header.setPrefHeight(30);
+//		header.setAlignment(Pos.TOP_RIGHT);
+//
+//		Button closeButton = new Button("Cancel");
+//		closeButton.setOnAction(e -> exportPu.hide()); 	//close popup
+//		header.getChildren().add(closeButton);
+//
+//		Label instruct = new Label("Please Select the Files to Export");
+//		instruct.setWrapText(true); instruct.setPrefWidth(150);
+//		instruct.setFont(new Font(16));
+//		instruct.setTextAlignment(TextAlignment.CENTER);
+//
+//		List<CheckBox> options = getExportCheckBoxes();
+//
+//		VBox centerStack = new VBox(8);
+//		centerStack.setAlignment(Pos.CENTER_LEFT);
+//		centerStack.setPadding(new Insets(15, 0, 15, 60));
+//		centerStack.getChildren().addAll(options);
+//
+//		Button send = new Button("Export");
+//		send.setOnAction(e -> {
+//			exportPu.hide();
+//			initializeFileExport(options);
+//		});
+//
+//		stack.getChildren().addAll(header, instruct, centerStack, send);
+//	}
 
 	/**
 	 * Gets the requested files from the GTFS class and saves the data to a file.

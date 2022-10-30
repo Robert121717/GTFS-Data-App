@@ -36,6 +36,10 @@
     -fx-background-color: transparent;
 }
 
+#text-display .content {
+    -fx-cursor: DEFAULT;
+}
+
 #text-display .scroll-pane {
     -fx-background-color: transparent;
 }
@@ -62,7 +66,6 @@
     -fx-background-color: transparent;
 }
 
-
 #left-recent:hover {
     -fx-font-size: 27;
 }
@@ -70,4 +73,28 @@
 
 #right-recent:hover {
     -fx-font-size: 27;
+}
+
+#update-send-button {
+    -fx-background-color: rgb(225, 225, 225);
+}
+
+#update-cancel-button {
+    -fx-background-color: transparent;
+}
+
+#update-send-button:hover, #update-cancel-button:hover {
+    -fx-background-color: rgba(215, 215, 215, 0.85);
+}
+
+#drop-border-pane {
+    -fx-border-width: 3;
+    -fx-border-color: #9e9e9e;
+    -fx-border-style: segments(10, 10, 10, 10);
+}
+
+#update-vbox {
+    -fx-background-radius: 8 8 8 8;
+    -fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);
+    -fx-effect: dropshadow(gaussian, #9e9e9e, 15, 0.05, 0, 0);
 }
