@@ -37,8 +37,8 @@ public class Driver extends Application {
         }
         stage.setScene(scene);
 
-        Controller controller = loader.getController();
-        controller.setStage(stage);
+//        Controller controller = loader.getController();
+//        controller.setStage(stage);
 
         stage.setTitle("GTFS Application");
         stage.setResizable(false);

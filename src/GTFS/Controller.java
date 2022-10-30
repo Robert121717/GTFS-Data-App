@@ -4,11 +4,13 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
+import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.effect.BlurType;
@@ -19,7 +21,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Translate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -31,17 +36,18 @@ import javafx.util.Duration;
  */
 public class Controller implements Initializable {
 	private final GTFS gtfs;
-	private Stage stage;
-	private List<String> recentUploadList = new ArrayList<>();
+	private final List<String> recentUploadList = new ArrayList<>();
 
-	@FXML
-	private VBox rootVBox;
 	@FXML
 	private HBox mainHBox;
-	private VBox updateMenu = new VBox(10);
+	private final VBox updateMenu = new VBox(10);
 	private TranslateTransition updateTranslate;
+	private ScaleTransition updateScale;
 
-	private VBox exportMenu = new VBox();
+	private final VBox exportMenu = new VBox();
+	private TranslateTransition exportTranslate;
+	private List<ToggleButton> options;
+	private final long translateDuration = 400;
 	@FXML
 	private VBox dropImportVBox;
 	private TextArea input;
@@ -55,8 +61,6 @@ public class Controller implements Initializable {
 	private Label leftRecent;
 	@FXML
 	private Label rightRecent;
-	@FXML
-	private BorderPane dropBorderPane;
 
 	public Controller(){
 		gtfs = new GTFS();
@@ -73,7 +77,206 @@ public class Controller implements Initializable {
 		searchTF.setDisable(true);
 
 		initializeUpdateMenu();
+		initExportOptions();
+		initializeExportMenu();
+
 		initializeDropBox();
+	}
+
+	@FXML
+	private void updatePopup() {
+		if (mainHBox.getChildren().contains(updateMenu)) {
+			closePopup(updateTranslate, updateMenu);
+			return;
+		}
+		long delay = 0;
+		if (mainHBox.getChildren().contains(exportMenu)) {
+			closePopup(exportTranslate, exportMenu);
+			delay = translateDuration;
+		}
+		Timer myTimer = new Timer();
+		myTimer.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				Platform.runLater(() -> {
+					updateMenu.setTranslateX(0);
+					mainHBox.getChildren().add(updateMenu);
+					updateScale.setRate(1);
+					updateScale.setCycleCount(1);
+					updateScale.play();
+				});
+			}
+		}, delay);
+	}
+
+	private void initializeUpdateMenu() {
+		final int height = 150;
+		final int width = 285;
+
+		//TODO add button for choosing file type
+
+		updateMenu.setId("update-menu");
+		updateMenu.setMinWidth(width); updateMenu.setMinHeight(height);
+		updateMenu.setMaxWidth(width); updateMenu.setMaxHeight(height);
+
+		updateMenu.setAlignment(Pos.TOP_CENTER);
+		updateMenu.setPadding(new Insets(8, 8, 8, 8));
+		addUpdateMenuComponents();
+
+		updateScale = new ScaleTransition(Duration.millis(300), updateMenu);
+		updateScale.setFromX(0); updateScale.setToX(1);
+		updateTranslate = new TranslateTransition(Duration.millis(translateDuration), updateMenu);
+
+		updateTranslate.setFromX(0);
+		updateTranslate.setToX(3 * width);
+	}
+
+	private void addUpdateMenuComponents() {
+		HBox header = new HBox(5);
+		header.setPrefWidth(260); header.setPrefHeight(50);
+		header.setAlignment(Pos.TOP_RIGHT);
+
+		Label inputPrompt = new Label("Enter New Data");
+		inputPrompt.setFont(new Font(14));
+		inputPrompt.setPadding(new Insets(10, 90, 0, 0));
+
+		Button closeButton = new Button("Cancel");
+		closeButton.setId("update-cancel-button");
+		closeButton.setOnAction(e -> closePopup(updateTranslate, updateMenu));
+		header.getChildren().addAll(inputPrompt, closeButton);
+
+		input = new TextArea();
+		input.setPromptText("Enter new data");
+		input.setPadding(new Insets(0, 10, 0, 10));
+
+		Button send = new Button("Update");
+		send.setId("update-send-button");
+		send.setOnAction(e -> {
+			gtfs.updateText(input.getText());	// TODO update files
+			closePopup(updateTranslate, updateMenu);
+			input.clear();
+		});
+		updateMenu.getChildren().addAll(header, input, send);
+	}
+
+	@FXML
+	private void exportPopup() {
+		if (mainHBox.getChildren().contains(exportMenu)) {
+			closePopup(exportTranslate, exportMenu);
+			return;
+		}
+		long delay = 0;
+		if (mainHBox.getChildren().contains(updateMenu)) {
+			closePopup(updateTranslate, updateMenu);
+			delay = translateDuration;
+		}
+		Timer myTimer = new Timer();
+		myTimer.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				Platform.runLater(() -> {
+					mainHBox.getChildren().add(exportMenu);
+					exportTranslate.setRate(1);
+					exportTranslate.play();
+					for (ToggleButton option : options) {
+						option.setSelected(false);
+					}
+				});
+			}
+		}, delay);
+	}
+
+	private void initializeExportMenu() {
+		final int height = 260;
+		final int width = 110;
+
+		exportMenu.setId("export-menu");
+		exportMenu.setMinWidth(width); exportMenu.setMinHeight(height);
+		exportMenu.setMaxWidth(width); exportMenu.setMaxHeight(height);
+
+		exportMenu.setAlignment(Pos.TOP_CENTER);
+		addExportMenuComponents();
+
+		double translateX = mainHBox.getPrefWidth();
+		exportMenu.setTranslateX(translateX);
+
+		exportTranslate = new TranslateTransition(Duration.millis(translateDuration), exportMenu);
+
+		exportTranslate.setFromX(translateX);
+		exportTranslate.setToX(200);
+	}
+
+	private void addExportMenuComponents() {
+		VBox header = new VBox();
+		header.setMinHeight(32); header.setMaxHeight(32);
+		header.setPadding(new Insets(4, 0, 8, 0));
+		header.setAlignment(Pos.CENTER);
+		header.setId("export-header");
+
+		header.setOnMouseClicked(e -> {
+			closePopup(exportTranslate, exportMenu);
+			for (ToggleButton option : options) {
+				option.setSelected(false);
+			}
+		});
+		Label close = new Label("Cancel");
+		close.setFont(new Font(16));
+		header.getChildren().add(close);
+
+		Separator headerLine = new Separator(Orientation.HORIZONTAL);
+
+		VBox optionsVBox = new VBox(3);
+		optionsVBox.setPadding(new Insets(15, 14, 15, 8));
+		optionsVBox.setAlignment(Pos.CENTER);
+		optionsVBox.getChildren().addAll(options);
+
+		VBox send = new VBox();
+		send.setId("export-send-vbox");
+		send.setMinHeight(32); send.setMaxHeight(32);
+		send.setAlignment(Pos.CENTER);
+
+		Separator exportLine = new Separator(Orientation.HORIZONTAL);
+
+		Label export = new Label("Export");
+		export.setFont(new Font(16));
+		send.setOnMouseClicked(e -> {
+			initializeFileExport();
+			closePopup(exportTranslate, exportMenu);
+
+			for (ToggleButton option : options) {
+				option.setSelected(false);
+			}
+		});
+		send.getChildren().add(export);
+
+		exportMenu.getChildren().addAll(header, headerLine, optionsVBox, exportLine, send);
+	}
+
+	private void initExportOptions() {
+		options = new ArrayList<>();
+		options.add(new ToggleButton("Routes"));
+		options.add(new ToggleButton("Stops"));
+		options.add(new ToggleButton("Stop Times"));
+		options.add(new ToggleButton("Trips"));
+
+		for (ToggleButton option : options) {
+			option.setPrefWidth(90);
+			option.setPrefHeight(40);
+		}
+	}
+
+	private void closePopup(TranslateTransition translate, VBox node) {
+		int rate = node == updateMenu ? 1 : -1;
+		translate.setRate(rate);
+		translate.play();
+
+		Timer myTimer = new Timer();
+		myTimer.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				Platform.runLater(() -> mainHBox.getChildren().remove(node));
+			}
+		}, translateDuration);
 	}
 
 	/**
@@ -107,27 +310,29 @@ public class Controller implements Initializable {
 	@FXML
 	private void prevRecentUpload() {
 		int listSize = recentUploadList.size();
-		if (listSize > 1) {
-			int currentIndex = recentUploadList.indexOf(recentUploadLabel.getText());
-
-			int newIndex = currentIndex - 1 < 0 ? listSize - 1 : currentIndex - 1;
-			String prevUpload = recentUploadList.get(newIndex);
-
-			recentUploadLabel.setText(prevUpload);
+		if (listSize == 0) {
+			return;
 		}
+		int currentIndex = recentUploadList.indexOf(recentUploadLabel.getText());
+
+		int newIndex = currentIndex - 1 < 0 ? listSize - 1 : currentIndex - 1;
+		String prevUpload = recentUploadList.get(newIndex);
+
+		recentUploadLabel.setText(prevUpload);
 	}
 
 	@FXML
 	private void nextRecentUpload() {
 		int listSize = recentUploadList.size();
-		if (listSize > 1) {
-			int currentIndex = recentUploadList.indexOf(recentUploadLabel.getText());
-
-			int newIndex = currentIndex + 1 > listSize - 1 ? 0 : currentIndex + 1;
-			String nextUpload = recentUploadList.get(newIndex);
-
-			recentUploadLabel.setText(nextUpload);
+		if (listSize == 0) {
+			return;
 		}
+		int currentIndex = recentUploadList.indexOf(recentUploadLabel.getText());
+
+		int newIndex = currentIndex + 1 > listSize - 1 ? 0 : currentIndex + 1;
+		String nextUpload = recentUploadList.get(newIndex);
+
+		recentUploadLabel.setText(nextUpload);
 	}
 
 	@FXML
@@ -140,153 +345,11 @@ public class Controller implements Initializable {
 		searchTF.setText("");
 	}
 
-	@FXML
-	private void showUpdatePopup() {
-
-		if (mainHBox.getChildren().contains(updateMenu)) {
-			closePopup(updateTranslate, updateMenu);
-
-		} else {
-			mainHBox.getChildren().add(updateMenu);
-			updateTranslate.setRate(1);
-			updateTranslate.play();
-		}
-	}
-
-	private void initializeUpdateMenu() {
-		final int height = 200;
-		final int width = 285;
-
-		updateMenu.setId("update-vbox");
-		updateMenu.setMinWidth(width); updateMenu.setMinHeight(height);
-		updateMenu.setPrefWidth(width); updateMenu.setPrefHeight(height);
-		updateMenu.setMaxWidth(width); updateMenu.setMaxHeight(height);
-
-		updateMenu.setAlignment(Pos.TOP_CENTER);
-		updateMenu.setPadding(new Insets(8, 25, 10, 8));
-		addUpdateMenuComponents();
-
-		double translateX = rootVBox.getPrefWidth();
-		updateMenu.setTranslateX(translateX);
-
-		updateTranslate = new TranslateTransition(Duration.millis(550), updateMenu);
-
-		updateTranslate.setFromX(translateX);
-		updateTranslate.setToX(25);
-	}
-
-	private void addUpdateMenuComponents() {
-		HBox header = new HBox(5);
-		header.setPrefWidth(260); header.setPrefHeight(50);
-		header.setAlignment(Pos.TOP_RIGHT);
-		header.setPadding(new Insets(0, 10, 0, 0));
-
-		Label inputPrompt = new Label("Enter New Data");
-		inputPrompt.setFont(new Font(14));
-		inputPrompt.setPadding(new Insets(10, 70, 0, 10));
-
-		Button closeButton = new Button("Cancel");
-		closeButton.setId("update-cancel-button");
-		closeButton.setOnAction(e -> {
-			closePopup(updateTranslate, updateMenu);
-		});
-		header.getChildren().addAll(inputPrompt, closeButton);
-
-		input = new TextArea();
-		input.setPromptText("Enter new data");
-		input.setPadding(new Insets(0, 10, 0, 10));
-
-		Button send = new Button("Update");
-		send.setId("update-send-button");
-		send.setOnAction(e -> {
-			gtfs.updateText(input.getText());	// TODO update files
-			closePopup(updateTranslate, updateMenu);
-			input.clear();
-		});
-		updateMenu.getChildren().addAll(header, input, send);
-	}
-
-	private void closePopup(TranslateTransition translate, VBox node) {
-		translate.setRate(-1);
-		translate.play();
-		Timer myTimer = new Timer();
-		myTimer.schedule(new TimerTask(){
-			@Override
-			public void run() {
-				Platform.runLater(() -> {
-					mainHBox.getChildren().remove(node);
-				});
-			}
-		}, 550);
-	}
-
-//	@FXML
-//	private void exportPopup() {
-//		final int width = 230;
-//		final int height = 310;
-//
-//		if (exportPu != null && exportPu.isShowing()) exportPu.hide();
-//		else if (importPu != null && importPu.isShowing()) importPu.hide();
-//
-//		exportPu = new Popup();
-//		exportPu.setHeight(height); exportPu.setWidth(width);
-//
-//		Pane background = new Pane();
-//		background.setPrefHeight(height); background.setPrefWidth(width);
-//
-//		VBox stack = new VBox(5);
-//		stack.setPrefHeight(height); stack.setPrefWidth(width);
-//		stack.setAlignment(Pos.TOP_CENTER);
-//		stack.setPadding(new Insets(8, 8, 8, 8));
-//
-//		addExportPuComponents(stack);
-//		background.getChildren().add(stack);
-//
-//		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
-//				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
-//		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
-//		background.setEffect(shadow);
-//
-//		exportPu.getContent().add(background);
-//		exportPu.show(stage);
-//	}
-//
-//	private void addExportPuComponents(VBox stack) {
-//		HBox header = new HBox();
-//		header.setPrefWidth(230); header.setPrefHeight(30);
-//		header.setAlignment(Pos.TOP_RIGHT);
-//
-//		Button closeButton = new Button("Cancel");
-//		closeButton.setOnAction(e -> exportPu.hide()); 	//close popup
-//		header.getChildren().add(closeButton);
-//
-//		Label instruct = new Label("Please Select the Files to Export");
-//		instruct.setWrapText(true); instruct.setPrefWidth(150);
-//		instruct.setFont(new Font(16));
-//		instruct.setTextAlignment(TextAlignment.CENTER);
-//
-//		List<CheckBox> options = getExportCheckBoxes();
-//
-//		VBox centerStack = new VBox(8);
-//		centerStack.setAlignment(Pos.CENTER_LEFT);
-//		centerStack.setPadding(new Insets(15, 0, 15, 60));
-//		centerStack.getChildren().addAll(options);
-//
-//		Button send = new Button("Export");
-//		send.setOnAction(e -> {
-//			exportPu.hide();
-//			initializeFileExport(options);
-//		});
-//
-//		stack.getChildren().addAll(header, instruct, centerStack, send);
-//	}
-
 	/**
 	 * Gets the requested files from the GTFS class and saves the data to a file.
-	 * @param options List of CheckBoxes, where each checkbox represents a file that can be exported.
 	 */
-	private void initializeFileExport(List<CheckBox> options) {
-		for (CheckBox option : options) {
+	private void initializeFileExport() {
+		for (ToggleButton option : options) {
 			if (option.isSelected()) {
 				String data = gtfs.exportFile(option.getText());
 
@@ -323,21 +386,6 @@ public class Controller implements Initializable {
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
 					"A problem with the location of the export was found.");
 		}
-	}
-
-	private List<CheckBox> getExportCheckBoxes() {
-		List<CheckBox> options = new ArrayList<>();
-		options.add(new CheckBox("Stops"));
-		options.add(new CheckBox("Stop Times"));
-		options.add(new CheckBox("Routes"));
-		options.add(new CheckBox("Trips"));
-
-		for (CheckBox option : options) {
-			option.setPrefWidth(120);
-			option.setPrefHeight(25);
-			option.setStyle("-fx-font-size: 14;");
-		}
-		return options;
 	}
 
 	private void searchStopId() {
@@ -424,45 +472,6 @@ public class Controller implements Initializable {
 		return hour + ":" + minute + ":" + second + " " + (am ? "am" : "pm");
 	}
 
-	private void searchRouteId() {
-	}
-
-	private boolean displayDistance() {
-		return false;
-	}
-
-	private boolean displaySpeed() {
-		return false;
-	}
-
-	private boolean displayRoute() {
-		return false;
-	}
-
-	private boolean displayStop() {
-		return false;
-	}
-
-	private boolean displayTrip() {
-		return false;
-	}
-
-	private void plotCord() {
-
-	}
-
-	private void plotLocation() {
-
-	}
-
-	private void showLegend(){
-
-	}
-
-	private void filterRoutes(){
-
-	}
-
 	/**
 	 * Adds event handlers to the drop box shown in the UI,
 	 * allowing the user to drag and drop files onto the screen to import them.
@@ -500,14 +509,6 @@ public class Controller implements Initializable {
 	}
 
 	/**
-	 * Assigns the current stage to an instance variable of this class
-	 * @param stage The stage currently in use
-	 */
-	protected void setStage(Stage stage) {
-		this.stage = stage;
-	}
-
-	/**
 	 * Displays an alert when called
 	 * @param type Alert type
 	 * @param title Title of alert
@@ -520,5 +521,44 @@ public class Controller implements Initializable {
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		alert.showAndWait();
+	}
+
+	private void searchRouteId() {
+	}
+
+	private boolean displayDistance() {
+		return false;
+	}
+
+	private boolean displaySpeed() {
+		return false;
+	}
+
+	private boolean displayRoute() {
+		return false;
+	}
+
+	private boolean displayStop() {
+		return false;
+	}
+
+	private boolean displayTrip() {
+		return false;
+	}
+
+	private void plotCord() {
+
+	}
+
+	private void plotLocation() {
+
+	}
+
+	private void showLegend(){
+
+	}
+
+	private void filterRoutes(){
+
 	}
 }
