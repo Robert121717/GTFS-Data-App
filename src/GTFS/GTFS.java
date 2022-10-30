@@ -46,7 +46,7 @@ public class GTFS {
 		tripsSet = new HashMap<>();
 	}
 
-	protected void updateText(String text) {
+	protected void updateText(String file, String text) {
 
 	}
 

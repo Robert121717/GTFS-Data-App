@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -13,20 +12,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Translate;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -40,9 +31,13 @@ public class Controller implements Initializable {
 
 	@FXML
 	private HBox mainHBox;
-	private final VBox updateMenu = new VBox(10);
-	private TranslateTransition updateTranslate;
-	private ScaleTransition updateScale;
+	@FXML
+	private HBox updateHBox;
+	private boolean searchSelected;
+	@FXML
+	private Menu searchMenu;
+	private final Menu updateOptions = new Menu("File Type");
+	private String fileToUpdate;
 
 	private final VBox exportMenu = new VBox();
 	private TranslateTransition exportTranslate;
@@ -50,7 +45,6 @@ public class Controller implements Initializable {
 	private final long translateDuration = 400;
 	@FXML
 	private VBox dropImportVBox;
-	private TextArea input;
 	@FXML
 	private TextArea textDisplay;
 	@FXML
@@ -70,120 +64,32 @@ public class Controller implements Initializable {
 	 * Initializes the components in the UI when an object of this class is created.
 	 */
 	public void initialize(URL url, ResourceBundle rb) {
+		searchSelected = true;
+
 		leftRecent.setVisible(false);
 		rightRecent.setVisible(false);
 
 		recentUploadLabel.setVisible(false);
 		searchTF.setDisable(true);
 
-		initializeUpdateMenu();
 		initExportOptions();
 		initializeExportMenu();
-
 		initializeDropBox();
-	}
-
-	@FXML
-	private void updatePopup() {
-		if (mainHBox.getChildren().contains(updateMenu)) {
-			closePopup(updateTranslate, updateMenu);
-			return;
-		}
-		long delay = 0;
-		if (mainHBox.getChildren().contains(exportMenu)) {
-			closePopup(exportTranslate, exportMenu);
-			delay = translateDuration;
-		}
-		Timer myTimer = new Timer();
-		myTimer.schedule(new TimerTask(){
-			@Override
-			public void run() {
-				Platform.runLater(() -> {
-					updateMenu.setTranslateX(0);
-					mainHBox.getChildren().add(updateMenu);
-					updateScale.setRate(1);
-					updateScale.setCycleCount(1);
-					updateScale.play();
-				});
-			}
-		}, delay);
-	}
-
-	private void initializeUpdateMenu() {
-		final int height = 150;
-		final int width = 285;
-
-		//TODO add button for choosing file type
-
-		updateMenu.setId("update-menu");
-		updateMenu.setMinWidth(width); updateMenu.setMinHeight(height);
-		updateMenu.setMaxWidth(width); updateMenu.setMaxHeight(height);
-
-		updateMenu.setAlignment(Pos.TOP_CENTER);
-		updateMenu.setPadding(new Insets(8, 8, 8, 8));
-		addUpdateMenuComponents();
-
-		updateScale = new ScaleTransition(Duration.millis(300), updateMenu);
-		updateScale.setFromX(0); updateScale.setToX(1);
-		updateTranslate = new TranslateTransition(Duration.millis(translateDuration), updateMenu);
-
-		updateTranslate.setFromX(0);
-		updateTranslate.setToX(3 * width);
-	}
-
-	private void addUpdateMenuComponents() {
-		HBox header = new HBox(5);
-		header.setPrefWidth(260); header.setPrefHeight(50);
-		header.setAlignment(Pos.TOP_RIGHT);
-
-		Label inputPrompt = new Label("Enter New Data");
-		inputPrompt.setFont(new Font(14));
-		inputPrompt.setPadding(new Insets(10, 90, 0, 0));
-
-		Button closeButton = new Button("Cancel");
-		closeButton.setId("update-cancel-button");
-		closeButton.setOnAction(e -> closePopup(updateTranslate, updateMenu));
-		header.getChildren().addAll(inputPrompt, closeButton);
-
-		input = new TextArea();
-		input.setPromptText("Enter new data");
-		input.setPadding(new Insets(0, 10, 0, 10));
-
-		Button send = new Button("Update");
-		send.setId("update-send-button");
-		send.setOnAction(e -> {
-			gtfs.updateText(input.getText());	// TODO update files
-			closePopup(updateTranslate, updateMenu);
-			input.clear();
-		});
-		updateMenu.getChildren().addAll(header, input, send);
 	}
 
 	@FXML
 	private void exportPopup() {
 		if (mainHBox.getChildren().contains(exportMenu)) {
-			closePopup(exportTranslate, exportMenu);
+			closePopup();
 			return;
 		}
-		long delay = 0;
-		if (mainHBox.getChildren().contains(updateMenu)) {
-			closePopup(updateTranslate, updateMenu);
-			delay = translateDuration;
+		mainHBox.getChildren().add(exportMenu);
+		exportTranslate.setRate(1);
+		exportTranslate.play();
+
+		for (ToggleButton option : options) {
+			option.setSelected(false);
 		}
-		Timer myTimer = new Timer();
-		myTimer.schedule(new TimerTask(){
-			@Override
-			public void run() {
-				Platform.runLater(() -> {
-					mainHBox.getChildren().add(exportMenu);
-					exportTranslate.setRate(1);
-					exportTranslate.play();
-					for (ToggleButton option : options) {
-						option.setSelected(false);
-					}
-				});
-			}
-		}, delay);
 	}
 
 	private void initializeExportMenu() {
@@ -214,7 +120,7 @@ public class Controller implements Initializable {
 		header.setId("export-header");
 
 		header.setOnMouseClicked(e -> {
-			closePopup(exportTranslate, exportMenu);
+			closePopup();
 			for (ToggleButton option : options) {
 				option.setSelected(false);
 			}
@@ -241,7 +147,7 @@ public class Controller implements Initializable {
 		export.setFont(new Font(16));
 		send.setOnMouseClicked(e -> {
 			initializeFileExport();
-			closePopup(exportTranslate, exportMenu);
+			closePopup();
 
 			for (ToggleButton option : options) {
 				option.setSelected(false);
@@ -265,16 +171,15 @@ public class Controller implements Initializable {
 		}
 	}
 
-	private void closePopup(TranslateTransition translate, VBox node) {
-		int rate = node == updateMenu ? 1 : -1;
-		translate.setRate(rate);
-		translate.play();
+	private void closePopup() {
+		exportTranslate.setRate(-1);
+		exportTranslate.play();
 
 		Timer myTimer = new Timer();
 		myTimer.schedule(new TimerTask(){
 			@Override
 			public void run() {
-				Platform.runLater(() -> mainHBox.getChildren().remove(node));
+				Platform.runLater(() -> mainHBox.getChildren().remove(exportMenu));
 			}
 		}, translateDuration);
 	}
@@ -336,13 +241,57 @@ public class Controller implements Initializable {
 	}
 
 	@FXML
-	private void search() {
-		if(searchTF.getText().trim().equals("")) {
-			textDisplay.setText("");
-		} else {
-			searchStopId();
+	private void updateSelected() {
+		// TODO index out of bounds thrown somewhere in here when update is selected after already being selected
+		if (updateHBox.getChildren().size() > 1) {
+			updateHBox.getChildren().remove(1);
 		}
-		searchTF.setText("");
+		MenuBar optionsMenuBar = new MenuBar();
+		updateOptions.getItems().clear();
+		optionsMenuBar.getMenus().add(updateOptions);
+
+		List<MenuItem> menuItems = new ArrayList<>();
+		menuItems.add(new MenuItem("Routes"));
+		menuItems.add(new MenuItem("Trips"));
+		menuItems.add(new MenuItem("Stops"));
+		menuItems.add(new MenuItem("Stop Times"));
+
+		for (MenuItem item : menuItems) {
+			updateOptions.getItems().add(item);
+			item.setOnAction(e -> updateOptions.setText(item.getText()));
+		}
+
+		updateHBox.getChildren().add(optionsMenuBar);
+		searchSelected = false;
+		searchTF.setPromptText("Enter new data");
+		searchMenu.setText("Update");
+	}
+
+	@FXML
+	private void searchSelected() {
+		if (updateHBox.getChildren().size() > 1) {
+			updateHBox.getChildren().remove(1);
+		}
+		searchSelected = true;
+		searchTF.setPromptText("Search by Stop ID");
+		searchMenu.setText("...");
+	}
+
+	@FXML
+	private void search() {
+		if (searchTF.getText().trim().equals("")) {
+			textDisplay.clear();
+			return;
+		}
+		if (searchSelected) {
+			searchStopId();
+		} else {
+			if (searchMenu.getText().equals("File Type")) {
+				return;
+			}
+			gtfs.updateText(searchMenu.getText(), searchTF.getText());
+		}
+		searchTF.clear();
 	}
 
 	/**
