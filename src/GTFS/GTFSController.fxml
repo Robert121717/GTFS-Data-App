@@ -98,7 +98,7 @@
             <Insets />
          </VBox.margin>
       </HBox>
-      <HBox id="main-hbox" fx:id="mainHBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="392.0" prefWidth="815.0">
+      <HBox id="main-hbox" fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="392.0" prefWidth="815.0">
          <children>
             <VBox prefHeight="450.0" prefWidth="290.0">
                <children>
