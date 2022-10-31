@@ -1,0 +1,149 @@
+
+#header-hbox {
+    -fx-background-color: #cdcdcd;
+}
+
+.separator {
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-border-width: 1px;
+    -fx-border-color: rgba(0, 0, 0, 0.6);
+    -fx-border-color: rgba(130, 130, 130, 0.6);
+}
+
+.line {
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+}
+
+#import, #export {
+    -fx-background-color: transparent;
+}
+
+#import:hover, #export:hover {
+    -fx-background-color: rgba(175, 175, 175, 0.9);
+    -fx-font-size: 18.5;
+}
+
+#import:hover {
+    -fx-background-radius: 5 0 0 5;
+}
+
+#export:hover {
+    -fx-background-radius: 0 5 5 0;
+}
+
+#search-hbox, #main-hbox {
+    -fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #f2f2f2, #F4F4F4);
+}
+
+#text-display {
+    -fx-background-color: transparent;
+}
+
+#text-display .content {
+    -fx-cursor: DEFAULT;
+}
+
+#text-display .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+#text-display .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+
+#text-display .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+#text-display .scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10px;
+}
+
+.scroll-pane .decrement-button .decrement-arrow, .scroll-pane . increment-button .increment-arrow {
+    -fx-background-color: transparent;
+}
+
+#left-recent, #right-recent {
+    -fx-text-fill: #5e5e5e;
+}
+
+#left-recent:hover, #right-recent:hover {
+    -fx-text-fill: #1e1e1e;
+}
+
+
+#drop-border-pane {
+    -fx-border-width: 3;
+    -fx-border-color: #9e9e9e;
+    -fx-border-style: segments(10, 10, 10, 10);
+}
+
+#export-menu {
+    -fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);
+    -fx-effect: dropshadow(gaussian, #a1a1a1, 15, 0.05, 0, 0);
+    -fx-background-radius: 8 0 0 8;
+
+    -fx-border-color: rgba(130, 130, 130, 0.6);
+    -fx-border-radius: 8 0 0 8;
+}
+
+.toggle-button {
+    -fx-border-radius: 5 5 5 5;
+    -fx-background-radius: 5 5 5 5;
+    -fx-background-color: transparent;
+    -fx-font-size: 13;
+}
+
+.toggle-button:hover {
+    -fx-background-color: rgba(215, 215, 215, 0.85);
+}
+
+.toggle-button:selected {
+    -fx-background-color: rgba(215, 215, 215, 0.85);
+    -fx-border-color: rgba(175, 175, 175, 0.9);
+}
+
+#export-header {
+    -fx-background-radius: 8 0 0 0;
+    -fx-background-color: #cdcdcd;
+}
+
+#export-send-vbox {
+    -fx-background-radius: 0 0 0 8;
+    -fx-background-color: #cdcdcd;
+}
+
+#export-header:hover, #export-send-vbox:hover {
+    -fx-background-color: rgba(175, 175, 175, 0.9);
+}
+
+.menu-bar {
+    -fx-background-color: rgba(205, 205, 205, 0.85);
+    -fx-background-radius: 3 3 3 3;
+}
+
+.menu:hover, .menu:showing, .menu-item:hover {
+    -fx-background-color: rgba(175, 175, 175, 0.9);
+    -fx-background-radius: 3 3 3 3;
+}
+
+.menu:hover .label, .menu:showing .label {
+    -fx-text-fill: black;
+}
+
+.menu .context-menu {
+    -fx-background-radius: 4 4 4 4;
+}
+
+.menu-item:focused {
+    -fx-background-color: rgba(175, 175, 175, 0.9);
+    -fx-border-radius: 4 4 4 4;
+}
