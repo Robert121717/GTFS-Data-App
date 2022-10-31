@@ -1,6 +1,6 @@
+
 #header-hbox {
     -fx-background-color: #cdcdcd;
-    /* -fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 30% , #c4c2c2, #cdcdcd); */
 }
 
 .separator {
@@ -16,19 +16,21 @@
     -fx-border-insets: 0;
 }
 
-/*
-#header-line {
-    -fx-border-color: rgba(130, 130, 130, 0.6);
-}
-*/
-
-#import, #export, #update {
+#import, #export {
     -fx-background-color: transparent;
 }
 
-#import:hover, #export:hover, #update:hover {
+#import:hover, #export:hover {
     -fx-background-color: rgba(175, 175, 175, 0.9);
-    -fx-font-size: 19;
+    -fx-font-size: 18.5;
+}
+
+#import:hover {
+    -fx-background-radius: 5 0 0 5;
+}
+
+#export:hover {
+    -fx-background-radius: 0 5 5 0;
 }
 
 #search-hbox, #main-hbox {
@@ -69,21 +71,14 @@
     -fx-background-color: transparent;
 }
 
+#left-recent, #right-recent {
+    -fx-text-fill: #5e5e5e;
+}
+
 #left-recent:hover, #right-recent:hover {
-    -fx-font-size: 27;
+    -fx-text-fill: #1e1e1e;
 }
 
-#update-send-button {
-    -fx-background-color: rgb(225, 225, 225);
-}
-
-#update-cancel-button {
-    -fx-background-color: transparent;
-}
-
-#update-send-button:hover, #update-cancel-button:hover {
-    -fx-background-color: rgba(215, 215, 215, 0.85);
-}
 
 #drop-border-pane {
     -fx-border-width: 3;
@@ -91,21 +86,18 @@
     -fx-border-style: segments(10, 10, 10, 10);
 }
 
-#update-menu, #export-menu {
-    -fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);
-    -fx-effect: dropshadow(gaussian, #7a7a7a, 15, 0.05, 0, 0);
-}
-
-#update-menu {
-    -fx-background-radius: 8 8 8 8;
-}
-
 #export-menu {
+    -fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);
+    -fx-effect: dropshadow(gaussian, #a1a1a1, 15, 0.05, 0, 0);
     -fx-background-radius: 8 0 0 8;
+
+    -fx-border-color: rgba(130, 130, 130, 0.6);
+    -fx-border-radius: 8 0 0 8;
 }
 
 .toggle-button {
     -fx-border-radius: 5 5 5 5;
+    -fx-background-radius: 5 5 5 5;
     -fx-background-color: transparent;
     -fx-font-size: 13;
 }
@@ -133,6 +125,25 @@
     -fx-background-color: rgba(175, 175, 175, 0.9);
 }
 
-#menu-bar {
+.menu-bar {
+    -fx-background-color: rgba(205, 205, 205, 0.85);
+    -fx-background-radius: 3 3 3 3;
+}
 
+.menu:hover, .menu:showing, .menu-item:hover {
+    -fx-background-color: rgba(175, 175, 175, 0.9);
+    -fx-background-radius: 3 3 3 3;
+}
+
+.menu:hover .label, .menu:showing .label {
+    -fx-text-fill: black;
+}
+
+.menu .context-menu {
+    -fx-background-radius: 4 4 4 4;
+}
+
+.menu-item:focused {
+    -fx-background-color: rgba(175, 175, 175, 0.9);
+    -fx-border-radius: 4 4 4 4;
 }

@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
 import java.util.Objects;
 
 /**
@@ -36,9 +35,6 @@ public class Driver extends Application {
             System.out.println("Please download the stage icon image for it to be displayed.");
         }
         stage.setScene(scene);
-
-//        Controller controller = loader.getController();
-//        controller.setStage(stage);
 
         stage.setTitle("GTFS Application");
         stage.setResizable(false);

@@ -6,6 +6,8 @@ import java.util.*;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -28,17 +30,20 @@ import javafx.util.Duration;
 public class Controller implements Initializable {
 	private final GTFS gtfs;
 	private final List<String> recentUploadList = new ArrayList<>();
-
 	@FXML
 	private HBox mainHBox;
 	@FXML
 	private HBox updateHBox;
-	private boolean searchSelected;
+	private boolean searchSelected = true;
+	@FXML
+	private MenuBar searchMenuBar;
 	@FXML
 	private Menu searchMenu;
 	private final Menu updateOptions = new Menu("File Type");
-	private String fileToUpdate;
 
+	@FXML
+	private Button exportButton;
+	private Tooltip exportHint;
 	private final VBox exportMenu = new VBox();
 	private TranslateTransition exportTranslate;
 	private List<ToggleButton> options;
@@ -64,7 +69,11 @@ public class Controller implements Initializable {
 	 * Initializes the components in the UI when an object of this class is created.
 	 */
 	public void initialize(URL url, ResourceBundle rb) {
-		searchSelected = true;
+		exportHint = new Tooltip("Please import a file before exporting");
+		exportHint.setShowDelay(Duration.millis(200));
+		exportHint.setHideDelay(Duration.ZERO);
+
+		exportButton.setTooltip(exportHint);
 
 		leftRecent.setVisible(false);
 		rightRecent.setVisible(false);
@@ -78,7 +87,7 @@ public class Controller implements Initializable {
 	}
 
 	@FXML
-	private void exportPopup() {
+	private void exportPopup(ActionEvent e) {
 		if (mainHBox.getChildren().contains(exportMenu)) {
 			closePopup();
 			return;
@@ -109,7 +118,7 @@ public class Controller implements Initializable {
 		exportTranslate = new TranslateTransition(Duration.millis(translateDuration), exportMenu);
 
 		exportTranslate.setFromX(translateX);
-		exportTranslate.setToX(200);
+		exportTranslate.setToX(130);
 	}
 
 	private void addExportMenuComponents() {
@@ -201,7 +210,7 @@ public class Controller implements Initializable {
 				gtfs.importFile(file);
 				recentUploadList.addAll(List.of(gtfs.getNewestImports().split("\\n")));
 			}
-			searchTF.setDisable(false);
+			allowFileInteraction();
 			showRecentUploadList();
 		}
 	}
@@ -240,31 +249,40 @@ public class Controller implements Initializable {
 		recentUploadLabel.setText(nextUpload);
 	}
 
+	private void allowFileInteraction() {
+		searchTF.setDisable(false);
+		searchTF.setPromptText("Search by Stop ID");
+		searchMenuBar.setDisable(false);
+
+		exportButton.setOnAction(this::exportPopup);
+		Tooltip.uninstall(exportButton, exportHint);
+	}
+
 	@FXML
 	private void updateSelected() {
-		// TODO index out of bounds thrown somewhere in here when update is selected after already being selected
-		if (updateHBox.getChildren().size() > 1) {
-			updateHBox.getChildren().remove(1);
-		}
 		MenuBar optionsMenuBar = new MenuBar();
-		updateOptions.getItems().clear();
+		updateHBox.getChildren().add(optionsMenuBar);
+
+		if (updateOptions.getItems().size() == 0) {
+			List<MenuItem> menuItems = new ArrayList<>();
+			menuItems.add(new MenuItem("Routes"));
+			menuItems.add(new MenuItem("Trips"));
+			menuItems.add(new MenuItem("Stops"));
+			menuItems.add(new MenuItem("Stop Times"));
+
+			for (MenuItem item : menuItems) {
+				updateOptions.getItems().add(item);
+				item.setOnAction(e -> updateOptions.setText(item.getText()));
+			}
+		}
 		optionsMenuBar.getMenus().add(updateOptions);
 
-		List<MenuItem> menuItems = new ArrayList<>();
-		menuItems.add(new MenuItem("Routes"));
-		menuItems.add(new MenuItem("Trips"));
-		menuItems.add(new MenuItem("Stops"));
-		menuItems.add(new MenuItem("Stop Times"));
-
-		for (MenuItem item : menuItems) {
-			updateOptions.getItems().add(item);
-			item.setOnAction(e -> updateOptions.setText(item.getText()));
-		}
-
-		updateHBox.getChildren().add(optionsMenuBar);
-		searchSelected = false;
 		searchTF.setPromptText("Enter new data");
 		searchMenu.setText("Update");
+
+		searchSelected = false;
+		searchMenu.getItems().get(0).setDisable(false);
+		searchMenu.getItems().get(1).setDisable(true);
 	}
 
 	@FXML
@@ -272,9 +290,12 @@ public class Controller implements Initializable {
 		if (updateHBox.getChildren().size() > 1) {
 			updateHBox.getChildren().remove(1);
 		}
-		searchSelected = true;
 		searchTF.setPromptText("Search by Stop ID");
 		searchMenu.setText("...");
+
+		searchSelected = true;
+		searchMenu.getItems().get(0).setDisable(true);
+		searchMenu.getItems().get(1).setDisable(false);
 	}
 
 	@FXML
@@ -448,7 +469,7 @@ public class Controller implements Initializable {
 					}
 				}
 				if (imported) {
-					searchTF.setDisable(false);
+					allowFileInteraction();
 					recentUploadLabel.setVisible(true);
 					showRecentUploadList();
 				}
