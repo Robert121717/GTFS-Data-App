@@ -88,7 +88,7 @@
 
 #export-menu {
     -fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);
-    -fx-effect: dropshadow(gaussian, #a1a1a1, 15, 0.05, 0, 0);
+    -fx-effect: dropshadow(gaussian, #b1b1b1, 13, 0.05, 0, 0);
     -fx-background-radius: 8 0 0 8;
 
     -fx-border-color: rgba(130, 130, 130, 0.6);

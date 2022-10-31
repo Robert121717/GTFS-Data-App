@@ -207,7 +207,7 @@ public class Controller implements Initializable {
 		if (files != null) {
 			for (File file : files) {
 				gtfs.importFile(file);
-				recentUploadList.addAll(List.of(gtfs.getNewestImports().split("\\n")));
+				addToRecentUploadList();
 			}
 			allowFileInteraction();
 			showRecentUploadList();
@@ -463,7 +463,7 @@ public class Controller implements Initializable {
 				for (File file : dropBox.getFiles()) {
 					if (file.getName().endsWith(".txt")) {
 						gtfs.importFile(file);
-						recentUploadList.addAll(List.of(gtfs.getNewestImports().split("\\n")));
+						addToRecentUploadList();
 						imported = true;
 					}
 				}
@@ -475,6 +475,17 @@ public class Controller implements Initializable {
 			}
 			e.consume();
 		});
+	}
+
+	private void addToRecentUploadList() {
+		String newestImports = gtfs.getNewestImports();
+		List<String> filesNames = List.of(newestImports.split("\\n"));
+
+		for (String fileName : filesNames) {
+			if (!fileName.equals("")) {
+				recentUploadList.add(fileName);
+			}
+		}
 	}
 
 	/**

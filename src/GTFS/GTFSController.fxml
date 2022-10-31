@@ -65,7 +65,7 @@
                   </MenuBar>
                </children>
                <HBox.margin>
-                  <Insets top="15.0" />
+                  <Insets top="18.0" />
                </HBox.margin>
             </HBox>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="238.0" spacing="8.0">
