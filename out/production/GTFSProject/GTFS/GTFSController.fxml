@@ -3,6 +3,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -12,7 +15,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="rootVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="509.0" prefWidth="884.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GTFS.Controller">
+<VBox fx:id="rootVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="509.0" prefWidth="813.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GTFS.Controller">
    <children>
       <HBox id="header-hbox" alignment="CENTER" maxHeight="-Infinity" prefHeight="60.0" prefWidth="871.0">
          <children>
@@ -21,7 +24,7 @@
                   <Font size="27.0" />
                </font>
                <HBox.margin>
-                  <Insets left="10.0" right="270.0" top="5.0" />
+                  <Insets left="10.0" right="345.0" top="5.0" />
                </HBox.margin>
             </Label>
             <Button id="import" fx:id="importFiles" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importFiles" prefHeight="40.0" prefWidth="125.0" text="Import File">
@@ -30,16 +33,7 @@
                </font>
             </Button>
             <Line endX="-100.0" endY="67.29290008674492" startX="-100.0" startY="28.100461959838864" />
-            <Button id="export" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exportPopup" prefHeight="40.0" prefWidth="125.0" text="Export File">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Button>
-            <Line endX="-100.0" endY="67.29290008674492" layoutX="722.0" layoutY="-4.0" startX="-100.0" startY="28.100461959838864" />
-            <Button id="update" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#updatePopup" prefHeight="40.0" prefWidth="125.0" text="Update File">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
+            <Button id="export" fx:id="exportButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="125.0" text="Export File">
                <font>
                   <Font size="18.0" />
                </font>
@@ -49,21 +43,42 @@
       <Separator id="header-line" prefWidth="200.0" />
       <HBox id="search-hbox" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" prefWidth="871.0">
          <children>
-            <TextField fx:id="searchTF" onAction="#search" prefHeight="30.0" prefWidth="286.0" promptText="Search by Stop ID">
+            <TextField fx:id="searchTF" onAction="#search" prefHeight="30.0" prefWidth="286.0" promptText="Import data to search">
                <HBox.margin>
-                  <Insets left="30.0" top="15.0" />
+                  <Insets left="30.0" right="15.0" top="15.0" />
                </HBox.margin>
             </TextField>
-            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="238.0">
+            <HBox fx:id="updateHBox" prefHeight="35.0" prefWidth="246.0" spacing="12.0">
+               <children>
+                  <MenuBar fx:id="searchMenuBar" disable="true">
+                    <menus>
+                      <Menu fx:id="searchMenu" mnemonicParsing="false" text="...">
+                        <items>
+                          <MenuItem mnemonicParsing="false" onAction="#searchSelected" text="SearchStop" />
+                           <MenuItem mnemonicParsing="false" onAction="#searchRouteSelected" text="SearchRoute" />
+                           <MenuItem mnemonicParsing="false" onAction="#updateSelected" text="Update" />
+                        </items>
+                      </Menu>
+                    </menus>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </MenuBar>
+               </children>
+               <HBox.margin>
+                  <Insets top="18.0" />
+               </HBox.margin>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="238.0" spacing="8.0">
                <children>
                   <Label id="left-recent" fx:id="leftRecent" onMouseClicked="#prevRecentUpload" text="&lt;">
                      <font>
-                        <Font size="22.0" />
+                        <Font size="25.0" />
                      </font>
                   </Label>
-                  <Label fx:id="recentUploadLabel" alignment="CENTER" contentDisplay="RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="165.0" text="Recent Uploads" textAlignment="CENTER">
+                  <Label fx:id="recentUploadLabel" alignment="CENTER" contentDisplay="RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="149.0" text="Recent Uploads" textAlignment="CENTER">
                      <HBox.margin>
-                        <Insets />
+                        <Insets top="3.0" />
                      </HBox.margin>
                      <font>
                         <Font size="16.0" />
@@ -71,17 +86,20 @@
                   </Label>
                   <Label id="right-recent" fx:id="rightRecent" onMouseClicked="#nextRecentUpload" text="&gt;">
                      <font>
-                        <Font size="22.0" />
+                        <Font size="25.0" />
                      </font>
                   </Label>
                </children>
                <HBox.margin>
-                  <Insets left="300.0" />
+                  <Insets />
                </HBox.margin>
             </HBox>
          </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
       </HBox>
-      <HBox id="main-hbox" fx:id="mainHBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="392.0" prefWidth="885.0">
+      <HBox id="main-hbox" fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="392.0" prefWidth="815.0">
          <children>
             <VBox prefHeight="450.0" prefWidth="290.0">
                <children>

@@ -54,8 +54,9 @@
                     <menus>
                       <Menu fx:id="searchMenu" mnemonicParsing="false" text="...">
                         <items>
-                          <MenuItem mnemonicParsing="false" onAction="#searchSelected" text="Search" />
-                              <MenuItem mnemonicParsing="false" onAction="#updateSelected" text="Update" />
+                          <MenuItem mnemonicParsing="false" onAction="#searchSelected" text="SearchStop" />
+                           <MenuItem mnemonicParsing="false" onAction="#searchRouteSelected" text="SearchRoute" />
+                           <MenuItem mnemonicParsing="false" onAction="#updateSelected" text="Update" />
                         </items>
                       </Menu>
                     </menus>

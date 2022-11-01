@@ -34,6 +34,7 @@ public class Controller implements Initializable {
 	@FXML
 	private HBox updateHBox;
 	private boolean searchSelected = true;
+	private boolean searchRouteSelected = false;
 	@FXML
 	private MenuBar searchMenuBar;
 	@FXML
@@ -280,21 +281,44 @@ public class Controller implements Initializable {
 		searchMenu.setText("Update");
 
 		searchSelected = false;
+		searchRouteSelected = false;
+
 		searchMenu.getItems().get(0).setDisable(false);
-		searchMenu.getItems().get(1).setDisable(true);
+		searchMenu.getItems().get(1).setDisable(false);
+
+		searchMenu.getItems().get(2).setDisable(true);
 	}
+
 
 	@FXML
 	private void searchSelected() {
 		if (updateHBox.getChildren().size() > 1) {
 			updateHBox.getChildren().remove(1);
+
 		}
 		searchTF.setPromptText("Search by Stop ID");
 		searchMenu.setText("...");
 
 		searchSelected = true;
+		searchRouteSelected = false;
 		searchMenu.getItems().get(0).setDisable(true);
 		searchMenu.getItems().get(1).setDisable(false);
+		searchMenu.getItems().get(2).setDisable(false);
+
+	}
+	@FXML
+	public void searchRouteSelected() {
+		if (updateHBox.getChildren().size() > 1) {
+			updateHBox.getChildren().remove(1);
+		}
+		searchTF.setPromptText("Search by Route ID");
+		searchMenu.setText("...");
+
+		searchSelected = false;
+		searchRouteSelected = true;
+		searchMenu.getItems().get(1).setDisable(true);
+		searchMenu.getItems().get(0).setDisable(false);
+		searchMenu.getItems().get(2).setDisable(false);
 	}
 
 	@FXML
@@ -305,7 +329,10 @@ public class Controller implements Initializable {
 		}
 		if (searchSelected) {
 			searchStopId();
-		} else {
+		} else if(searchRouteSelected) {
+			searchRouteId();
+		}
+		else {
 			if (searchMenu.getText().equals("File Type")) {
 				return;
 			}
