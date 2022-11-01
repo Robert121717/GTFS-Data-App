@@ -29,6 +29,7 @@ public class GTFS {
 	private final HashMap<BigInteger, StopTime> stopTimesSet;
 	private final HashMap<BigInteger, Trip> tripsSet;
 	private String lastAdded;
+	private String badData;
 	private final StringBuilder stringBuilder = new StringBuilder();
 
 	/**
@@ -58,6 +59,7 @@ public class GTFS {
 	 */
 	protected void importFile(File file) {
 		lastAdded = "";
+		badData = "";
 		try (Scanner in = new Scanner(file)) {
 			String fileName = file.getName();
 			String header = in.nextLine();
@@ -126,10 +128,10 @@ public class GTFS {
 				if(!incorrectRouteData.isEmpty()) {
 					stringBuilder.append("\n\n");
 					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
-					stringBuilder.append("\n");
+					stringBuilder.append("\n\n");
 					for (String badData : incorrectRouteData) {
 						stringBuilder.append(badData);
-						stringBuilder.append("\n");
+						stringBuilder.append("\n\n");
 					}
 				}
 
@@ -137,6 +139,7 @@ public class GTFS {
 			}
 		}
 		if(routes.size() != priorListSize){
+			badData += stringBuilder.toString();
 			lastAdded += filename + "\n";
 			lastAdded += stringBuilder.toString();
 		}
@@ -174,10 +177,10 @@ public class GTFS {
 				if(!incorrectStopData.isEmpty()) {
 					stringBuilder.append("\n\n");
 					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
-					stringBuilder.append("\n");
+					stringBuilder.append("\n\n");
 					for (String badData : incorrectStopData) {
 						stringBuilder.append(badData);
-						stringBuilder.append("\n");
+						stringBuilder.append("\n\n");
 					}
 				}
 
@@ -185,6 +188,7 @@ public class GTFS {
 			}
 		}
 		if(stops.size() != priorListSize){
+			badData += stringBuilder.toString();
 			lastAdded += filename + "\n";
 			lastAdded += stringBuilder.toString();
 		}
@@ -228,10 +232,10 @@ public class GTFS {
 				if(!incorrectStopTimeData.isEmpty()) {
 					stringBuilder.append("\n\n");
 					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
-					stringBuilder.append("\n");
+					stringBuilder.append("\n\n");
 					for (String badData : incorrectStopTimeData) {
 						stringBuilder.append(badData);
-						stringBuilder.append("\n");
+						stringBuilder.append("\n\n");
 					}
 				}
 
@@ -239,6 +243,7 @@ public class GTFS {
 			}
 		}
 		if(stopTimes.size() != priorListSize){
+			badData += stringBuilder.toString();
 			lastAdded += filename + "\n";
 			lastAdded += stringBuilder.toString();
 		}
@@ -278,10 +283,10 @@ public class GTFS {
 				if(!incorrectTripData.isEmpty()) {
 					stringBuilder.append("\n\n");
 					stringBuilder.append("Bad Data Lines: DID NOT IMPORT");
-					stringBuilder.append("\n");
+					stringBuilder.append("\n\n");
 					for (String badData : incorrectTripData) {
 						stringBuilder.append(badData);
-						stringBuilder.append("\n");
+						stringBuilder.append("\n\n");
 					}
 				}
 
@@ -289,6 +294,7 @@ public class GTFS {
 			}
 		}
 		if(trips.size() != priorListSize){
+			badData += stringBuilder.toString();
 			lastAdded += filename + "\n";
 			lastAdded += stringBuilder.toString();
 		}
@@ -654,6 +660,9 @@ public class GTFS {
 
 	protected String getNewestImports() {
 		return lastAdded;
+	}
+	protected String getBadData() {
+		return badData;
 	}
 	public boolean hasTrip() {
 		return !trips.isEmpty();

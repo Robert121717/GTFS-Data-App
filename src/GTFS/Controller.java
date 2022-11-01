@@ -548,6 +548,8 @@ public class Controller implements Initializable {
 
 	private void addToRecentUploadList() {
 		String newestImports = gtfs.getNewestImports();
+		String badData = gtfs.getBadData();
+		textDisplay.setText(badData);
 		List<String> filesNames = List.of(newestImports.split("\\n"));
 
 		for (String fileName : filesNames) {
