@@ -481,7 +481,7 @@ public class GTFS {
 		return sb.toString();
 	}
 
-	protected ArrayList<Object[]> getNextTrips(String stopId) {
+	protected ArrayList<Object[]> getNextTrips(String id, boolean isStop) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		String time = dateFormat.format(Calendar.getInstance().getTime());
 
@@ -491,21 +491,43 @@ public class GTFS {
 		int seconds = Integer.parseInt(currentTimeStamp[2]);
 
 		int currentTime = (hour * 3600) + (minute * 60) + seconds;
-		ArrayList<Object[]> trips = new ArrayList<>();
+		ArrayList<Object[]> tripsWithId = new ArrayList<>();
+		if(isStop) {
+			for (StopTime stop : stopTimes) {
+				if (stop.getStopId().equals(id)) {
+					String[] timeStamp = stop.getArrivalTime().split(":");
+					int numSeconds = toSeconds(timeStamp);
 
-		for (StopTime stop : stopTimes) {
-			if (stop.getStopId().equals(stopId)) {
-				String[] timeStamp = stop.getArrivalTime().split(":");
-				int numSeconds = toSeconds(timeStamp);
+					int timeDifference = numSeconds - currentTime;
+					if (timeDifference > 0) {
 
-				int timeDifference = numSeconds - currentTime;
-				if (timeDifference > 0) {
-					sortNewStop(trips, stop, timeDifference);
+						sortNewStop(tripsWithId, stop, timeDifference);
+					}
+				}
+			}
+		} else {
+			for(Trip trip: trips) {
+				if(trip.getRouteId().equals(id)) {
+					for(StopTime stop: stopTimes) {
+						if(stop.getTripId().equals(trip.getTripId())) {
+							String[] timeStamp = stop.getArrivalTime().split(":");
+							int numSeconds = toSeconds(timeStamp);
+							int timeDifference = numSeconds - currentTime;
+							if (timeDifference > 0) {
+								tripsWithId.add(new Object[]{stop, timeDifference});
+							}
+						}
+					}
 				}
 			}
 		}
-		return trips;
+
+		return tripsWithId;
+
 	}
+
+
+
 
 	private void sortNewStop(ArrayList<Object[]> trips, StopTime stop, int timeDifference) {
 		if (trips.size() < 3) {
