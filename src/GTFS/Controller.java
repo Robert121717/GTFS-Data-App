@@ -345,20 +345,27 @@ public class Controller implements Initializable {
 	 * Gets the requested files from the GTFS class and saves the data to a file.
 	 */
 	private void initializeFileExport() {
+		StringBuilder error = new StringBuilder();
+		int appends = 0;
+		int offset = 0;
 		for (ToggleButton option : options) {
 			if (option.isSelected()) {
 				String data = gtfs.exportFile(option.getText());
-
 				if (data.equals("")) {
-					newAlert(Alert.AlertType.ERROR,
-							"Error Dialog",
-							"The requested data could not be found.",
-							"The data trying to be export hasn't yet been imported. " +
-									"If you wish to still export the file, please import a file first");
+					error.append(option.getText()).append(", ");
+					offset = option.getText().length() + 2;
+					appends++;
 				} else {
 					export(data);
 				}
 			}
+		}
+		if (appends > 1) {
+			error.insert(error.length() - offset, "and ");
+		}
+		if(!error.isEmpty()){
+			newAlert(Alert.AlertType.ERROR, "Error Dialog", "The requested data could not be found.",
+					"The data for files, " + error + "did not have data and could not be exported. ");
 		}
 	}
 
