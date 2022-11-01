@@ -326,7 +326,8 @@ public class Controller implements Initializable {
 					newAlert(Alert.AlertType.ERROR,
 							"Error Dialog",
 							"The requested data could not be found.",
-							"Please import the data first.");
+							"The data trying to be export hasn't yet been imported. " +
+									"If you wish to still export the file, please import a file first");
 				} else {
 					export(data);
 				}
@@ -353,7 +354,7 @@ public class Controller implements Initializable {
 
 		} catch (IOException e){
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
-					"A problem with the location of the export was found.");
+					"The file selected for export is invalid. Please select a valid file to export to.");
 		}
 	}
 

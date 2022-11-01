@@ -59,50 +59,34 @@ public class GTFS {
 	protected void importFile(File file) {
 		lastAdded = "";
 		try (Scanner in = new Scanner(file)) {
-
+			String fileName = file.getName();
 			String header = in.nextLine();
 
 			if(verifyRouteHeader(header)) {
-				importRoute(file);
+				importRoute(in.hasNextLine(), in, fileName);
 			} else if(verifyStopHeader(header)) {
-				importStop(file);
+				importStop(in.hasNextLine(), in, fileName);
 			} else if(verifyTripHeader(header)) {
-				importTrip(file);
+				importTrip(in.hasNextLine(), in, fileName);
 			} else if(verifyStopTimeHeader(header)) {
-				importStopTime(file);
+				importStopTime(in.hasNextLine(), in, fileName);
 			} else {
 				throw new IllegalArgumentException();
 			}
 
 		} catch (NumberFormatException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
+			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", "Please reselect the file to be imported");
 
 		} catch (FileNotFoundException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found", e.getMessage());
+			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found",
+					"The file chosen for import could not be found. Please select a different file");
 
 		} catch (IllegalArgumentException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "Invalid Data", e.getMessage());
+			newAlert(AlertType.ERROR, "Error Dialog", "Invalid Data",
+					"The file chosen for import is not a valid importable file. Please select a valid file to import");
 		}
 	}
 
-	/**
-	 * This method puts a new route into the routes arraylist
-	 *
-	 * @param file is the route file being added to arraylist
-	 */
-	protected void importRoute(File file){
-		try (Scanner in = new Scanner(file)) {
-			in.nextLine();
-			importRoute(in.hasNextLine(), in, file.getName());
-
-
-		} catch (NumberFormatException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
-
-		} catch (FileNotFoundException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found", e.getMessage());
-		}
-	}
 
 	private void importRoute(boolean hasLine, Scanner in, String filename){
 		int priorListSize = routes.size();
@@ -160,23 +144,6 @@ public class GTFS {
 		stringBuilder.setLength(0);
 	}
 
-	/**
-	 * This method puts a new stop into the stops arraylist
-	 *
-	 * @param file represent the stop file being added to arraylist
-	 */
-	protected void importStop(File file) throws IllegalArgumentException{
-		try (Scanner in = new Scanner(file)) {
-			in.nextLine();
-			importStop(in.hasNextLine(), in, file.getName());
-
-		} catch (NumberFormatException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
-
-		} catch (FileNotFoundException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found", e.getMessage());
-		}
-	}
 
 	private void importStop(boolean hasLine, Scanner in, String filename){
 		int priorListSize = stops.size();
@@ -225,23 +192,6 @@ public class GTFS {
 		stringBuilder.setLength(0);
 	}
 
-	/**
-	 * This method puts a new StopTime into the StopTimes ArrayList
-	 *
-	 * @param file represents the StopTime file being added to ArrayList
-	 */
-	protected void importStopTime(File file){
-		try (Scanner in = new Scanner(file)) {
-			in.nextLine();
-			importStopTime(in.hasNextLine(), in, file.getName());
-
-		} catch (NumberFormatException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
-
-		} catch (FileNotFoundException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found", e.getMessage());
-		}
-	}
 
 	private void importStopTime(boolean hasLine, Scanner in, String filename){
 		int priorListSize = stopTimes.size();
@@ -293,24 +243,6 @@ public class GTFS {
 			lastAdded += stringBuilder.toString();
 		}
 		stringBuilder.setLength(0);
-	}
-
-	/**
-	 * This method puts a new trip into the trips ArrayList
-	 *
-	 * @param file represents the trip file being added to ArrayList
-	 */
-	protected void importTrip(File file){
-		try (Scanner in = new Scanner(file)) {
-			in.nextLine();
-			importTrip(in.hasNextLine(), in, file.getName());
-
-		} catch (NumberFormatException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value", e.getMessage());
-
-		} catch (FileNotFoundException e) {
-			newAlert(AlertType.ERROR, "Error Dialog", "File Not Found", e.getMessage());
-		}
 	}
 
 	private void importTrip(boolean hasLine, Scanner in, String filename){
