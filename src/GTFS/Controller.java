@@ -364,8 +364,12 @@ public class Controller implements Initializable {
 			error.insert(error.length() - offset, "and ");
 		}
 		if(!error.isEmpty()){
-			newAlert(Alert.AlertType.ERROR, "Error Dialog", "The requested data could not be found.",
-					"The data for files, " + error + "did not have data and could not be exported. ");
+			String errorStr = error.toString();
+			int lastComma = errorStr.lastIndexOf(",");
+			errorStr = errorStr.substring(0, lastComma) + errorStr.substring(lastComma + 1);
+
+			newAlert(Alert.AlertType.ERROR, "Error Dialog", "Some requested data could not be found.",
+					"The files " + errorStr + "did not have data and could not be exported. ");
 		}
 	}
 
