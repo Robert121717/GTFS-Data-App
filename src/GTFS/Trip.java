@@ -1,5 +1,5 @@
-/**
- * <one line to give the program's name and a brief idea of what it does.>
+/*
+ * GTFS, program to import, export, and search information on bus transit data
  *     Copyright (C) 2022  nairac, atkinsonr, morrowc, schmidtrj
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -105,11 +105,20 @@ public class Trip {
 		return hashId;
 	}
 
+	/**
+	 * method to convert the data stored into a string
+	 * @return string of all data in the class
+	 */
 	public String toString(){
 		return "" + routeId + "," + serviceId + "," + tripId + "," + headSign +
 				"," + directionId + "," + blockId + "," + shapeId;
 	}
 
+	/**
+	 * method to check if passed in class is the same as this class
+	 * @param other class to be compared to current class
+	 * @return if classes are similar or not
+	 */
 	@Override
 	public boolean equals(Object other){
 		Trip temp = (Trip) other;
