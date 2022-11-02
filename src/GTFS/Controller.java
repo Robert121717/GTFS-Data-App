@@ -428,7 +428,7 @@ public class Controller implements Initializable {
 	private void searchRouteId() {
 		String routeId = searchTF.getText();
 		if(gtfs.hasTrip() && gtfs.hasStopTime()) {
-			String searchRouteInfo = "Stop ID: " + searchTF.getText() + "\n\n"
+			String searchRouteInfo = "Route ID: " + searchTF.getText() + "\n\n" + gtfs.stopsOnRoute(routeId) + "\n\n"
 					+ searchFutureTrips(routeId);
 			textDisplay.setText(searchRouteInfo);
 		} else {
