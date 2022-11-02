@@ -1,5 +1,5 @@
-/**
- * <one line to give the program's name and a brief idea of what it does.>
+/*
+ * GTFS, program to import, export, and search information on bus transit data
  *     Copyright (C) 2022  nairac, atkinsonr, morrowc, schmidtrj
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -114,7 +114,10 @@ public class StopTime {
 		return hashId;
 	}
 
-
+	/**
+	 * method to convert the data stored into a string
+	 * @return string of all data in the class
+	 */
 	public String toString(){
 		return "" + tripId + "," + arrivalTime + "," + departureTime + "," + stopId +
 				"," + stopSequence + "," + stopHeadSign + "," + pickUpType + "," + dropOffType;
