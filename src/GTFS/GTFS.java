@@ -479,13 +479,15 @@ public class GTFS {
 		String tripId = "";
 		StringBuilder sb = new StringBuilder();
 		ArrayList<String> currentRoutes = new ArrayList<>();
+		HashSet<String> currentRouteSet = new HashSet<>();
 
 		for (StopTime stopTime : stopTimes) {
 			if (stopTime.hasStop(stopId)) {
 				tripId = stopTime.getTripId();
 				for (Trip trip : trips) {
 					if(trip.getTripId().equals(tripId)) {
-						if(!currentRoutes.contains(trip.getRouteId())) {
+						if(!currentRouteSet.contains(trip.getRouteId())) {
+							currentRouteSet.add(trip.getRouteId());
 							currentRoutes.add(trip.getRouteId());
 						}
 					}
@@ -498,6 +500,43 @@ public class GTFS {
 			sb.append("\n");
 		}
 		if(currentRoutes.isEmpty()) {
+			sb.append("No Routes with StopID");
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * search a route and returns the stopID's of the stops on the route.
+	 *
+	 * @param routeId - searched route
+	 * @return returns stop ID's that are on the route.
+	 */
+	public String stopsOnRoute(String routeId){
+		String tripId = "";
+		StringBuilder sb = new StringBuilder();
+		ArrayList<String> currentStops = new ArrayList<>();
+		HashSet<String> currentStopSet = new HashSet<>();
+
+		for(Trip trip: trips){
+			if(trip.getRouteId().equals(routeId)){
+				tripId = trip.getTripId();
+				for(StopTime stopTime: stopTimes){
+					if(stopTime.getTripId().equals(tripId)){
+						if(!currentStopSet.contains(stopTime.getStopId())){
+							currentStopSet.add(stopTime.getStopId());
+							currentStops.add(stopTime.getStopId());
+						}
+
+					}
+				}
+			}
+		}
+		for(String stopId: currentStops){
+			sb.append("StopId: ");
+			sb.append(stopId);
+			sb.append("\n");
+		}
+		if(currentStops.isEmpty()) {
 			sb.append("No Routes with StopID");
 		}
 		return sb.toString();
