@@ -2,29 +2,24 @@ package GTFS;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
+
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * @author nairac, atkinsonr, morrowc, schmidtrj
@@ -33,31 +28,38 @@ import javafx.stage.Stage;
  */
 public class Controller implements Initializable {
 	private final GTFS gtfs;
-	private Stage stage;
-	private Popup importPu;
-	private Popup exportPu;
+	private final List<String> recentUploadList = new ArrayList<>();
+	@FXML
+	private HBox mainHBox;
+	@FXML
+	private HBox updateHBox;
+	private boolean searchSelected = true;
+	private boolean searchRouteSelected = false;
+	@FXML
+	private MenuBar searchMenuBar;
+	@FXML
+	private Menu searchMenu;
+	private final Menu updateOptions = new Menu("File Type");
 
 	@FXML
+	private Button exportButton;
+	private Tooltip exportHint;
+	private final VBox exportMenu = new VBox();
+	private TranslateTransition exportTranslate;
+	private List<ToggleButton> options;
+	private final long translateDuration = 400;
+	@FXML
 	private VBox dropImportVBox;
-	private TextArea importEntry;
 	@FXML
-	private TextArea recentUploadDisplay;
-	@FXML
-	private Label recentUploadLabel;
+	private TextArea textDisplay;
 	@FXML
 	private TextField searchTF;
 	@FXML
-	private VBox mainVBox;
+	private Label recentUploadLabel;
 	@FXML
-	private MenuItem stopMI;
+	private Label leftRecent;
 	@FXML
-	private MenuItem routeMI;
-	@FXML
-	private MenuItem closeMI;
-	@FXML
-	private Menu menu;
-	@FXML
-	private BorderPane dropBorderPane;
+	private Label rightRecent;
 
 	public Controller(){
 		gtfs = new GTFS();
@@ -67,13 +69,128 @@ public class Controller implements Initializable {
 	 * Initializes the components in the UI when an object of this class is created.
 	 */
 	public void initialize(URL url, ResourceBundle rb) {
-		searchTF.setDisable(true);
+		exportHint = new Tooltip("Please import a file before exporting");
+		exportHint.setShowDelay(Duration.millis(200));
+		exportHint.setHideDelay(Duration.ZERO);
+
+		exportButton.setTooltip(exportHint);
+
+		leftRecent.setVisible(false);
+		rightRecent.setVisible(false);
+
 		recentUploadLabel.setVisible(false);
+		searchTF.setDisable(true);
+
+		initExportOptions();
+		initializeExportMenu();
 		initializeDropBox();
-		initializeMenuItems();
-		mainVBox.setStyle("-fx-background-color: " +
-				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
-		dropBorderPane.setStyle("-fx-border-width: 3; -fx-border-color: #9e9e9e; -fx-border-style: segments(10, 10, 10, 10);");
+	}
+
+	@FXML
+	private void exportPopup(ActionEvent e) {
+		if (mainHBox.getChildren().contains(exportMenu)) {
+			closePopup();
+			return;
+		}
+		mainHBox.getChildren().add(exportMenu);
+		exportTranslate.setRate(1);
+		exportTranslate.play();
+
+		for (ToggleButton option : options) {
+			option.setSelected(false);
+		}
+	}
+
+	private void initializeExportMenu() {
+		final int height = 260;
+		final int width = 110;
+
+		exportMenu.setId("export-menu");
+		exportMenu.setMinWidth(width); exportMenu.setMinHeight(height);
+		exportMenu.setMaxWidth(width); exportMenu.setMaxHeight(height);
+
+		exportMenu.setAlignment(Pos.TOP_CENTER);
+		addExportMenuComponents();
+
+		double translateX = mainHBox.getPrefWidth();
+		exportMenu.setTranslateX(translateX);
+
+		exportTranslate = new TranslateTransition(Duration.millis(translateDuration), exportMenu);
+
+		exportTranslate.setFromX(translateX);
+		exportTranslate.setToX(130);
+	}
+
+	private void addExportMenuComponents() {
+		VBox header = new VBox();
+		header.setMinHeight(32); header.setMaxHeight(32);
+		header.setPadding(new Insets(4, 0, 8, 0));
+		header.setAlignment(Pos.CENTER);
+		header.setId("export-header");
+
+		header.setOnMouseClicked(e -> {
+			closePopup();
+			for (ToggleButton option : options) {
+				option.setSelected(false);
+			}
+		});
+		Label close = new Label("Cancel");
+		close.setFont(new Font(16));
+		header.getChildren().add(close);
+
+		Separator headerLine = new Separator(Orientation.HORIZONTAL);
+
+		VBox optionsVBox = new VBox(3);
+		optionsVBox.setPadding(new Insets(15, 14, 15, 8));
+		optionsVBox.setAlignment(Pos.CENTER);
+		optionsVBox.getChildren().addAll(options);
+
+		VBox send = new VBox();
+		send.setId("export-send-vbox");
+		send.setMinHeight(32); send.setMaxHeight(32);
+		send.setAlignment(Pos.CENTER);
+
+		Separator exportLine = new Separator(Orientation.HORIZONTAL);
+
+		Label export = new Label("Export");
+		export.setFont(new Font(16));
+		send.setOnMouseClicked(e -> {
+			initializeFileExport();
+			closePopup();
+
+			for (ToggleButton option : options) {
+				option.setSelected(false);
+			}
+		});
+		send.getChildren().add(export);
+
+		exportMenu.getChildren().addAll(header, headerLine, optionsVBox, exportLine, send);
+	}
+
+	private void initExportOptions() {
+		options = new ArrayList<>();
+		options.add(new ToggleButton("Routes"));
+		options.add(new ToggleButton("Stops"));
+		options.add(new ToggleButton("Stop Times"));
+		options.add(new ToggleButton("Trips"));
+
+		for (ToggleButton option : options) {
+			option.setPrefWidth(90);
+			option.setPrefHeight(40);
+		}
+	}
+
+	private void closePopup() {
+		exportTranslate.setRate(-1);
+		exportTranslate.play();
+
+		Timer myTimer = new Timer();
+		myTimer.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				Platform.runLater(() -> mainHBox.getChildren().remove(exportMenu));
+			}
+		}, translateDuration);
 	}
 
 	/**
@@ -91,187 +208,168 @@ public class Controller implements Initializable {
 		if (files != null) {
 			for (File file : files) {
 				gtfs.importFile(file);
+				addToRecentUploadList();
 			}
-			recentUploadDisplay.setText(gtfs.getNewestImport());
-			recentUploadLabel.setVisible(true);
+			allowFileInteraction();
+			showRecentUploadList();
 		}
+	}
+
+	private void showRecentUploadList() {
+		leftRecent.setVisible(true);
+		rightRecent.setVisible(true);
+		recentUploadLabel.setVisible(true);
+	}
+
+	@FXML
+	private void prevRecentUpload() {
+		int listSize = recentUploadList.size();
+		if (listSize == 0) {
+			return;
+		}
+		int currentIndex = recentUploadList.indexOf(recentUploadLabel.getText());
+
+		int newIndex = currentIndex - 1 < 0 ? listSize - 1 : currentIndex - 1;
+		String prevUpload = recentUploadList.get(newIndex);
+
+		recentUploadLabel.setText(prevUpload);
+	}
+
+	@FXML
+	private void nextRecentUpload() {
+		int listSize = recentUploadList.size();
+		if (listSize == 0) {
+			return;
+		}
+		int currentIndex = recentUploadList.indexOf(recentUploadLabel.getText());
+
+		int newIndex = currentIndex + 1 > listSize - 1 ? 0 : currentIndex + 1;
+		String nextUpload = recentUploadList.get(newIndex);
+
+		recentUploadLabel.setText(nextUpload);
+	}
+
+	private void allowFileInteraction() {
+		searchTF.setDisable(false);
+		searchTF.setPromptText("Search by Stop ID");
+		searchMenuBar.setDisable(false);
+
+		exportButton.setOnAction(this::exportPopup);
+		Tooltip.uninstall(exportButton, exportHint);
+	}
+
+	@FXML
+	private void updateSelected() {
+		MenuBar optionsMenuBar = new MenuBar();
+		updateHBox.getChildren().add(optionsMenuBar);
+
+		if (updateOptions.getItems().size() == 0) {
+			List<MenuItem> menuItems = new ArrayList<>();
+			menuItems.add(new MenuItem("Routes"));
+			menuItems.add(new MenuItem("Trips"));
+			menuItems.add(new MenuItem("Stops"));
+			menuItems.add(new MenuItem("Stop Times"));
+
+			for (MenuItem item : menuItems) {
+				updateOptions.getItems().add(item);
+				item.setOnAction(e -> updateOptions.setText(item.getText()));
+			}
+		}
+		optionsMenuBar.getMenus().add(updateOptions);
+
+		searchTF.setPromptText("Enter new data");
+		searchMenu.setText("Update");
+
+		searchSelected = false;
+		searchRouteSelected = false;
+
+		searchMenu.getItems().get(0).setDisable(false);
+		searchMenu.getItems().get(1).setDisable(false);
+
+		searchMenu.getItems().get(2).setDisable(true);
+	}
+
+
+	@FXML
+	private void searchSelected() {
+		if (updateHBox.getChildren().size() > 1) {
+			updateHBox.getChildren().remove(1);
+
+		}
+		searchTF.setPromptText("Search by Stop ID");
+		searchMenu.setText("...");
+
+		searchSelected = true;
+		searchRouteSelected = false;
+		searchMenu.getItems().get(0).setDisable(true);
+		searchMenu.getItems().get(1).setDisable(false);
+		searchMenu.getItems().get(2).setDisable(false);
+
+	}
+	@FXML
+	public void searchRouteSelected() {
+		if (updateHBox.getChildren().size() > 1) {
+			updateHBox.getChildren().remove(1);
+		}
+		searchTF.setPromptText("Search by Route ID");
+		searchMenu.setText("...");
+
+		searchSelected = false;
+		searchRouteSelected = true;
+		searchMenu.getItems().get(1).setDisable(true);
+		searchMenu.getItems().get(0).setDisable(false);
+		searchMenu.getItems().get(2).setDisable(false);
 	}
 
 	@FXML
 	private void search() {
-		if(menu.getText().equals(routeMI.getText())) {
-			searchRouteId();
-
-		} else if(menu.getText().equals(stopMI.getText())) {
-			searchStopId();
+		if (searchTF.getText().trim().equals("")) {
+			textDisplay.clear();
+			return;
 		}
-		recentUploadLabel.setVisible(false);
+		if (searchSelected) {
+			searchStopId();
+		} else if(searchRouteSelected) {
+			searchRouteId();
+		}
+		else {
+			if (searchMenu.getText().equals("File Type")) {
+				return;
+			}
+			gtfs.updateText(searchMenu.getText(), searchTF.getText());
+		}
+		searchTF.clear();
 	}
 
 	/**
-	 * @author Robert Schmidt
-	 * Creates and displays a popup allowing the user to manually update data in the GTFS files.
-	 */
-	@FXML
-	private void updatePopup() {
-		final int height = 200;
-		final int width = 400;
-
-		if (importPu != null && importPu.isShowing()) importPu.hide();
-		else if (exportPu != null && exportPu.isShowing()) exportPu.hide();
-
-		importPu = new Popup();								//create popup prompt for user to type data into
-		importPu.setWidth(width); importPu.setHeight(height);
-
-		Pane background = new Pane();
-		background.setPrefWidth(width); background.setPrefHeight(height);
-
-		VBox stack = new VBox(18);
-		stack.setPrefWidth(width); stack.setPrefHeight(height);
-		stack.setAlignment(Pos.CENTER);
-		stack.setPadding(new Insets(8, 8, 10, 8));
-
-		addUpdatePuComponents(stack);
-		background.getChildren().add(stack);
-
-		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
-				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
-		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
-		background.setEffect(shadow);
-
-		importPu.getContent().add(background);
-		importPu.show(stage);
-	}
-
-	/**
-	 * @author Robert Schmidt
-	 * Helper method to importPopup().
-	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
-	 * Including:
-	 * 		a close window button,
-	 * 		a text area for user input
-	 * 		an update button, which well send the data to the GTFS files.
-	 * @param stack Main component of the popup.
-	 */
-	private void addUpdatePuComponents(VBox stack) {
-		HBox header = new HBox(5);
-		header.setPrefWidth(400); header.setPrefHeight(50);
-		header.setAlignment(Pos.TOP_RIGHT);
-
-		Button closeButton = new Button("Cancel");
-		closeButton.setOnAction(e -> importPu.hide()); 	//close popup
-		header.getChildren().addAll(closeButton);
-
-		Label inputPrompt = new Label("Please Enter the Relevant Data Below");
-		inputPrompt.setFont(new Font(15));
-
-		importEntry = new TextArea();
-		importEntry.setPromptText("Format: {Stop / Stop Time / Route / Trip}, data");
-		importEntry.setPadding(new Insets(0, 10, 0, 10));
-
-		Button send = new Button("Update");
-		send.setOnAction(e -> {
-			gtfs.updateText(importEntry.getText());					//update the user input into the gtfs data structures
-			recentUploadDisplay.setText(gtfs.getNewestImport()); 	//display the imported data to user to show it was successful
-			recentUploadLabel.setVisible(true); importPu.hide();
-		});
-		stack.getChildren().addAll(header, inputPrompt, importEntry, send);
-	}
-
-	/**
-	 * @author Robert Schmidt
-	 * Creates and displays a popup allowing users to select files to export.
-	 */
-	@FXML
-	private void exportPopup() {
-		final int width = 230;
-		final int height = 310;
-
-		if (exportPu != null && exportPu.isShowing()) exportPu.hide();
-		else if (importPu != null && importPu.isShowing()) importPu.hide();
-
-		exportPu = new Popup();
-		exportPu.setHeight(height); exportPu.setWidth(width);
-
-		Pane background = new Pane();
-		background.setPrefHeight(height); background.setPrefWidth(width);
-
-		VBox stack = new VBox(5);
-		stack.setPrefHeight(height); stack.setPrefWidth(width);
-		stack.setAlignment(Pos.TOP_CENTER);
-		stack.setPadding(new Insets(8, 8, 8, 8));
-
-		addExportPuComponents(stack);
-		background.getChildren().add(stack);
-
-		background.setStyle("-fx-background-radius: 8 8 8 8; -fx-background-color: " +
-				"radial-gradient(focus-distance 0% , center 50% 50% , radius 60% , #E5E6E4, #F9F9F8);");
-		DropShadow shadow = new DropShadow(BlurType.GAUSSIAN, Color.web("#9e9e9e"), 15, 0.05, 0, 0);
-		background.setEffect(shadow);
-
-		exportPu.getContent().add(background);
-		exportPu.show(stage);
-	}
-
-	/**
-	 * @author Robert Schmidt
-	 * Helper method to exportPopup().
-	 * Creates and adds the nodes to the main component in the popup to give it the necessary functionality.
-	 * Including:
-	 * 		a close window button,
-	 * 		checkboxes to select which files to export,
-	 * 		an export button to begin the process of exporting the files.
-	 * @param stack Main component of the popup.
-	 */
-	private void addExportPuComponents(VBox stack) {
-		HBox header = new HBox();
-		header.setPrefWidth(230); header.setPrefHeight(30);
-		header.setAlignment(Pos.TOP_RIGHT);
-
-		Button closeButton = new Button("Cancel");
-		closeButton.setOnAction(e -> exportPu.hide()); 	//close popup
-		header.getChildren().add(closeButton);
-
-		Label instruct = new Label("Please Select the Files to Export");
-		instruct.setWrapText(true); instruct.setPrefWidth(150);
-		instruct.setFont(new Font(16));
-		instruct.setTextAlignment(TextAlignment.CENTER);
-
-		List<CheckBox> options = getExportCheckBoxes();
-
-		VBox centerStack = new VBox(8);
-		centerStack.setAlignment(Pos.CENTER_LEFT);
-		centerStack.setPadding(new Insets(15, 0, 15, 60));
-		centerStack.getChildren().addAll(options);
-
-		Button send = new Button("Export");
-		send.setOnAction(e -> {
-			exportPu.hide();
-			initializeFileExport(options);
-		});
-
-		stack.getChildren().addAll(header, instruct, centerStack, send);
-	}
-
-	/**
-	 * @author Robert Schmidt
 	 * Gets the requested files from the GTFS class and saves the data to a file.
-	 * @param options List of CheckBoxes, where each checkbox represents a file that can be exported.
 	 */
-	private void initializeFileExport(List<CheckBox> options) {
-		for (CheckBox option : options) {
+	private void initializeFileExport() {
+		StringBuilder error = new StringBuilder();
+		int appends = 0;
+		int offset = 0;
+		for (ToggleButton option : options) {
 			if (option.isSelected()) {
 				String data = gtfs.exportFile(option.getText());
-
 				if (data.equals("")) {
-					newAlert(Alert.AlertType.ERROR,
-							"Error Dialog",
-							"The requested data could not be found.",
-							"Please import the data first.");
+					error.append(option.getText()).append(", ");
+					offset = option.getText().length() + 2;
+					appends++;
 				} else {
 					export(data);
 				}
 			}
+		}
+		if (appends > 1) {
+			error.insert(error.length() - offset, "and ");
+		}
+		if(!error.isEmpty()){
+			String errorStr = error.toString();
+			int lastComma = errorStr.lastIndexOf(",");
+			errorStr = errorStr.substring(0, lastComma) + errorStr.substring(lastComma + 1);
+
+			newAlert(Alert.AlertType.ERROR, "Error Dialog", "Some requested data could not be found.",
+					"The files " + errorStr + "did not have data and could not be exported. ");
 		}
 	}
 
@@ -294,26 +392,8 @@ public class Controller implements Initializable {
 
 		} catch (IOException e){
 			newAlert(Alert.AlertType.ERROR, "Error Dialog", "File Error",
-					"A problem with the location of the export was found.");
+					"The file selected for export is invalid. Please select a valid file to export to.");
 		}
-	}
-
-	private List<CheckBox> getExportCheckBoxes() {
-		List<CheckBox> options = new ArrayList<>();
-		options.add(new CheckBox("Stops"));
-		options.add(new CheckBox("Stop Times"));
-		options.add(new CheckBox("Routes"));
-		options.add(new CheckBox("Trips"));
-
-		for (CheckBox option : options) {
-			option.setPrefWidth(120);
-			option.setPrefHeight(25);
-			option.setStyle("-fx-font-size: 14;");
-		}
-		return options;
-	}
-
-	private void displayFile(String text) {
 	}
 
 	private void searchStopId() {
@@ -323,40 +403,53 @@ public class Controller implements Initializable {
 		String routeIdWithStop = gtfs.routesWithStop(searchTF.getText().toUpperCase(Locale.ROOT));
 		if(gtfs.hasStopTime() && gtfs.hasTrip()) {
 			if(routeIdWithStop.equals("No Routes with StopID")) {
-				String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
-						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + routeIdWithStop;
-				recentUploadDisplay.setText(searchRouteInfo);
+				String searchStopInfo = "Stop ID: " + searchTF.getText() + "\n\n" +
+						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + routeIdWithStop  + searchNextTrips(stopId);
+				textDisplay.setText(searchStopInfo);
 			} else {
-				String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
+				String searchStopInfo = "Stop ID: " + searchTF.getText() + "\n\n" +
 						"Number of Trips with stop: " + numTripsWithStop + "\n\n" + "Routes with Stop:" + "\n" +
-						routeIdWithStop;
-				recentUploadDisplay.setText(searchRouteInfo);
+						routeIdWithStop + searchNextTrips(stopId);
+				textDisplay.setText(searchStopInfo);
 			}
 
 		} else if(gtfs.hasStopTime() && !gtfs.hasTrip()) {
-			String searchRouteInfo = "Stop ID: " + searchTF.getText().toUpperCase(Locale.ROOT) + "\n\n" +
-					"Number of Trips with stop: " + numTripsWithStop + "\n\n" +
+			String searchStopInfo = "Stop ID: " + searchTF.getText() + "\n\n" +
+					"Number of Trips with stop: " + numTripsWithStop + searchNextTrips(stopId) + "\n\n" +
 					"NOTICE: Must import a trip file to see more data.";
-			recentUploadDisplay.setText(searchRouteInfo);
+			textDisplay.setText(searchStopInfo);
 
 		} else if(!gtfs.hasStopTime() && !gtfs.hasTrip()) {
+			String searchStopInfo = "NOTICE: Must import StopTime and Trip files to see data.";
+			textDisplay.setText(searchStopInfo);
+		}
+	}
+
+	private void searchRouteId() {
+		String routeId = searchTF.getText();
+		if(gtfs.hasTrip() && gtfs.hasStopTime()) {
+			String searchRouteInfo = "Stop ID: " + searchTF.getText() + "\n\n"
+					+ searchFutureTrips(routeId);
+			textDisplay.setText(searchRouteInfo);
+		} else {
 			String searchRouteInfo = "NOTICE: Must import StopTime and Trip files to see data.";
-			recentUploadDisplay.setText(searchRouteInfo);
+			textDisplay.setText(searchRouteInfo);
 		}
 
-		recentUploadDisplay.appendText(searchNextTrips(stopId));
+
+
 	}
 
 	private String searchNextTrips(String stopId) {
-		ArrayList<Object[]> trips = gtfs.getNextTrips(stopId);
+		ArrayList<Object[]> trips = gtfs.getNextTrips(stopId, true);
 
 		String content;
 		if (!trips.isEmpty()) {
 			String header;
 			if (trips.size() > 1) {
-				header = "\n\nNext trips to arrive at this stop:";
+				header = "\nNext trips to arrive at this stop:";
 			} else {
-				header = "\n\nNext trip to arrive at this stop:";
+				header = "\nNext trip to arrive at this stop:";
 			}
 			StringBuilder text = new StringBuilder(header);
 
@@ -371,8 +464,34 @@ public class Controller implements Initializable {
 			}
 			content = text.toString();
 		} else {
-			content = "\n\nNo subsequent trips to the given stop ID were found for today.";
+			content = "\n\nNo subsequent trips to the given ID were found for today.";
 		}
+		return content;
+	}
+
+	private String searchFutureTrips(String routeId) {
+		ArrayList<Object[]> trips = gtfs.getNextTrips(routeId, false);
+
+		String content;
+		if (!trips.isEmpty()) {
+			String header;
+			HashSet<String> allTrips = new HashSet<>();
+				header = "\nAll future trips on this route:";
+
+				StringBuilder text = new StringBuilder(header);
+
+				for (Object[] array : trips) {
+					StopTime stop = (StopTime) array[0];
+					String tripId = stop.getTripId();
+					if(!allTrips.contains(tripId)) {
+						text.append("\n  -ID: ").append(tripId).append("\n");
+						allTrips.add(tripId);
+					}
+				}
+				content = text.toString();
+			} else {
+				content = "\n\nNo subsequent trips to the given stop ID were found for today.";
+			}
 		return content;
 	}
 
@@ -402,7 +521,68 @@ public class Controller implements Initializable {
 		return hour + ":" + minute + ":" + second + " " + (am ? "am" : "pm");
 	}
 
-	private void searchRouteId() {
+	/**
+	 * Adds event handlers to the drop box shown in the UI,
+	 * allowing the user to drag and drop files onto the screen to import them.
+	 */
+	private void initializeDropBox() {
+		dropImportVBox.setOnDragOver(e -> {			// allows user to drag files into VBox
+			Dragboard dropBox = e.getDragboard();
+
+			if (dropBox.hasFiles()) {
+				e.acceptTransferModes(TransferMode.COPY);
+			} else {
+				e.consume();
+			}
+		});
+		dropImportVBox.setOnDragDropped(e -> {			// handles files once dropped into VBox
+			Dragboard dropBox = e.getDragboard();
+
+			if (dropBox.hasFiles()) {
+				boolean imported = false;
+				for (File file : dropBox.getFiles()) {
+					if (file.getName().endsWith(".txt")) {
+						gtfs.importFile(file);
+						addToRecentUploadList();
+						imported = true;
+					}
+				}
+				if (imported) {
+					allowFileInteraction();
+					recentUploadLabel.setVisible(true);
+					showRecentUploadList();
+				}
+			}
+			e.consume();
+		});
+	}
+
+	private void addToRecentUploadList() {
+		String newestImports = gtfs.getNewestImports();
+		String badData = gtfs.getBadData();
+		textDisplay.setText(badData);
+		List<String> filesNames = List.of(newestImports.split("\\n"));
+
+		for (String fileName : filesNames) {
+			if (!fileName.equals("")) {
+				recentUploadList.add(fileName);
+			}
+		}
+	}
+
+	/**
+	 * Displays an alert when called
+	 * @param type Alert type
+	 * @param title Title of alert
+	 * @param header Header of alert
+	 * @param content Content within the alert
+	 */
+	protected static void newAlert(Alert.AlertType type, String title, String header, String content) {
+		Alert alert = new Alert(type);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+		alert.showAndWait();
 	}
 
 	private boolean displayDistance() {
@@ -439,83 +619,5 @@ public class Controller implements Initializable {
 
 	private void filterRoutes(){
 
-	}
-
-	/**
-	 * Adds event handlers to the drop box shown in the UI,
-	 * allowing the user to drag and drop files onto the screen to import them.
-	 */
-	private void initializeDropBox() {
-		dropImportVBox.setOnDragOver(e -> {			// allows user to drag files into VBox
-			Dragboard dropBox = e.getDragboard();
-
-			if (dropBox.hasFiles()) {
-				e.acceptTransferModes(TransferMode.COPY);
-			} else {
-				e.consume();
-			}
-		});
-		dropImportVBox.setOnDragDropped(e -> {			// handles files once dropped into VBox
-			Dragboard dropBox = e.getDragboard();
-
-			if (dropBox.hasFiles()) {
-				boolean imported = false;
-				for (File file : dropBox.getFiles()) {
-					if (file.getName().endsWith(".txt")) {
-						gtfs.importFile(file);
-						imported = true;
-					}
-				}
-				if (imported) {
-					recentUploadDisplay.setText(gtfs.getNewestImport());
-					recentUploadLabel.setVisible(true);
-				}
-			}
-			e.consume();
-		});
-	}
-
-	/**
-	 * Adds event handlers to the menu items shown in the UI
-	 */
-	private void initializeMenuItems() {
-		stopMI.setOnAction(e -> {
-			menu.setText("Stop");
-			searchTF.setDisable(false);
-		});
-
-		routeMI.setOnAction(e -> {
-			menu.setText("Route");
-			searchTF.setDisable(false);
-		});
-
-		closeMI.setOnAction(e -> {
-			menu.setText("Select");
-			searchTF.setDisable(true);
-			searchTF.setText("");
-		});
-	}
-
-	/**
-	 * Assigns the current stage to an instance variable of this class
-	 * @param stage The stage currently in use
-	 */
-	protected void setStage(Stage stage) {
-		this.stage = stage;
-	}
-
-	/**
-	 * Displays an alert when called
-	 * @param type Alert type
-	 * @param title Title of alert
-	 * @param header Header of alert
-	 * @param content Content within the alert
-	 */
-	protected static void newAlert(Alert.AlertType type, String title, String header, String content) {
-		Alert alert = new Alert(type);
-		alert.setTitle(title);
-		alert.setHeaderText(header);
-		alert.setContentText(content);
-		alert.showAndWait();
 	}
 }
