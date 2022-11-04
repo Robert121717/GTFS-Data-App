@@ -64,7 +64,131 @@ public class GTFS {
 	}
 
 	protected void updateText(String file, String text) {
+		String[] attributes = text.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+		boolean valid;
+		try {
+			switch (file) {
+				case "Routes" -> {
+					valid = validateRouteData(attributes);
+					if (valid) updateRoute(attributes);
+				}
+				case "Trips" -> {
+					valid = validateTripData(attributes);
+					if (valid) updateTrip(attributes);
+				}
+				case "Stop Times" -> {
+					valid = validateStopTimeData(attributes);
+					if (valid) updateStopTime(attributes);
+				}
+				default -> {
+					valid = validateStopData(attributes);
+					if (valid) updateStop(attributes);
+				}
+			}
+		} catch (IndexOutOfBoundsException | NumberFormatException e) {
+			valid = false;
+		}
+		if (!valid) {
+			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value",
+					"The given data is not formatted properly.");
+		}
+	}
 
+	private void updateRoute(String[] attributes) throws IndexOutOfBoundsException {
+		String routeId = attributes[0];
+		Route updatedRoute = new Route(routeId);
+
+		updatedRoute.setAgencyID(attributes[1]);
+		updatedRoute.setShortName(attributes[2]);
+		updatedRoute.setLongName(attributes[3]);
+		updatedRoute.setRouteDesc(attributes[4]);
+		updatedRoute.setRouteType(attributes[5]);
+		updatedRoute.setRouteURL(attributes[6]);
+		updatedRoute.setRouteColor(attributes[7]);
+		updatedRoute.setRouteTextColor(attributes[8]);
+
+		boolean updated = false;
+		for (int i = 0; i < routes.size(); ++i) {
+			Route route = routes.get(i);
+			if (route.getRouteId().equals(routeId)) {
+				routes.set(i, updatedRoute);
+				updated = true;
+				break;
+			}
+		}
+		if (!updated) routes.add(updatedRoute);
+	}
+
+	private void updateTrip(String[] attributes) throws IndexOutOfBoundsException {
+		String tripId = attributes[2];
+		String routeId = attributes[0];
+		Trip updatedTrip = new Trip(tripId, routeId);
+
+		updatedTrip.setServiceId(attributes[1]);
+		updatedTrip.setHeadSign(attributes[3]);
+		updatedTrip.setDirectionId(attributes[4]);
+		updatedTrip.setBlockId(attributes[5]);
+		updatedTrip.setShapeId(attributes[6]);
+
+		boolean updated = false;
+		for (int i = 0; i < trips.size(); ++i) {
+			Trip trip = trips.get(i);
+			if (trip.getTripId().equals(tripId)) {
+				trips.set(i, updatedTrip);
+				updated = true;
+				break;
+			}
+		}
+		if (!updated) trips.add(updatedTrip);
+	}
+
+	private void updateStopTime(String[] attributes) throws IndexOutOfBoundsException {
+		String stopId = attributes[3];
+		String tripId = attributes[0];
+		StopTime updatedStop = new StopTime(stopId, tripId);
+
+		updatedStop.setArrivalTime(attributes[1]);
+		updatedStop.setDepartureTime(attributes[2]);
+		updatedStop.setStopSequence(attributes[4]);
+		updatedStop.setStopHeadSign(attributes[5]);
+		updatedStop.setPickUpType(attributes[6]);
+		updatedStop.setDropOffType(attributes[7]);
+
+		boolean updated = false;
+		for (int i = 0; i < stopTimes.size(); ++i) {
+			StopTime stop = stopTimes.get(i);
+			boolean equalStopIds = stop.getStopId().equals(stopId);
+			boolean equalTripIds = stop.getTripId().equals(tripId);
+
+			if (equalStopIds && equalTripIds) {
+				stopTimes.set(i, updatedStop);
+				updated = true;
+				break;
+			}
+		}
+		if (!updated) stopTimes.add(updatedStop);
+	}
+
+	private void updateStop(String[] attributes)
+			throws IndexOutOfBoundsException, NumberFormatException{
+		String stopId = attributes[0];
+		Stop updatedStop = new Stop(stopId);
+
+		updatedStop.setStopName(attributes[1]);
+		updatedStop.setStopDesc(attributes[2]);
+		updatedStop.setStopLat(Double.parseDouble(attributes[3]));
+		updatedStop.setStopLon(Double.parseDouble(attributes[4]));
+
+		boolean updated = false;
+		for (int i = 0; i < stops.size(); ++i) {
+			Stop stop = stops.get(i);
+			if (stop.getStopId().equals(stopId)) {
+				stops.set(i, updatedStop);
+				updated = true;
+				break;
+			}
+		}
+		if (!updated) stops.add(updatedStop);
 	}
 
 	/**
