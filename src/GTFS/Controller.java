@@ -352,8 +352,6 @@ public class Controller implements Initializable {
 			if (updateOptions.getText().equals("File Type")) {
 				return;
 			}
-			System.out.println("File: " + updateOptions.getText());
-			System.out.println("Data: " + searchTF.getText());
 			gtfs.updateText(updateOptions.getText(), searchTF.getText());
 		}
 		searchTF.clear();
