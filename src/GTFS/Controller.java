@@ -349,7 +349,7 @@ public class Controller implements Initializable {
 			searchRouteId();
 		}
 		else {
-			if (searchMenu.getText().equals("File Type")) {
+			if (updateOptions.getText().equals("File Type")) {
 				return;
 			}
 			System.out.println("File: " + updateOptions.getText());
