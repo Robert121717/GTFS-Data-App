@@ -600,40 +600,4 @@ public class Controller implements Initializable {
 		alert.setContentText(content);
 		alert.showAndWait();
 	}
-
-	private boolean displayDistance() {
-		return false;
-	}
-
-	private boolean displaySpeed() {
-		return false;
-	}
-
-	private boolean displayRoute() {
-		return false;
-	}
-
-	private boolean displayStop() {
-		return false;
-	}
-
-	private boolean displayTrip() {
-		return false;
-	}
-
-	private void plotCord() {
-
-	}
-
-	private void plotLocation() {
-
-	}
-
-	private void showLegend(){
-
-	}
-
-	private void filterRoutes(){
-
-	}
 }
