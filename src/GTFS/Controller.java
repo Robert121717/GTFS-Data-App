@@ -1,3 +1,19 @@
+/**
+ * GTFS, program to import, export, and search information on bus transit data
+ *     Copyright (C) 2022  nairac, atkinsonr, morrowc, schmidtrj
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package GTFS;
 
 import java.io.*;
@@ -333,10 +349,10 @@ public class Controller implements Initializable {
 			searchRouteId();
 		}
 		else {
-			if (searchMenu.getText().equals("File Type")) {
+			if (updateOptions.getText().equals("File Type")) {
 				return;
 			}
-			gtfs.updateText(searchMenu.getText(), searchTF.getText());
+			gtfs.updateText(updateOptions.getText(), searchTF.getText());
 		}
 		searchTF.clear();
 	}
@@ -428,7 +444,7 @@ public class Controller implements Initializable {
 	private void searchRouteId() {
 		String routeId = searchTF.getText();
 		if(gtfs.hasTrip() && gtfs.hasStopTime()) {
-			String searchRouteInfo = "Stop ID: " + searchTF.getText() + "\n\n"
+			String searchRouteInfo = "Route ID: " + searchTF.getText() + "\n\n" + gtfs.stopsOnRoute(routeId) + "\n\n"
 					+ searchFutureTrips(routeId);
 			textDisplay.setText(searchRouteInfo);
 		} else {
@@ -583,41 +599,5 @@ public class Controller implements Initializable {
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		alert.showAndWait();
-	}
-
-	private boolean displayDistance() {
-		return false;
-	}
-
-	private boolean displaySpeed() {
-		return false;
-	}
-
-	private boolean displayRoute() {
-		return false;
-	}
-
-	private boolean displayStop() {
-		return false;
-	}
-
-	private boolean displayTrip() {
-		return false;
-	}
-
-	private void plotCord() {
-
-	}
-
-	private void plotLocation() {
-
-	}
-
-	private void showLegend(){
-
-	}
-
-	private void filterRoutes(){
-
 	}
 }

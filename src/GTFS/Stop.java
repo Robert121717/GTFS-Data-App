@@ -1,3 +1,19 @@
+/**
+ * GTFS, program to import, export, and search information on bus transit data
+ *     Copyright (C) 2022  nairac, atkinsonr, morrowc, schmidtrj
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package GTFS;
 
 import java.math.BigInteger;
@@ -95,10 +111,19 @@ public class Stop {
 		return stopIDHash;
 	}
 
+	/**
+	 * method to convert the data stored into a string
+	 * @return string of all data in the class
+	 */
 	public String toString(){
 		return "" + stopID + "," + stopName + "," + stopDesc + "," + stopLat + "," + stopLon;
 	}
 
+	/**
+	 * method to check if passed in class is the same as this class
+	 * @param other class to be compared to current class
+	 * @return if classes are similar or not
+	 */
 	@Override
 	public boolean equals(Object other){
 		Stop temp = (Stop) other;

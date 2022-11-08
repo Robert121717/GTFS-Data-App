@@ -1,3 +1,19 @@
+/**
+ * GTFS, program to import, export, and search information on bus transit data
+ *     Copyright (C) 2022  nairac, atkinsonr, morrowc, schmidtrj
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package GTFS;
 
 import javafx.scene.control.Alert.AlertType;
@@ -48,7 +64,131 @@ public class GTFS {
 	}
 
 	protected void updateText(String file, String text) {
+		String[] attributes = text.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+		boolean valid;
+		try {
+			switch (file) {
+				case "Routes" -> {
+					valid = validateRouteData(attributes);
+					if (valid) updateRoute(attributes);
+				}
+				case "Trips" -> {
+					valid = validateTripData(attributes);
+					if (valid) updateTrip(attributes);
+				}
+				case "Stop Times" -> {
+					valid = validateStopTimeData(attributes);
+					if (valid) updateStopTime(attributes);
+				}
+				default -> {
+					valid = validateStopData(attributes);
+					if (valid) updateStop(attributes);
+				}
+			}
+		} catch (IndexOutOfBoundsException | NumberFormatException e) {
+			valid = false;
+		}
+		if (!valid) {
+			newAlert(AlertType.ERROR, "Error Dialog", "Unexpected Value",
+					"The given data is not formatted properly.");
+		}
+	}
 
+	private void updateRoute(String[] attributes) throws IndexOutOfBoundsException {
+		String routeId = attributes[0];
+		Route updatedRoute = new Route(routeId);
+
+		updatedRoute.setAgencyID(attributes[1]);
+		updatedRoute.setShortName(attributes[2]);
+		updatedRoute.setLongName(attributes[3]);
+		updatedRoute.setRouteDesc(attributes[4]);
+		updatedRoute.setRouteType(attributes[5]);
+		updatedRoute.setRouteURL(attributes[6]);
+		updatedRoute.setRouteColor(attributes[7]);
+		updatedRoute.setRouteTextColor(attributes[8]);
+
+		boolean updated = false;
+		for (int i = 0; i < routes.size(); ++i) {
+			Route route = routes.get(i);
+			if (route.getRouteId().equals(routeId)) {
+				routes.set(i, updatedRoute);
+				updated = true;
+				break;
+			}
+		}
+		if (!updated) routes.add(updatedRoute);
+	}
+
+	private void updateTrip(String[] attributes) throws IndexOutOfBoundsException {
+		String tripId = attributes[2];
+		String routeId = attributes[0];
+		Trip updatedTrip = new Trip(tripId, routeId);
+
+		updatedTrip.setServiceId(attributes[1]);
+		updatedTrip.setHeadSign(attributes[3]);
+		updatedTrip.setDirectionId(attributes[4]);
+		updatedTrip.setBlockId(attributes[5]);
+		updatedTrip.setShapeId(attributes[6]);
+
+		boolean updated = false;
+		for (int i = 0; i < trips.size(); ++i) {
+			Trip trip = trips.get(i);
+			if (trip.getTripId().equals(tripId)) {
+				trips.set(i, updatedTrip);
+				updated = true;
+				break;
+			}
+		}
+		if (!updated) trips.add(updatedTrip);
+	}
+
+	private void updateStopTime(String[] attributes) throws IndexOutOfBoundsException {
+		String stopId = attributes[3];
+		String tripId = attributes[0];
+		StopTime updatedStop = new StopTime(stopId, tripId);
+
+		updatedStop.setArrivalTime(attributes[1]);
+		updatedStop.setDepartureTime(attributes[2]);
+		updatedStop.setStopSequence(attributes[4]);
+		updatedStop.setStopHeadSign(attributes[5]);
+		updatedStop.setPickUpType(attributes[6]);
+		updatedStop.setDropOffType(attributes[7]);
+
+		boolean updated = false;
+		for (int i = 0; i < stopTimes.size(); ++i) {
+			StopTime stop = stopTimes.get(i);
+			boolean equalStopIds = stop.getStopId().equals(stopId);
+			boolean equalTripIds = stop.getTripId().equals(tripId);
+
+			if (equalStopIds && equalTripIds) {
+				stopTimes.set(i, updatedStop);
+				updated = true;
+				break;
+			}
+		}
+		if (!updated) stopTimes.add(updatedStop);
+	}
+
+	private void updateStop(String[] attributes)
+			throws IndexOutOfBoundsException, NumberFormatException{
+		String stopId = attributes[0];
+		Stop updatedStop = new Stop(stopId);
+
+		updatedStop.setStopName(attributes[1]);
+		updatedStop.setStopDesc(attributes[2]);
+		updatedStop.setStopLat(Double.parseDouble(attributes[3]));
+		updatedStop.setStopLon(Double.parseDouble(attributes[4]));
+
+		boolean updated = false;
+		for (int i = 0; i < stops.size(); ++i) {
+			Stop stop = stops.get(i);
+			if (stop.getStopId().equals(stopId)) {
+				stops.set(i, updatedStop);
+				updated = true;
+				break;
+			}
+		}
+		if (!updated) stops.add(updatedStop);
 	}
 
 	/**
@@ -463,13 +603,15 @@ public class GTFS {
 		String tripId = "";
 		StringBuilder sb = new StringBuilder();
 		ArrayList<String> currentRoutes = new ArrayList<>();
+		HashSet<String> currentRouteSet = new HashSet<>();
 
 		for (StopTime stopTime : stopTimes) {
 			if (stopTime.hasStop(stopId)) {
 				tripId = stopTime.getTripId();
 				for (Trip trip : trips) {
 					if(trip.getTripId().equals(tripId)) {
-						if(!currentRoutes.contains(trip.getRouteId())) {
+						if(!currentRouteSet.contains(trip.getRouteId())) {
+							currentRouteSet.add(trip.getRouteId());
 							currentRoutes.add(trip.getRouteId());
 						}
 					}
@@ -482,6 +624,43 @@ public class GTFS {
 			sb.append("\n");
 		}
 		if(currentRoutes.isEmpty()) {
+			sb.append("No Routes with StopID");
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * search a route and returns the stopID's of the stops on the route.
+	 *
+	 * @param routeId - searched route
+	 * @return returns stop ID's that are on the route.
+	 */
+	public String stopsOnRoute(String routeId){
+		String tripId = "";
+		StringBuilder sb = new StringBuilder();
+		ArrayList<String> currentStops = new ArrayList<>();
+		HashSet<String> currentStopSet = new HashSet<>();
+
+		for(Trip trip: trips){
+			if(trip.getRouteId().equals(routeId)){
+				tripId = trip.getTripId();
+				for(StopTime stopTime: stopTimes){
+					if(stopTime.getTripId().equals(tripId)){
+						if(!currentStopSet.contains(stopTime.getStopId())){
+							currentStopSet.add(stopTime.getStopId());
+							currentStops.add(stopTime.getStopId());
+						}
+
+					}
+				}
+			}
+		}
+		for(String stopId: currentStops){
+			sb.append("StopId: ");
+			sb.append(stopId);
+			sb.append("\n");
+		}
+		if(currentStops.isEmpty()) {
 			sb.append("No Routes with StopID");
 		}
 		return sb.toString();
