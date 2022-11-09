@@ -281,7 +281,7 @@ public class GTFS {
 		if(routes.size() != priorListSize){
 			badData += stringBuilder.toString();
 			lastAdded += filename + "\n";
-			lastAdded += stringBuilder.toString();
+
 		}
 
 		stringBuilder.setLength(0);
@@ -330,7 +330,7 @@ public class GTFS {
 		if(stops.size() != priorListSize){
 			badData += stringBuilder.toString();
 			lastAdded += filename + "\n";
-			lastAdded += stringBuilder.toString();
+
 		}
 
 		stringBuilder.setLength(0);
@@ -385,7 +385,7 @@ public class GTFS {
 		if(stopTimes.size() != priorListSize){
 			badData += stringBuilder.toString();
 			lastAdded += filename + "\n";
-			lastAdded += stringBuilder.toString();
+
 		}
 		stringBuilder.setLength(0);
 	}
@@ -436,7 +436,7 @@ public class GTFS {
 		if(trips.size() != priorListSize){
 			badData += stringBuilder.toString();
 			lastAdded += filename + "\n";
-			lastAdded += stringBuilder.toString();
+
 		}
 		stringBuilder.setLength(0);
 	}
