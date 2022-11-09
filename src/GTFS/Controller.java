@@ -506,7 +506,7 @@ public class Controller implements Initializable {
 				}
 				content = text.toString();
 			} else {
-				content = "\n\nNo subsequent trips to the given stop ID were found for today.";
+				content = "\n\nNo subsequent trips to the given route ID were found for today.";
 			}
 		return content;
 	}
