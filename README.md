@@ -3,7 +3,7 @@
 ## License
 GTFS program to import, export, and search Google transit data
 
-Copyright (C) 2022  nairac, atkinsonr, morrowc, schmidtrj
+Copyright (C) 2022  nairac, atkinsonr, morrowc, Robert121717
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ To use the program, the user will need to import any relevant files before they 
 When searching, the user must be able to provide an attribute's ID to receive data relevant to it.
 
 ## Authors and Acknowledgment
-Thank you to Achuth Nair (nairac), Ryan Atkinson (atkinsonr), Cody Morrow (morrowc), and Robert Schmidt (schmidtrj) for contributing to this project.
+Thank you to Achuth Nair (nairac), Ryan Atkinson (atkinsonr), Cody Morrow (morrowc), and Robert Schmidt (Robert121717) for contributing to this project.
 Robert Schmidt, thank you for providing an intuitive front end to the application.
 Cody Morrow, thank you for your help in implementing the import and export features.
 Achuth Nair and Ryan Atkinson, thank you for your help in implementing the methods that validate user input.
