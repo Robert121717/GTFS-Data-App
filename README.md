@@ -21,14 +21,13 @@ Google Transit Data Application
 
 ## Description
 This project allows a user to import data files on transit stops, trips, routes and stop times, where they can then
-search for a an attribute's ID and receive information relative to that attribute, whether it be a stop, trip, route, or stop time.
+search for an attribute's ID and receive information relative to that attribute, whether it be a stop, trip, route, or stop time.
 Users are also able to export any imported files to a specified directory.
 
 ## Usage
-To make this program run, the user needs to have some way for your system to run Java 17.1 and display .fxml files.
-To use the program, the user will need to import the data files before the can search for all the information on a stop.
-For searching, the user will need to know a valid stop id to get information on the desired stop.
-When the user wants to export, they can choose where ever they want the files to be exported to.
+To run this program, the user's operating system must be capable of running Java 17.1 and compiling .fxml files.
+To use the program, the user will need to import any relevant files before they can search for a specified attribute (stop, stop time, route, trip).
+When searching, the user must be able to provide an attribute's ID to receive data relevant to it.
 
 ## Authors and Acknowledgment
 Thank you to Achuth Nair (nairac), Ryan Atkinson (atkinsonr), Cody Morrow (morrowc), and Robert Schmidt (schmidtrj) for contributing to this project.
